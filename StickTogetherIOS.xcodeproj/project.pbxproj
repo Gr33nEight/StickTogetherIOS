@@ -20,6 +20,8 @@
 		3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504262EB2328F004AF0A9 /* MockAuthService.swift */; };
 		3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042A2EB232F6004AF0A9 /* User.swift */; };
 		3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */; };
+		3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504392EB24ACC004AF0A9 /* CustomFont.swift */; };
+		3CB5043D2EB25034004AF0A9 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5043C2EB25034004AF0A9 /* CustomColors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,16 @@
 		3CB504262EB2328F004AF0A9 /* MockAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthService.swift; sourceTree = "<group>"; };
 		3CB5042A2EB232F6004AF0A9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		3CB504312EB24A7A004AF0A9 /* HelveticaNeueUltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueUltraLight.otf; sourceTree = "<group>"; };
+		3CB504322EB24A7B004AF0A9 /* HelveticaNeueHeavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueHeavy.otf; sourceTree = "<group>"; };
+		3CB504332EB24A7B004AF0A9 /* HelveticaNeueBlack.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBlack.otf; sourceTree = "<group>"; };
+		3CB504342EB24A7B004AF0A9 /* HelveticaNeueBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBold.otf; sourceTree = "<group>"; };
+		3CB504352EB24A7B004AF0A9 /* HelveticaNeueLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueLight.otf; sourceTree = "<group>"; };
+		3CB504362EB24A7B004AF0A9 /* HelveticaNeueMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueMedium.otf; sourceTree = "<group>"; };
+		3CB504372EB24A7B004AF0A9 /* HelveticaNeueThin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueThin.otf; sourceTree = "<group>"; };
+		3CB504392EB24ACC004AF0A9 /* CustomFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
+		3CB5043B2EB24E7C004AF0A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3CB5043C2EB25034004AF0A9 /* CustomColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +118,7 @@
 		3C4D400B2EB229BC00DD51A5 /* StickTogetherIOS */ = {
 			isa = PBXGroup;
 			children = (
+				3CB5043B2EB24E7C004AF0A9 /* Info.plist */,
 				3CB5041B2EB23168004AF0A9 /* App */,
 				3CB5041A2EB23164004AF0A9 /* Core */,
 				3CB504192EB2315F004AF0A9 /* Features */,
@@ -144,6 +157,9 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3CB504382EB24A82004AF0A9 /* Font */,
+				3CB504392EB24ACC004AF0A9 /* CustomFont.swift */,
+				3CB5043C2EB25034004AF0A9 /* CustomColors.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -215,6 +231,20 @@
 				3CB5042A2EB232F6004AF0A9 /* User.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		3CB504382EB24A82004AF0A9 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				3CB504332EB24A7B004AF0A9 /* HelveticaNeueBlack.otf */,
+				3CB504342EB24A7B004AF0A9 /* HelveticaNeueBold.otf */,
+				3CB504322EB24A7B004AF0A9 /* HelveticaNeueHeavy.otf */,
+				3CB504352EB24A7B004AF0A9 /* HelveticaNeueLight.otf */,
+				3CB504362EB24A7B004AF0A9 /* HelveticaNeueMedium.otf */,
+				3CB504372EB24A7B004AF0A9 /* HelveticaNeueThin.otf */,
+				3CB504312EB24A7A004AF0A9 /* HelveticaNeueUltraLight.otf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,6 +382,8 @@
 				3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */,
 				3CB504252EB23283004AF0A9 /* AuthServiceProtocol.swift in Sources */,
 				3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */,
+				3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */,
+				3CB5043D2EB25034004AF0A9 /* CustomColors.swift in Sources */,
 				3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */,
 				3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */,
 				3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */,
@@ -521,6 +553,7 @@
 				DEVELOPMENT_TEAM = 6VQ9H973C9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -550,6 +583,7 @@
 				DEVELOPMENT_TEAM = 6VQ9H973C9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
