@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct StickTogetherIOSApp: App {
+    @StateObject var diContainer = DIContainer()
     var body: some Scene {
         WindowGroup {
             AppCoordinatorView()
+                .environmentObject(diContainer)
         }
     }
 }
