@@ -106,6 +106,37 @@ StickTogether/
 
 ---
 
+## Figma Design
+[View the interactive design in Figma]([https://www.figma.com/file/XXXXXX/StickTogether](https://www.figma.com/design/BHNAYWaEGcwYoomamDRHov/StickTogether?node-id=0-1&p=f&t=rHmoWV57zxbApQAS-0))
+
+---
+
+## App Design
+
+### 1. Splash Screen
+A welcoming screen shown when the app launches.
+![Splash Screen](Resources/Design/SplashScreen.png)
+
+### 2. Login View
+Allows users to sign in using their email and password.
+![Login View](Resources/Design/LoginView.png)
+
+### 3. Register View
+Enables new users to create an account and join the Stick Together community.
+![Register View](Resources/Design/RegisterView.png)
+
+### 4. Home Screen
+Main dashboard showing active habits, challenges, and user overview.
+![Home Screen](Resources/Design/HomeScreen.png)
+
+### 5. Create Habit
+Screen for creating a new habit, including name, frequency, and optional reminders.
+![Create Habit](Resources/Design/CreateHabit.png)
+
+### 6. Habit View
+Displays detailed information about a specific habit, progress tracking, and editing options.
+![Habit View](Resources/Design/HabitView.png)
+
 ## 🏁 Getting Started
 
 ### 1️⃣ Clone the project
