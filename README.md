@@ -107,7 +107,7 @@ StickTogether/
 ---
 
 ## Figma Design
-[View the interactive design in Figma]([https://www.figma.com/file/XXXXXX/StickTogether](https://www.figma.com/design/BHNAYWaEGcwYoomamDRHov/StickTogether?node-id=0-1&p=f&t=rHmoWV57zxbApQAS-0))
+[View the interactive design in Figma]([https://www.figma.com/design/BHNAYWaEGcwYoomamDRHov/StickTogether?node-id=0-1&p=f&t=rHmoWV57zxbApQAS-0])
 
 ---
 
