@@ -107,7 +107,7 @@ StickTogether/
 ---
 
 ## Figma Design
-[View the interactive design in Figma]([https://www.figma.com/design/BHNAYWaEGcwYoomamDRHov/StickTogether?node-id=0-1&p=f&t=rHmoWV57zxbApQAS-0])
+[View the interactive design in Figma](https://www.figma.com/design/BHNAYWaEGcwYoomamDRHov/StickTogether?node-id=0-1&p=f&t=rHmoWV57zxbApQAS-0)
 
 ---
 
@@ -115,7 +115,6 @@ StickTogether/
 
 ### 1. Splash Screen
 <img width="375" height="812" alt="Splash" src="https://github.com/user-attachments/assets/550d028c-4611-442e-85c5-e10bcdda7c4b" />
-Screen.png)
 
 ### 2. Login View
 <img width="375" height="812" alt="LogIn View" src="https://github.com/user-attachments/assets/385155e6-22b7-42ae-af06-ac6088c8deec" />
@@ -124,13 +123,13 @@ Screen.png)
 <img width="375" height="812" alt="Register View" src="https://github.com/user-attachments/assets/760fca13-3b54-4701-8399-50345a3caf83" />
 
 ### 4. Home Screen
-<img width="1500" height="3248" alt="Home Screen" src="https://github.com/user-attachments/assets/08be61fb-f5da-4b8d-8757-78f27948380d" />
+<img width="375" height="812" alt="Home Screen" src="https://github.com/user-attachments/assets/08be61fb-f5da-4b8d-8757-78f27948380d" />
 
 ### 5. Create Habit
-<img width="1500" height="3248" alt="Create Habit" src="https://github.com/user-attachments/assets/ede07b84-95df-47be-bd26-b972d6e5b65b" />
+<img width="375" height="812" alt="Create Habit" src="https://github.com/user-attachments/assets/ede07b84-95df-47be-bd26-b972d6e5b65b" />
 
 ### 6. Habit View
-<img width="1500" height="3248" alt="Habit View" src="https://github.com/user-attachments/assets/10cee9d4-8ba4-4efd-9f0d-0112ab821e5b" />
+<img width="375" height="812" alt="Habit View" src="https://github.com/user-attachments/assets/10cee9d4-8ba4-4efd-9f0d-0112ab821e5b" />
 
 ## 🏁 Getting Started
 
