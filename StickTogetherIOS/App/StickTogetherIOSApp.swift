@@ -11,7 +11,7 @@ import SwiftUI
 struct StickTogetherIOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppCoordinatorView()
         }
     }
 }
