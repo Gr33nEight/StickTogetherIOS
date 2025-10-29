@@ -114,28 +114,23 @@ StickTogether/
 ## App Design
 
 ### 1. Splash Screen
-A welcoming screen shown when the app launches.
-![Splash Screen](Resources/Design/SplashScreen.png)
+<img width="375" height="812" alt="Splash" src="https://github.com/user-attachments/assets/550d028c-4611-442e-85c5-e10bcdda7c4b" />
+Screen.png)
 
 ### 2. Login View
-Allows users to sign in using their email and password.
-![Login View](Resources/Design/LoginView.png)
+<img width="375" height="812" alt="LogIn View" src="https://github.com/user-attachments/assets/385155e6-22b7-42ae-af06-ac6088c8deec" />
 
 ### 3. Register View
-Enables new users to create an account and join the Stick Together community.
-![Register View](Resources/Design/RegisterView.png)
+<img width="375" height="812" alt="Register View" src="https://github.com/user-attachments/assets/760fca13-3b54-4701-8399-50345a3caf83" />
 
 ### 4. Home Screen
-Main dashboard showing active habits, challenges, and user overview.
-![Home Screen](Resources/Design/HomeScreen.png)
+<img width="1500" height="3248" alt="Home Screen" src="https://github.com/user-attachments/assets/08be61fb-f5da-4b8d-8757-78f27948380d" />
 
 ### 5. Create Habit
-Screen for creating a new habit, including name, frequency, and optional reminders.
-![Create Habit](Resources/Design/CreateHabit.png)
+<img width="1500" height="3248" alt="Create Habit" src="https://github.com/user-attachments/assets/ede07b84-95df-47be-bd26-b972d6e5b65b" />
 
 ### 6. Habit View
-Displays detailed information about a specific habit, progress tracking, and editing options.
-![Habit View](Resources/Design/HabitView.png)
+<img width="1500" height="3248" alt="Habit View" src="https://github.com/user-attachments/assets/10cee9d4-8ba4-4efd-9f0d-0112ab821e5b" />
 
 ## 🏁 Getting Started
 
