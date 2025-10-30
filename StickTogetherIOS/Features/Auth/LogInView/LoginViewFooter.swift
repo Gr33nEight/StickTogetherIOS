@@ -7,12 +7,28 @@
 
 import SwiftUI
 
-struct LoginViewFooter: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension LogInView {
+    var footer: some View {
+        HStack {
+            Text("Don't have account?")
+            
+            NavigationLink {
+                CreateAccountView(vm: vm)
+            } label: {
+                Text("Create New")
+                    .underline()
+                    .foregroundStyle(Color.custom.secondary)
+            }
+
+//            Button {
+//                // go to register view
+//            } label: {
+//                Text("Create New")
+//                    .underline()
+//                    .foregroundStyle(Color.custom.secondary)
+//            }
+        }.font(.myCaption)
     }
 }
 
-#Preview {
-    LoginViewFooter()
-}
+

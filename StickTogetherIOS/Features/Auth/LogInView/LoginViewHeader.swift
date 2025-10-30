@@ -7,12 +7,16 @@
 
 import SwiftUI
 
-struct LoginViewHeader: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension LogInView {
+    var header: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Text("Welcome Back")
+                .font(.customAppFont(size: 34, weight: .bold))
+            Text("Login to you account with\nEmail and Password")
+                .multilineTextAlignment(.center)
+                .font(.customAppFont(size: 13, weight: .regular))
+                .fixedSize()
+        }
     }
-}
-
-#Preview {
-    LoginViewHeader()
 }

@@ -8,7 +8,8 @@
 import SwiftUI
 
 extension LogInView {
-    var body: some View {
+    @ViewBuilder
+    var content: some View {
         VStack(spacing: 15) {
             CustomTextField(
                 text: $vm.email,
