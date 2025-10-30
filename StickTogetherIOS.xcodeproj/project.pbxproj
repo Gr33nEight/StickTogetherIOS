@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E12EB2627500D0D58C /* LogInView.swift */; };
+		3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */; };
+		3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */; };
+		3C42E6E92EB28AB300D0D58C /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E82EB28AB300D0D58C /* CustomTextField.swift */; };
+		3C42E6EC2EB28C4E00D0D58C /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6EB2EB28C4E00D0D58C /* TextField.swift */; };
+		3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */; };
+		3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F02EB2981200D0D58C /* CreateAccountView.swift */; };
+		3C42E6F42EB2986D00D0D58C /* LoginViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F32EB2986D00D0D58C /* LoginViewHeader.swift */; };
+		3C42E6F62EB2987A00D0D58C /* LoginViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F52EB2987A00D0D58C /* LoginViewContent.swift */; };
+		3C42E6F82EB2988200D0D58C /* LoginViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F72EB2988200D0D58C /* LoginViewFooter.swift */; };
+		3C42E6FA2EB3562400D0D58C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F92EB3562400D0D58C /* HomeView.swift */; };
+		3C42E6FC2EB365F300D0D58C /* CreateAccountHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6FB2EB365F300D0D58C /* CreateAccountHeader.swift */; };
+		3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6FD2EB365FB00D0D58C /* CreateAccountContent.swift */; };
+		3C42E7002EB3660300D0D58C /* CreateAccountFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6FF2EB3660300D0D58C /* CreateAccountFooter.swift */; };
+		3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7022EB3674F00D0D58C /* Habit.swift */; };
+		3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7042EB3677200D0D58C /* HabitCell.swift */; };
+		3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7062EB3678200D0D58C /* DayCell.swift */; };
+		3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */; };
+		3C42E70B2EB367E100D0D58C /* HomeViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E70A2EB367E000D0D58C /* HomeViewHeader.swift */; };
+		3C42E70D2EB3680A00D0D58C /* HomeViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E70C2EB3680A00D0D58C /* HomeViewContent.swift */; };
 		3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D400C2EB229BC00DD51A5 /* StickTogetherIOSApp.swift */; };
 		3C4D400F2EB229BC00DD51A5 /* AppCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D400E2EB229BC00DD51A5 /* AppCoordinatorView.swift */; };
 		3C4D40112EB229BD00DD51A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D40102EB229BD00DD51A5 /* Assets.xcassets */; };
@@ -21,7 +41,7 @@
 		3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042A2EB232F6004AF0A9 /* User.swift */; };
 		3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */; };
 		3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504392EB24ACC004AF0A9 /* CustomFont.swift */; };
-		3CB5043D2EB25034004AF0A9 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5043C2EB25034004AF0A9 /* CustomColors.swift */; };
+		3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +62,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C42E6E12EB2627500D0D58C /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
+		3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
+		3C42E6E82EB28AB300D0D58C /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		3C42E6EB2EB28C4E00D0D58C /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
+		3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyles.swift; sourceTree = "<group>"; };
+		3C42E6F02EB2981200D0D58C /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		3C42E6F32EB2986D00D0D58C /* LoginViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewHeader.swift; sourceTree = "<group>"; };
+		3C42E6F52EB2987A00D0D58C /* LoginViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewContent.swift; sourceTree = "<group>"; };
+		3C42E6F72EB2988200D0D58C /* LoginViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewFooter.swift; sourceTree = "<group>"; };
+		3C42E6F92EB3562400D0D58C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		3C42E6FB2EB365F300D0D58C /* CreateAccountHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountHeader.swift; sourceTree = "<group>"; };
+		3C42E6FD2EB365FB00D0D58C /* CreateAccountContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountContent.swift; sourceTree = "<group>"; };
+		3C42E6FF2EB3660300D0D58C /* CreateAccountFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountFooter.swift; sourceTree = "<group>"; };
+		3C42E7022EB3674F00D0D58C /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
+		3C42E7042EB3677200D0D58C /* HabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCell.swift; sourceTree = "<group>"; };
+		3C42E7062EB3678200D0D58C /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
+		3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewCalendar.swift; sourceTree = "<group>"; };
+		3C42E70A2EB367E000D0D58C /* HomeViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewHeader.swift; sourceTree = "<group>"; };
+		3C42E70C2EB3680A00D0D58C /* HomeViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewContent.swift; sourceTree = "<group>"; };
 		3C4D40092EB229BC00DD51A5 /* StickTogetherIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickTogetherIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D400C2EB229BC00DD51A5 /* StickTogetherIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSApp.swift; sourceTree = "<group>"; };
 		3C4D400E2EB229BC00DD51A5 /* AppCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorView.swift; sourceTree = "<group>"; };
@@ -67,7 +107,7 @@
 		3CB504372EB24A7B004AF0A9 /* HelveticaNeueThin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueThin.otf; sourceTree = "<group>"; };
 		3CB504392EB24ACC004AF0A9 /* CustomFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
 		3CB5043B2EB24E7C004AF0A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		3CB5043C2EB25034004AF0A9 /* CustomColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
+		3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +135,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C42E6E02EB2626700D0D58C /* LogInView */ = {
+			isa = PBXGroup;
+			children = (
+				3C42E6E12EB2627500D0D58C /* LogInView.swift */,
+				3C42E6F32EB2986D00D0D58C /* LoginViewHeader.swift */,
+				3C42E6F52EB2987A00D0D58C /* LoginViewContent.swift */,
+				3C42E6F72EB2988200D0D58C /* LoginViewFooter.swift */,
+			);
+			path = LogInView;
+			sourceTree = "<group>";
+		};
+		3C42E6E32EB27DE500D0D58C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */,
+				3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */,
+				3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3C42E6EA2EB28C4300D0D58C /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				3C42E6EB2EB28C4E00D0D58C /* TextField.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		3C42E6F22EB2984B00D0D58C /* CreateAccountView */ = {
+			isa = PBXGroup;
+			children = (
+				3C42E6F02EB2981200D0D58C /* CreateAccountView.swift */,
+				3C42E6FB2EB365F300D0D58C /* CreateAccountHeader.swift */,
+				3C42E6FD2EB365FB00D0D58C /* CreateAccountContent.swift */,
+				3C42E6FF2EB3660300D0D58C /* CreateAccountFooter.swift */,
+			);
+			path = CreateAccountView;
+			sourceTree = "<group>";
+		};
+		3C42E7012EB3671600D0D58C /* HomeView */ = {
+			isa = PBXGroup;
+			children = (
+				3C42E6F92EB3562400D0D58C /* HomeView.swift */,
+				3C42E7042EB3677200D0D58C /* HabitCell.swift */,
+				3C42E7062EB3678200D0D58C /* DayCell.swift */,
+				3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */,
+				3C42E70A2EB367E000D0D58C /* HomeViewHeader.swift */,
+				3C42E70C2EB3680A00D0D58C /* HomeViewContent.swift */,
+			);
+			path = HomeView;
+			sourceTree = "<group>";
+		};
 		3C4D40002EB229BC00DD51A5 = {
 			isa = PBXGroup;
 			children = (
@@ -157,9 +250,12 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C42E6EA2EB28C4300D0D58C /* Enums */,
+				3C42E6E32EB27DE500D0D58C /* Extensions */,
 				3CB504382EB24A82004AF0A9 /* Font */,
 				3CB504392EB24ACC004AF0A9 /* CustomFont.swift */,
-				3CB5043C2EB25034004AF0A9 /* CustomColors.swift */,
+				3C42E6E82EB28AB300D0D58C /* CustomTextField.swift */,
+				3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -196,6 +292,8 @@
 		3CB5041C2EB23193004AF0A9 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				3C42E6F22EB2984B00D0D58C /* CreateAccountView */,
+				3C42E6E02EB2626700D0D58C /* LogInView */,
 				3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */,
 			);
 			path = Auth;
@@ -204,6 +302,7 @@
 		3CB5041D2EB2319B004AF0A9 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3C42E7012EB3671600D0D58C /* HomeView */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -229,6 +328,7 @@
 			isa = PBXGroup;
 			children = (
 				3CB5042A2EB232F6004AF0A9 /* User.swift */,
+				3C42E7022EB3674F00D0D58C /* Habit.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -377,15 +477,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C42E6E92EB28AB300D0D58C /* CustomTextField.swift in Sources */,
+				3C42E6F42EB2986D00D0D58C /* LoginViewHeader.swift in Sources */,
+				3C42E6F62EB2987A00D0D58C /* LoginViewContent.swift in Sources */,
+				3C42E6F82EB2988200D0D58C /* LoginViewFooter.swift in Sources */,
 				3CB504212EB231F4004AF0A9 /* AppEntry.swift in Sources */,
 				3C4D400F2EB229BC00DD51A5 /* AppCoordinatorView.swift in Sources */,
+				3C42E6EC2EB28C4E00D0D58C /* TextField.swift in Sources */,
+				3C42E70D2EB3680A00D0D58C /* HomeViewContent.swift in Sources */,
 				3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */,
 				3CB504252EB23283004AF0A9 /* AuthServiceProtocol.swift in Sources */,
 				3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */,
+				3C42E6FC2EB365F300D0D58C /* CreateAccountHeader.swift in Sources */,
+				3C42E70B2EB367E100D0D58C /* HomeViewHeader.swift in Sources */,
 				3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */,
-				3CB5043D2EB25034004AF0A9 /* CustomColors.swift in Sources */,
+				3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */,
+				3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */,
 				3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */,
+				3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */,
+				3C42E6FA2EB3562400D0D58C /* HomeView.swift in Sources */,
 				3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */,
+				3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */,
+				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
+				3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */,
+				3C42E7002EB3660300D0D58C /* CreateAccountFooter.swift in Sources */,
+				3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */,
+				3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */,
+				3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */,
+				3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */,
+				3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */,
 				3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

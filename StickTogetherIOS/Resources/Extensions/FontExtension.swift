@@ -7,12 +7,14 @@
 
 import SwiftUI
 
-struct FontExtension: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+extension Font {
+    static var myTitle: Font { CustomFont.title.font }
+    static var mySubtitle: Font { CustomFont.subtitle.font }
+    static var myHeadline: Font { CustomFont.headline.font }
+    static var myBody: Font { CustomFont.body.font }
+    static var myCaption: Font { CustomFont.caption.font }
 
-#Preview {
-    FontExtension()
+    static func customAppFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        CustomFont.custom(size: size, weight: weight).font
+    }
 }

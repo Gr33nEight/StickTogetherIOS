@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct ViewExtension: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension View {
+    @ViewBuilder
+    func customButtonStyle(_ style: ButtonStyles, color: Color = Color.custom.primary, textColor: Color = Color.custom.text) -> some View {
+        switch style {
+        case .primary: buttonStyle(PrimaryButton(color: color, textColor: textColor))
+        case .secondary: buttonStyle(SecondaryButton())
+        case .disabled: buttonStyle(DisabledButton())
+        }
     }
-}
-
-#Preview {
-    ViewExtension()
 }

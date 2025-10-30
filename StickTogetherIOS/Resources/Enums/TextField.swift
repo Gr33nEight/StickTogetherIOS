@@ -7,12 +7,31 @@
 
 import SwiftUI
 
-struct TextField: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+enum TextFieldState: Equatable {
+    case filled
+    case notFilled
+    case focused
+    case error(String)
+
+    var borderColor: Color {
+        switch self {
+        case .notFilled: return .clear
+        case .focused, .filled: return .custom.primary
+        case .error: return .custom.red
+        }
+    }
+    var textColor: Color {
+        switch self {
+        case .notFilled: return .custom.background
+        case .focused, .filled: return .custom.primary
+        case .error: return .custom.red
+        }
+    }
+    var backgroundColor: Color {
+        switch self {
+        case .notFilled, .error: return .custom.grey
+        case .focused, .filled: return .custom.background
+        }
     }
 }
 
-#Preview {
-    TextField()
-}

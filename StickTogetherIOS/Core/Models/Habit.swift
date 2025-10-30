@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-struct Habit: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    Habit()
+struct Habit: Identifiable {
+    let id: UUID = UUID()
+    let icon: String
+    let title: String
 }

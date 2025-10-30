@@ -8,8 +8,9 @@
 import SwiftUI
 
 enum CustomFont {
-    case heading
-    case subheading
+    case title
+    case subtitle
+    case headline
     case body
     case caption
     case custom(size: CGFloat, weight: Font.Weight = .regular)
@@ -18,12 +19,14 @@ enum CustomFont {
     
     var font: Font {
         switch self {
-        case .heading:
+        case .title:
             return Font.custom("\(family)-Heavy", size: 32, relativeTo: .largeTitle)
-        case .subheading:
-            return Font.custom("\(family)-Bold", size: 24, relativeTo: .title)
-        case .body:
+        case .subtitle:
+            return Font.custom("\(family)-Bold", size: 20, relativeTo: .title)
+        case .headline:
             return Font.custom("\(family)-Medium", size: 18, relativeTo: .body)
+        case .body:
+            return Font.custom("\(family)-Medium", size: 16, relativeTo: .caption)
         case .caption:
             return Font.custom("\(family)-Light", size: 14, relativeTo: .caption)
         case .custom(let size, let weight):
@@ -48,3 +51,4 @@ private extension Font.Weight {
         }
     }
 }
+

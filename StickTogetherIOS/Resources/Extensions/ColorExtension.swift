@@ -12,9 +12,12 @@ extension Color {
         static let background = Color("backgroundColor")
         static let primary = Color("primaryColor")
         static let secondary = Color("secondaryColor")
-        static let tetriary = Color("tetriaryColor")
+        static let tertiary = Color("tertiaryColor")
         static let text = Color("textColor")
         static let red = Color("redColor")
+        static let grey = Color("greyColor")
+        static let darkGrey = Color("darkGreyColor")
+        static let lightGrey = Color("lightGreyColor")
     }
 }
 
