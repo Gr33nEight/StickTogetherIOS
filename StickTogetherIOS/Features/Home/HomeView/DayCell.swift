@@ -13,11 +13,11 @@ struct DayCell: View {
     var body: some View {
         VStack(alignment: .center){
             Text("\(dayOfMonth)")
-                .font(.mySubtitle)
+                .font(.myBody)
             Text(dayOfWeek)
                 .font(.myCaption)
                 .fixedSize()
-        }.frame(width: 24, height: 50)
+        }.frame(width: 24, height: 40)
         .padding()
             .background(
                 RoundedRectangle(cornerRadius: 15)

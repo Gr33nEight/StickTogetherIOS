@@ -14,7 +14,7 @@ extension HomeView  {
                 ForEach(0..<8) { i in
                    DayCell(dayOfWeek: "Mon", dayOfMonth: 20+i)
                 }
-            }
+            }.padding(.horizontal, 20)
         }.fixedSize(horizontal: false, vertical: true)
     }
 }

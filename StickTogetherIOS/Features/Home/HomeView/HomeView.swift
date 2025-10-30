@@ -13,10 +13,12 @@ struct HomeView: View {
             header
             calendar
             content
-            Spacer()
-        }.padding(.horizontal, 20)
+                .padding(.horizontal, 20)
+        }
         .background(
             Color.custom.background
         )
+        .navigationBarBackButtonHidden()
+        .edgesIgnoringSafeArea(.bottom)
     }
 }

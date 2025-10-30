@@ -36,11 +36,17 @@ extension LogInView {
                     .font(.myCaption)
             }
         }
-        Button(action: {
-//                vm.login()
-        }, label: {
+        NavigationLink {
+            HomeView()
+        } label: {
             Text("Login")
-        }).customButtonStyle(.primary)
+        }.customButtonStyle(.primary)
+
+//        Button(action: {
+////                vm.login()
+//        }, label: {
+//            Text("Login")
+//        }).customButtonStyle(.primary)
         HStack(spacing: 15) {
             VStack { Divider() }
             Text("Or")

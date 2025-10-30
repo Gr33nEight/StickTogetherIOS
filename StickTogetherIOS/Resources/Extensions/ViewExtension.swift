@@ -16,4 +16,8 @@ extension View {
         case .disabled: buttonStyle(DisabledButton())
         }
     }
+    
+    func customCellViewModifier() -> some View {
+        modifier(CustomCellViewModifier())
+    }
 }

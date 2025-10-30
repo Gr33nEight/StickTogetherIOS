@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-enum ButtonStyles {
-    case primary, secondary, disabled
-}
-
 struct PrimaryButton: ButtonStyle {
     var color: Color = Color.custom.primary
     var textColor: Color = Color.custom.text
