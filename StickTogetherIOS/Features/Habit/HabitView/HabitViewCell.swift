@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct HabitViewCell: View {
+    let title: String
+    let value: String
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.myCaption)
+            Text(value)
+                .font(.mySubtitle)
+                .fixedSize()
+        }.frame(maxWidth: .infinity, alignment: .leading)
+        .customCellViewModifier()
     }
-}
-
-#Preview {
-    HabitViewCell()
 }
