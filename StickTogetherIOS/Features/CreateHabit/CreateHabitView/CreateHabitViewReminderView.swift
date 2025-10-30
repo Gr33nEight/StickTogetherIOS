@@ -7,12 +7,20 @@
 
 import SwiftUI
 
-struct CreateHabitViewReminderView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension CreateHabitView {
+    var reminder: some View {
+        VStack {
+            Toggle("Set reminder", isOn: $setReminder)
+                .tint(Color.custom.primary)
+                .padding(5)
+            if setReminder {
+                DatePicker("", selection: $date, displayedComponents: .hourAndMinute)
+                    .padding(10)
+                    .padding(.horizontal, 5)
+                    .frame(width: 1)
+                    .datePickerStyle(.wheel)
+            }
+        }.customCellViewModifier()
+            .animation(.default, value: setReminder)
     }
-}
-
-#Preview {
-    CreateHabitViewReminderView()
 }
