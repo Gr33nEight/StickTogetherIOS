@@ -14,6 +14,7 @@ extension Color {
         static let secondary = Color("secondaryColor")
         static let tetriary = Color("tetriaryColor")
         static let text = Color("textColor")
+        static let red = Color("redColor")
     }
 }
 
