@@ -7,12 +7,35 @@
 
 import SwiftUI
 
-struct CustomView: View {
+struct CustomView<Content: View, Buttons: View, Icons: View>: View {
+    let title: String
+    @ViewBuilder var content: Content
+    @ViewBuilder var buttons: Buttons
+    @ViewBuilder var icons: Icons
+    @Environment(\.dismiss) var dismiss
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            HStack {
+                Button(action: { dismiss() }, label: {
+                    Image(systemName: "chevron.left")
+                        .bold()
+                })
+                Spacer()
+                icons
+            }.padding(.horizontal)
+                .padding(.vertical, 8)
+            .overlay {
+                Text(title)
+                    .font(.mySubtitle)
+                    .foregroundStyle(Color.custom.text)
+            }
+            content
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.darkGrey.opacity(0.33))
+                )
+            buttons.padding([.horizontal, .top])
+        }.background(Color.custom.background.ignoresSafeArea())
+            .navigationBarBackButtonHidden()
     }
-}
-
-#Preview {
-    CustomView()
 }
