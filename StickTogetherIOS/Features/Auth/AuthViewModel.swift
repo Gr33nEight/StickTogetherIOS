@@ -9,8 +9,11 @@ import SwiftUI
 
 @MainActor
 class AuthViewModel: ObservableObject {
+    @Published var name: String = ""
     @Published var email: String = ""
     @Published var password: String = ""
+    @Published var rePassword: String = ""
+    
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false

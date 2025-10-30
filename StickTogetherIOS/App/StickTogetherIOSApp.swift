@@ -14,6 +14,7 @@ struct StickTogetherIOSApp: App {
         WindowGroup {
             AppCoordinatorView()
                 .environmentObject(diContainer)
+                .preferredColorScheme(.dark)
         }
     }
 }

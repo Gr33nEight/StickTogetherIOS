@@ -11,11 +11,14 @@ struct AppCoordinatorView: View {
     @EnvironmentObject var di: DIContainer
     @StateObject private var authVM = AuthViewModel()
     var body: some View {
-        Group {
-            if authVM.isAuthenticated {
-                Text("Authenticated")
-            } else {
-                Text("Login View")
+        NavigationView{
+            Group {
+                if authVM.isAuthenticated {
+                    Text("Authenticated")
+                } else {
+                    LogInView(vm: authVM)
+                        .navigationBarBackButtonHidden(true)
+                }
             }
         }.onAppear {
             authVM.setup(authService: di.authService)
