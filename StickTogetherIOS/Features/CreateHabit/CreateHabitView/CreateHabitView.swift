@@ -8,11 +8,42 @@
 import SwiftUI
 
 struct CreateHabitView: View {
+    @State var title = ""
+    @State var pickedFrequency: Frequency = .daily
+    @State var dayStepper = 1
+    @State var date = Date()
+    @State var setReminder = false
+    @State var alone = false
+    @Namespace var frequencyAnimation
+    @Environment(\.dismiss) var dismiss
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        CustomView(title: "Create Habit") {
+            ScrollView {
+                VStack(spacing: 20) {
+                    titleTextField
+                    frequencySelection
+                    reminder
+                    inviteFriend
+                }.font(.myBody)
+                    .foregroundStyle(Color.custom.text)
+            }.padding()
+        } buttons: {
+            HStack(spacing: 20) {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Go back")
+                }.customButtonStyle(.secondary)
+                Button {
+                    // create
+                } label: {
+                    Text("Create")
+                }.customButtonStyle(.primary)
+            }
+        } icons: {}
     }
 }
 
 #Preview {
-    CreateHabitView()
+    CreateHabitView().preferredColorScheme(.dark)
 }

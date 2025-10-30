@@ -7,12 +7,21 @@
 
 import SwiftUI
 
-struct CreateHabitViewInviteFriend: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+extension CreateHabitView {
+    var inviteFriend: some View {
+        VStack {
+            Toggle("Alone", isOn: $alone)
+                .tint(Color.custom.primary)
+                .padding(5)
+            if !alone {
+                Button {
+                    // invite friend
+                } label: {
+                    Text("Invite a friend")
+                }
+                .customButtonStyle(.primary)
+            }
+        }.customCellViewModifier()
+            .animation(.default, value: setReminder)
     }
-}
-
-#Preview {
-    CreateHabitViewInviteFriend()
 }
