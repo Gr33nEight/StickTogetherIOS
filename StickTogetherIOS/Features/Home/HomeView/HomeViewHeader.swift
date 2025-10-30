@@ -11,7 +11,7 @@ extension HomeView {
     var header: some View {
         HStack {
             Text("Good Morning, Natanael 👋")
-                .font(.mySubtitle)
+                .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {
                 
@@ -19,5 +19,6 @@ extension HomeView {
                 Image(systemName: "bell")
             }
         }.foregroundStyle(Color.custom.text)
+            .padding([.top, .leading, .trailing], 20)
     }
 }
