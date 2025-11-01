@@ -9,8 +9,9 @@ import SwiftUI
 
 struct CreateHabitView: View {
     @State var title = ""
-    @State var pickedFrequency: Frequency = .daily
-    @State var dayStepper = 1
+    @State var pickedFrequency: FrequencyType = .daily
+    @State var pickedDays = [Weekday]()
+    @State var stepper = 1
     @State var date = Date()
     @State var setReminder = false
     @State var alone = false
@@ -42,8 +43,4 @@ struct CreateHabitView: View {
             }
         } icons: {}
     }
-}
-
-#Preview {
-    CreateHabitView().preferredColorScheme(.dark)
 }

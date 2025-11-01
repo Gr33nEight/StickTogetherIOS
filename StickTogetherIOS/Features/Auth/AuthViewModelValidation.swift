@@ -1,3 +1,5 @@
+import SwiftUI
+
 extension AuthViewModel {
     var nameError: String? { validator.validateName(form.name).message }
     var emailError: String? { validator.validateEmail(form.email).message }
