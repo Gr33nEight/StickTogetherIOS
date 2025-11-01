@@ -11,7 +11,7 @@ extension CreateHabitView {
     var frequencySelection: some View {
         VStack(spacing: 15) {
             HStack(spacing: 0) {
-                ForEach(Frequency.allCases, id:\.self) { f in
+                ForEach(FrequencyType.allCases, id:\.self) { f in
                     Button {
                         pickedFrequency = f
                     } label: {
@@ -34,13 +34,34 @@ extension CreateHabitView {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
-            Stepper("Every \(dayStepper) day", value: $dayStepper, in: 1...7)
+            Stepper("Every \(stepper == 1 ? pickedFrequency.value.dropLast() : ("\(stepper) \(pickedFrequency.value)"))", value: $stepper, in: 1...(pickedFrequency.limit))
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
+            if pickedFrequency == .weekly {
+                HStack(spacing: 10) {
+                    ForEach(Weekday.allCases, id:\.self) { day in
+                        Button {
+                            if let idx = pickedDays.firstIndex(where: { $0 == day }) {
+                                pickedDays.remove(at: idx)
+                            }else{
+                                pickedDays.append(day)
+                            }
+                        } label: {
+                            ZStack {
+                                Circle()
+                                    .fill(pickedDays.contains(day) ? Color.custom.primary : Color.custom.lightGrey)
+                                Text(day.shortened)
+                                    .font(.customAppFont(size: 12, weight: .medium))
+                                    .foregroundStyle(pickedDays.contains(day) ? Color.custom.text : Color(.systemGray))
+                            }.frame(width: 38, height: 38)
+                        }
+                    }
+                }
+            }
             DatePicker("Start date", selection: $date, displayedComponents: .date)
                 .padding(10)
                 .padding(.horizontal, 5)
@@ -49,5 +70,8 @@ extension CreateHabitView {
                         .fill(Color.custom.lightGrey)
                 )
         }.customCellViewModifier()
+            .onChange(of: stepper) { _,_ in
+                stepper = 0
+            }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    let signOut: () -> Void
     var body: some View {
         VStack(spacing: 30) {
             header

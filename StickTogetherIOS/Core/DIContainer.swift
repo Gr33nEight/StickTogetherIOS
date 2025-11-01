@@ -10,7 +10,7 @@ import Foundation
 final class DIContainer: ObservableObject {
     let authService: AuthServiceProtocol
     
-    init(authService: AuthServiceProtocol = MockAuthService()) {
+    init(authService: AuthServiceProtocol = FirebaseAuthService()) {
         self.authService = authService
     }
 }

@@ -10,6 +10,8 @@ import SwiftUI
 extension LogInView {
     @ViewBuilder
     var content: some View {
+        let hasNoErrors = (passwordError == nil && emailError == nil && vm.email.isEmpty == false && vm.password.isEmpty == false)
+        
         VStack(spacing: 15) {
             CustomTextField(
                 text: $vm.email,
@@ -36,17 +38,14 @@ extension LogInView {
                     .font(.myCaption)
             }
         }
-        NavigationLink {
-            HomeView()
-        } label: {
+        Button(action: {
+            if hasNoErrors {
+                UIApplication.shared.endEditing()
+                Task { await vm.signIn() }
+            }
+        }, label: {
             Text("Login")
-        }.customButtonStyle(.primary)
-
-//        Button(action: {
-////                vm.login()
-//        }, label: {
-//            Text("Login")
-//        }).customButtonStyle(.primary)
+        }).customButtonStyle(hasNoErrors ? .primary : .disabled)
         HStack(spacing: 15) {
             VStack { Divider() }
             Text("Or")

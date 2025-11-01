@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HabitView: View {
     let habit: Habit
-    @State var pickedFrequency: Frequency = .daily
+    @State var pickedFrequency: Frequency = .daily()
     @Namespace var frequencyAnimation
     var body: some View {
         CustomView(title: "Habit") {
@@ -31,8 +31,8 @@ struct HabitView: View {
                         HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted)")
                     }
                     HStack {
-                        HabitViewCell(title: "Buddy 👋", value: habit.buddy)
-                        HabitViewCell(title: "Current state 🎯", value: habit.state.text)
+                        HabitViewCell(title: "Buddy 👋", value: habit.buddyId ?? "Alex")
+                        HabitViewCell(title: "Current state 🎯", value: habit.state.text, font: .myBody)
                     }
                     CalendarView()
                 }.padding()

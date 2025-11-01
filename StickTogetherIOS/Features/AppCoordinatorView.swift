@@ -9,19 +9,27 @@ import SwiftUI
 
 struct AppCoordinatorView: View {
     @EnvironmentObject var di: DIContainer
+    @EnvironmentObject var loading: LoadingManager
+    @Environment(\.showToastMessage) private var showToastMessage
+
     @StateObject private var authVM = AuthViewModel()
     var body: some View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
-                    Text("Authenticated")
+                    HomeView {
+                        Task { await authVM.signOut() }
+                    }
                 } else {
                     LogInView(vm: authVM)
                         .navigationBarBackButtonHidden(true)
                 }
             }
-        }.onAppear {
-            authVM.setup(authService: di.authService)
+        }
+        .onAppear {
+            authVM.setup(authService: di.authService,
+                         loading: loading,
+                         toast: showToastMessage)
         }
     }
 }

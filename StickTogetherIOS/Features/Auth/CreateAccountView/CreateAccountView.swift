@@ -37,6 +37,9 @@ struct CreateAccountView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationBarBackButtonHidden(true)
+            .onAppear {
+                vm.resetState()
+            }
     }
     private func validateEmail(_ email: String) -> String? {
             guard !email.isEmpty else { return nil }

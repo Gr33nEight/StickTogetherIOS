@@ -22,6 +22,7 @@ struct HabitCell: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(habit.title)
                     .font(.myBody)
+                    .foregroundStyle(Color.custom.text)
                 Text("Evey 2nd day")
                     .font(.customAppFont(size: 12, weight: .medium))
                     .foregroundStyle(Color.custom.primary)

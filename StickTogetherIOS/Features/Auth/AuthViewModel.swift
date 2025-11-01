@@ -13,46 +13,83 @@ class AuthViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var rePassword: String = ""
-    
+
     @Published var isAuthenticated: Bool = false
-    @Published var errorMessage: String?
-    @Published var isLoading: Bool = false
-    
+
+    // Injected dependencies
     private var authService: (any AuthServiceProtocol)?
-    
-    func setup(authService: AuthServiceProtocol) {
+    private var loadingManager: LoadingManager?
+    private var showToastMessage: ToastMessageService = .init { _ in }
+
+    func setup(authService: any AuthServiceProtocol,
+               loading: LoadingManager? = nil,
+               toast: ToastMessageService? = nil) {
         self.authService = authService
-        Task {
-            await checkIfSignedIn()
-        }
+        self.loadingManager = loading
+        if let toast { self.showToastMessage = toast }
+        Task { await checkIfSignedIn() }
     }
-    
+
     func checkIfSignedIn() async {
-        guard let authService = authService else { return }
-        isAuthenticated = await authService.isSignedIn()
+        guard let auth = authService else { return }
+        isAuthenticated = await auth.isSignedIn()
     }
-    
+
+    private func execute(_ operation: @escaping @Sendable () async throws -> Void,
+                         setAuthStateOnSuccess: Bool? = nil,
+                         successMessage: String? = nil) async {
+        guard authService != nil else { return }
+
+        if let loader = loadingManager {
+            do {
+                try await loader.run { try await operation() }
+                if let success = setAuthStateOnSuccess { isAuthenticated = success }
+                if let message = successMessage { print(message) }
+            } catch {
+                showToastMessage(.failed(error.localizedDescription))
+                if setAuthStateOnSuccess != nil { isAuthenticated = false }
+            }
+            return
+        }
+
+        do {
+            try await operation()
+            if let success = setAuthStateOnSuccess { isAuthenticated = success }
+            if let message = successMessage { showToastMessage(.succes(message)) }
+        } catch {
+            showToastMessage(.failed(error.localizedDescription))
+            if setAuthStateOnSuccess != nil { isAuthenticated = false }
+        }
+    }
+
     func signIn() async {
-        guard let authService = authService else { return }
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let _ = try await authService.signIn(email: email, password: password)
-            isAuthenticated = true
-        } catch {
-            errorMessage = error.localizedDescription
-            isAuthenticated = false
-        }
+        await execute({
+            guard let s = await self.authService else { return }
+            _ = try await s.signIn(email: self.email, password: self.password)
+        }, setAuthStateOnSuccess: true,
+           successMessage: "Signed in successfully")
+    }
+
+    func signUp() async {
+        await execute({
+            guard let s = await self.authService else { return }
+            _ = try await s.signUp(email: self.email, password: self.password, name: self.name)
+        }, setAuthStateOnSuccess: true,
+           successMessage: "Account created successfully")
+    }
+
+    func signOut() async {
+        await execute({
+            guard let s = await self.authService else { return }
+            try await s.signOut()
+        }, setAuthStateOnSuccess: false,
+           successMessage: "Signed out successfully")
     }
     
-    func signOut() async {
-        guard let authService = authService else { return }
-        do {
-            try await authService.signOut()
-            isAuthenticated = false
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+    func resetState() {
+        name = ""
+        email = ""
+        password = ""
+        rePassword = ""
     }
 }

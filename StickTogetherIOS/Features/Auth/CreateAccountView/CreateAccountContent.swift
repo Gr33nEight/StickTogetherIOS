@@ -50,11 +50,22 @@ extension CreateAccountView {
     
     @ViewBuilder
     var createAccountButton: some View {
+        let hasNoErrors = (passwordError == nil &&
+                           emailError == nil &&
+                           nameError == nil &&
+                           rePasswordError == nil &&
+                           vm.password.isEmpty == false &&
+                           vm.email.isEmpty == false &&
+                           vm.name.isEmpty == false &&
+                           vm.rePassword.isEmpty == false)
+        
         Button(action: {
-//                vm.login()
+            if hasNoErrors {
+                Task { await vm.signUp() }
+            }
         }, label: {
             Text("Create Account")
-        }).customButtonStyle(.primary)
+        }).customButtonStyle(hasNoErrors ? .primary : .disabled)
     }
     
     @ViewBuilder
