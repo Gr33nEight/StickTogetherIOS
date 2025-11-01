@@ -14,9 +14,9 @@ extension HomeView {
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {
-                
+                signOut()
             } label: {
-                Image(systemName: "bell")
+                Image(systemName: "rectangle.portrait.and.arrow.right")
             }
         }.foregroundStyle(Color.custom.text)
             .padding([.top, .leading, .trailing], 20)
