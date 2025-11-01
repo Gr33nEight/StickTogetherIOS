@@ -5,4 +5,15 @@
 //  Created by Natanael Jop on 31/10/2025.
 //
 
-import Foundation
+import SwiftUI
+
+struct ToastMessageEnvironmentKey: EnvironmentKey {
+    static var defaultValue: ToastMessageService = ToastMessageService { _ in }
+}
+
+extension EnvironmentValues {
+    var showToastMessage: ToastMessageService {
+        get { self[ToastMessageEnvironmentKey.self] }
+        set { self[ToastMessageEnvironmentKey.self] = newValue }
+    }
+}

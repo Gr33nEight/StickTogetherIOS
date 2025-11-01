@@ -43,9 +43,8 @@ struct DisabledButton: ButtonStyle {
         configuration.label
             .padding(15)
             .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.custom.tertiary))
-            .foregroundColor(.custom.text.opacity(0.5))
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.custom.grey))
+            .foregroundColor(.custom.primary)
             .font(.myHeadline)
-            .disabled(true)
     }
 }

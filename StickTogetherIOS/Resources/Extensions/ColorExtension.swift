@@ -15,6 +15,8 @@ extension Color {
         static let tertiary = Color("tertiaryColor")
         static let text = Color("textColor")
         static let red = Color("redColor")
+        static let blue = Color("blueColor")
+        static let yellow = Color("yellowColor")
         static let grey = Color("greyColor")
         static let darkGrey = Color("darkGreyColor")
         static let lightGrey = Color("lightGreyColor")
