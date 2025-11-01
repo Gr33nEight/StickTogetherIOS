@@ -6,14 +6,25 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 @main
 struct StickTogetherIOSApp: App {
     @StateObject var diContainer = DIContainer()
+    @StateObject var loading = LoadingManager()
+    
+    init() {
+        FirebaseApp.configure()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            AppCoordinatorView()
+            AppEntry()
+                .customToastMessage()
                 .environmentObject(diContainer)
+                .environmentObject(loading)
                 .preferredColorScheme(.dark)
         }
     }
