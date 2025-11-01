@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseFirestore
 
-struct User: Identifiable {
-    let id: UUID = UUID()
-    let name: String
-    let email: String
+struct User: Codable {
+    @DocumentID var id: String?
+    var name: String
+    var email: String
 }
