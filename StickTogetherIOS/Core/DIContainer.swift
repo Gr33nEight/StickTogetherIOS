@@ -9,8 +9,10 @@ import Foundation
 
 final class DIContainer: ObservableObject {
     let authService: AuthServiceProtocol
+    let habitService: HabitServiceProtocol
     
-    init(authService: AuthServiceProtocol = FirebaseAuthService()) {
+    init(authService: AuthServiceProtocol = FirebaseAuthService(), habitService: HabitServiceProtocol = FirebaseHabitService()) {
         self.authService = authService
+        self.habitService = habitService
     }
 }

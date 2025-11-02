@@ -27,9 +27,10 @@ final class LoadingManager: ObservableObject {
     }
 
     @discardableResult
-    func run<T>(_ operation: @escaping @Sendable () async throws -> T) async rethrows -> T {
+    func run<T>(_ operation: @escaping @MainActor @Sendable () async throws -> T) async rethrows -> T {
         start()
         defer { stop() }
         return try await operation()
     }
 }
+

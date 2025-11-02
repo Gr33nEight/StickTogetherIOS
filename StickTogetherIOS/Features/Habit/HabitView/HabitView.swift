@@ -27,12 +27,12 @@ struct HabitView: View {
                         Spacer()
                     }.customCellViewModifier()
                     HStack {
-                        HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak) days")
-                        HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted)")
+//                        HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak) days")
+//                        HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted)")
                     }
                     HStack {
                         HabitViewCell(title: "Buddy 👋", value: habit.buddyId ?? "Alex")
-                        HabitViewCell(title: "Current state 🎯", value: habit.state.text, font: .myBody)
+//                        HabitViewCell(title: "Current state 🎯", value: habit.state.text, font: .myBody)
                     }
                     CalendarView()
                 }.padding()
@@ -67,9 +67,4 @@ struct HabitView: View {
         }
 
     }
-}
-
-#Preview {
-    HabitView(habit: Constants.sampleHabits[0])
-        .preferredColorScheme(.dark)
 }
