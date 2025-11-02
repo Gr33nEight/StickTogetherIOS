@@ -83,8 +83,3 @@ struct CalendarView: View {
         }
     }
 }
-
-#Preview {
-    HabitView(habit: Constants.sampleHabits[0])
-        .preferredColorScheme(.dark)
-}
