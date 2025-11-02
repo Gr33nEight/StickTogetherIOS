@@ -15,26 +15,39 @@ extension HomeView {
                 .font(.myTitle)
             Spacer()
             NavigationLink {
-                CreateHabitView()
+                CreateHabitView(currentUser: currentUser) { habit in
+                    Task { await vm.createHabit(habit) }
+                }
             } label: {
                 ZStack {
                     Circle()
                         .stroke(lineWidth: 2)
                     Image(systemName: "plus")
-                }.frame(width: 50)
+                }
+                .frame(width: 50)
             }
-        }.foregroundColor(.custom.text)
+        }
+        .foregroundColor(.custom.text)
+
+        let visible = vm.habits.filter { $0.isScheduled(on: selectedDate) }
+
         ScrollView(showsIndicators: false) {
             VStack(spacing: 15) {
-                ForEach(Constants.sampleHabits) { habit in
-                    NavigationLink {
-                        HabitView(habit: habit)
-                    } label: {
-                        HabitCell(habit: habit)
+                if visible.isEmpty {
+                    Text("No habits scheduled for this day")
+                        .foregroundStyle(Color.custom.grey)
+                        .padding(.top, 20)
+                } else {
+                    ForEach(visible) { habit in
+                        NavigationLink {
+                            HabitView(habit: habit)
+                        } label: {
+                            HabitCell(habit: habit)
+                        }
                     }
-
                 }
             }
+            .padding(.vertical, 10)
         }
     }
 }
