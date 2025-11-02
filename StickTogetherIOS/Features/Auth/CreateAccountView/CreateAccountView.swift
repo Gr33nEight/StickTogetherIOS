@@ -10,6 +10,11 @@ import SwiftUI
 struct CreateAccountView: View {
     @ObservedObject var vm: AuthViewModel
     
+    @State var name: String = ""
+    @State var email: String = ""
+    @State var password: String = ""
+    @State var rePassword: String = ""
+    
     @State var nameError: String?
     @State var emailError: String?
     @State var passwordError: String?
@@ -29,17 +34,14 @@ struct CreateAccountView: View {
             .background(
                 Color.custom.background.ignoresSafeArea()
             )
-            .onChange(of: vm.email) { _, _ in
-                emailError = validateEmail(vm.email)
+            .onChange(of: email) { _, _ in
+                emailError = validateEmail(email)
             }
-            .onChange(of: vm.password) { _, _ in
-                passwordError = validatePassword(vm.password)
+            .onChange(of: password) { _, _ in
+                passwordError = validatePassword(password)
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationBarBackButtonHidden(true)
-            .onAppear {
-                vm.resetState()
-            }
     }
     private func validateEmail(_ email: String) -> String? {
             guard !email.isEmpty else { return nil }

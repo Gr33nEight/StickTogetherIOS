@@ -9,12 +9,6 @@ import SwiftUI
 
 @MainActor
 class AuthViewModel: ObservableObject {
-    @Published var name: String = ""
-    @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var rePassword: String = ""
-
-    
     @Published var currentUser: User? = nil
     @Published var isAuthenticated: Bool = false
 
@@ -71,19 +65,19 @@ class AuthViewModel: ObservableObject {
         }
     }
 
-    func signIn() async {
+    func signIn(email: String, password: String) async {
         await execute({
             guard let s = self.authService else { return }
-            let user = try await s.signIn(email: self.email, password: self.password)
+            let user = try await s.signIn(email: email, password: password)
             self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Signed in successfully")
     }
 
-    func signUp() async {
+    func signUp(email: String, password: String, name: String) async {
         await execute({
             guard let s = self.authService else { return }
-            let user = try await s.signUp(email: self.email, password: self.password, name: self.name)
+            let user = try await s.signUp(email: email, password: password, name: name)
             self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Account created successfully")
@@ -95,13 +89,6 @@ class AuthViewModel: ObservableObject {
             try await s.signOut()
         }, setAuthStateOnSuccess: false,
            successMessage: "Signed out successfully")
-    }
-    
-    func resetState() {
-        name = ""
-        email = ""
-        password = ""
-        rePassword = ""
     }
 }
 

@@ -10,11 +10,11 @@ import SwiftUI
 extension LogInView {
     @ViewBuilder
     var content: some View {
-        let hasNoErrors = (passwordError == nil && emailError == nil && vm.email.isEmpty == false && vm.password.isEmpty == false)
+        let hasNoErrors = (passwordError == nil && emailError == nil && email.isEmpty == false && password.isEmpty == false)
         
         VStack(spacing: 15) {
             CustomTextField(
-                text: $vm.email,
+                text: $email,
                 placeholder: "Email",
                 systemIcon: "envelope",
                 isSecure: false,
@@ -22,7 +22,7 @@ extension LogInView {
             )
 
             CustomTextField(
-                text: $vm.password,
+                text: $password,
                 placeholder: "Password",
                 systemIcon: "lock",
                 isSecure: true,
@@ -41,7 +41,7 @@ extension LogInView {
         Button(action: {
             if hasNoErrors {
                 UIApplication.shared.endEditing()
-                Task { await vm.signIn() }
+                Task { await vm.signIn(email: email, password: password) }
             }
         }, label: {
             Text("Login")

@@ -13,4 +13,5 @@ struct User: Codable {
     @DocumentID var id: String?
     var name: String
     var email: String
+    var habitsIds: [String] = []
 }

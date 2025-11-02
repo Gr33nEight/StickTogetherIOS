@@ -18,28 +18,28 @@ extension CreateAccountView {
     var textFields: some View {
         VStack(spacing: 15) {
             CustomTextField(
-                text: $vm.name,
+                text: $name,
                 placeholder: "Name",
                 systemIcon: "person",
                 isSecure: false,
                 errorMessage: nameError
             )
             CustomTextField(
-                text: $vm.email,
+                text: $email,
                 placeholder: "Email",
                 systemIcon: "envelope",
                 isSecure: false,
                 errorMessage: emailError
             )
             CustomTextField(
-                text: $vm.password,
+                text: $password,
                 placeholder: "New Password",
                 systemIcon: "lock",
                 isSecure: true,
                 errorMessage: passwordError
             )
             CustomTextField(
-                text: $vm.rePassword,
+                text: $rePassword,
                 placeholder: "Confirm Password",
                 systemIcon: "lock",
                 isSecure: true,
@@ -54,14 +54,14 @@ extension CreateAccountView {
                            emailError == nil &&
                            nameError == nil &&
                            rePasswordError == nil &&
-                           vm.password.isEmpty == false &&
-                           vm.email.isEmpty == false &&
-                           vm.name.isEmpty == false &&
-                           vm.rePassword.isEmpty == false)
+                           password.isEmpty == false &&
+                           email.isEmpty == false &&
+                           name.isEmpty == false &&
+                           rePassword.isEmpty == false)
         
         Button(action: {
             if hasNoErrors {
-                Task { await vm.signUp() }
+                Task { await vm.signUp(email: email, password: password, name: name) }
             }
         }, label: {
             Text("Create Account")

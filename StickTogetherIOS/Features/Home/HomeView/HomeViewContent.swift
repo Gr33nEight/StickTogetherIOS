@@ -49,6 +49,7 @@ extension HomeView {
                 }
                 .padding(.vertical, 10)
                 .padding(.horizontal, 20)
+                .padding(.bottom, 80)
             }
             if !Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
 //                Color.black.opacity(0.3)
