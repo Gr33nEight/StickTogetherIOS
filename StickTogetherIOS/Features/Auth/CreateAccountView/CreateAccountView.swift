@@ -53,7 +53,3 @@ struct CreateAccountView: View {
             return pw.count >= 6 ? nil : "Password must be at least 6 characters"
         }
 }
-
-#Preview {
-    CreateAccountView(vm: AuthViewModel()).preferredColorScheme(.dark)
-}

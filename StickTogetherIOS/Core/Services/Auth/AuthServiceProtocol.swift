@@ -14,4 +14,7 @@ protocol AuthServiceProtocol {
     func signUp(email: String, password: String, name: String) async throws -> User
     func signOut() async throws
     func authStateStream() -> AsyncStream<User?>
+    
+    func getUserById(_ uid: String) async throws -> User?
+    func updateUser(_ user: User) async throws
 }

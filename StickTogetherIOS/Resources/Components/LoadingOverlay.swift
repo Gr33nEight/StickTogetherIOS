@@ -14,12 +14,10 @@ struct LoadingOverlay: View {
     var body: some View {
         ZStack {
             if loading.isLoading {
-                // dim background
                 Color.black.opacity(0.35)
                     .ignoresSafeArea()
                     .transition(.opacity)
 
-                // center loader
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
                     .scaleEffect(1.3)
@@ -33,6 +31,6 @@ struct LoadingOverlay: View {
             }
         }
         .animation(.easeInOut(duration: 0.12), value: loading.isLoading)
-        .allowsHitTesting(loading.isLoading) // block interactions when loading
+        .allowsHitTesting(loading.isLoading)
     }
 }

@@ -9,18 +9,29 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var vm: HabitViewModel
-    
+    @StateObject var userVm: UserViewModel
+
     @State var selectedDate: Date = Date()
     @State var pageIndex: Int = 0
     @State var baseWeekAnchor: Date = Date()
-    
-    let currentUser: User
+
     let signOut: () -> Void
 
-    init(signOut: @escaping () -> Void, currentUser: User, habitService: HabitServiceProtocol, authService: any AuthServiceProtocol) {
-        _vm = StateObject(wrappedValue: HabitViewModel(service: habitService, authService: authService))
+    init(signOut: @escaping () -> Void,
+         habitService: HabitServiceProtocol,
+         authService: any AuthServiceProtocol,
+         loading: LoadingManager? = nil) {
+
+        let userViewModel = UserViewModel(authService: authService, loading: loading)
+        _userVm = StateObject(wrappedValue: userViewModel)
+
+        let habitVM = HabitViewModel(service: habitService,
+                                     authService: authService,
+                                     userViewModel: userViewModel,
+                                     loading: loading)
+        _vm = StateObject(wrappedValue: habitVM)
+
         self.signOut = signOut
-        self.currentUser = currentUser
     }
 
     var body: some View {
@@ -33,7 +44,8 @@ struct HomeView: View {
         .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
         .task {
-            await vm.loadUserHabits() // initial load / listener
+            await userVm.loadCurrentUser()
+            await vm.loadUserHabits()
         }
     }
 }

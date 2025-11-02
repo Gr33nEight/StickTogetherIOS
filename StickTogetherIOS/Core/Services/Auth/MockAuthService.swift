@@ -8,6 +8,14 @@
 import SwiftUI
 
 actor MockAuthService: @preconcurrency AuthServiceProtocol {
+    func getUserById(_ uid: String) async throws -> User? {
+        return storedUser
+    }
+    
+    func updateUser(_ user: User) async throws {
+        storedUser = user
+    }
+    
     private var authStateContinuation: AsyncStream<User?>.Continuation?
 
     // simple in-memory user store

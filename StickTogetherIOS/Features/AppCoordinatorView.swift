@@ -17,17 +17,12 @@ struct AppCoordinatorView: View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
-                    if let user = authVM.currentUser {
-                        HomeView(
-                            signOut: { Task { await authVM.signOut() } },
-                            currentUser: user,
-                            habitService: di.habitService,
-                            authService: di.authService
-                        )
-                    } else {
-                        //TODO: Handle later
-                        LoadingOverlay()
-                    }
+                    HomeView(
+                        signOut: { Task { await authVM.signOut() } },
+                        habitService: di.habitService,
+                        authService: di.authService,
+                        loading: loading
+                    )
                 } else {
                     LogInView(vm: authVM)
                         .navigationBarBackButtonHidden(true)

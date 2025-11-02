@@ -107,8 +107,3 @@ struct CustomTextField: View {
         }
     }
 }
-
-#Preview(body: {
-    LogInView(vm: AuthViewModel())
-        .preferredColorScheme(.dark)
-})

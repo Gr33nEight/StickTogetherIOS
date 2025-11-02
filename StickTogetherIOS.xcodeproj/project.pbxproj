@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C27EA322EB7EBB100BB39F7 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */; };
+		3C27EB352EB7FC1200BB39F7 /* DeepLinkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */; };
 		3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E12EB2627500D0D58C /* LogInView.swift */; };
 		3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */; };
 		3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */; };
@@ -107,6 +109,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkService.swift; sourceTree = "<group>"; };
 		3C42E6E12EB2627500D0D58C /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
@@ -522,6 +526,7 @@
 		3CB5041C2EB23193004AF0A9 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */,
 				3C42E6F22EB2984B00D0D58C /* CreateAccountView */,
 				3C42E6E02EB2626700D0D58C /* LogInView */,
 				3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */,
@@ -541,6 +546,7 @@
 		3CB504222EB2326A004AF0A9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */,
 				3C6687FF2EB4F5B500DE45E8 /* Validation */,
 				3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */,
 				3C70E0BF2EB4026C00C325D9 /* Mappers */,
@@ -758,6 +764,7 @@
 				3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */,
 				3C6688222EB6807300DE45E8 /* FirebaseHabitService.swift in Sources */,
 				3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */,
+				3C27EA322EB7EBB100BB39F7 /* UserViewModel.swift in Sources */,
 				3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */,
 				3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */,
 				3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */,
@@ -778,6 +785,7 @@
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
 				3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */,
 				3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */,
+				3C27EB352EB7FC1200BB39F7 /* DeepLinkService.swift in Sources */,
 				3C6687F92EB4EA8A00DE45E8 /* EnvironmentKeys.swift in Sources */,
 				3C42E7002EB3660300D0D58C /* CreateAccountFooter.swift in Sources */,
 				3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */,
@@ -957,7 +965,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StickTogetherIOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 6VQ9H973C9;
+				DEVELOPMENT_TEAM = 5C4DAU25T3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
@@ -987,7 +995,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StickTogetherIOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 6VQ9H973C9;
+				DEVELOPMENT_TEAM = 5C4DAU25T3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;

@@ -15,8 +15,10 @@ extension HomeView {
                 .font(.myTitle)
             Spacer()
             NavigationLink {
-                CreateHabitView(currentUser: currentUser) { habit in
-                    Task { await vm.createHabit(habit) }
+                if let currentUser = userVm.currentUser {
+                    CreateHabitView(currentUser: currentUser) { habit in
+                        Task { await vm.createHabit(habit) }
+                    }
                 }
             } label: {
                 ZStack {

@@ -10,7 +10,7 @@ import SwiftUI
 extension HomeView {
     var header: some View {
         HStack {
-            Text("\(Date().timeOfDayGreeting),\n\(currentUser.name.capitalized) 👋")
+            Text("\(Date().timeOfDayGreeting),\n\(userVm.currentUser?.name.capitalized ?? "") 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {

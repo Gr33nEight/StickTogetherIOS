@@ -46,8 +46,3 @@ struct LogInView: View {
             return pw.count >= 6 ? nil : "Password must be at least 6 characters"
         }
 }
-
-#Preview {
-    LogInView(vm: AuthViewModel())
-        .preferredColorScheme(.dark)
-}
