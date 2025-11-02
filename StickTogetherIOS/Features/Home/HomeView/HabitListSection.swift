@@ -11,8 +11,13 @@ struct HabitListSection: View {
     let state: CompletionState
     let selectedDate: Date
     
+    let updateCompletion: (Habit) -> Void
+    
     var filteredHabits: [Habit] {
-        visible.filter({$0.completion.values.contains(state)})
+        visible.filter { habit in
+            let stateForDay = habit.completion[Habit.dayKey(for: selectedDate)] ?? .neither
+            return stateForDay == state
+        }
     }
     
     var body: some View {
@@ -26,11 +31,12 @@ struct HabitListSection: View {
                 NavigationLink {
                     HabitView(habit: habit, selectedDate: selectedDate)
                 } label: {
-                    HabitCell(habit: habit)
+                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate)
                 }
             }
             if !filteredHabits.isEmpty {
                 VStack { Divider() }
+                    .padding(.vertical, 8)
             }
         }
     }

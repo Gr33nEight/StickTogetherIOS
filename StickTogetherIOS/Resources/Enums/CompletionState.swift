@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum CompletionState: Int, Codable {
+enum CompletionState: Int, Codable, CaseIterable {
     case both, me, buddy, neither
     
     var text: String {

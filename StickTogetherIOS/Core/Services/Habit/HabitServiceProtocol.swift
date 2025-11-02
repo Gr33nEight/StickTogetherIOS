@@ -14,6 +14,7 @@ protocol HabitServiceProtocol {
     func fetchHabit(byId id: String) async throws -> Habit?
     func fetchAllHabits(for userId: String) async throws -> [Habit]
     func listenToHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken
+    func updatedCompletionState(for habitId: String, date: Date, state: CompletionState) async throws
 }
 
 protocol ListenerToken {

@@ -13,6 +13,7 @@ class HabitViewModel: ObservableObject {
     private let service: HabitServiceProtocol
     private let authService: any AuthServiceProtocol
     private var listenerToken: ListenerToken?
+    private var loadingManager: LoadingManager?
     
     init(service: HabitServiceProtocol, authService: any AuthServiceProtocol) {
         self.service = service
@@ -58,6 +59,25 @@ class HabitViewModel: ObservableObject {
             habits.removeAll { $0.id == habitId }
         } catch {
             print("Failed to delete habit: \(error)")
+        }
+    }
+    
+    func markHabitAsCompleted(_ habit: Habit, date: Date) async {
+        guard let habitId = habit.id else { return }
+        let state = habit.completionState(on: date)
+        do {
+            switch state {
+            case .both:
+                try await service.updatedCompletionState(for: habitId, date: date, state: CompletionState.buddy)
+            case .me:
+                try await service.updatedCompletionState(for: habitId, date: date, state: CompletionState.neither)
+            case .buddy:
+                try await service.updatedCompletionState(for: habitId, date: date, state: CompletionState.both)
+            case .neither:
+                try await service.updatedCompletionState(for: habitId, date: date, state: CompletionState.me)
+            }
+        } catch {
+            print("Failed to update habit: \(error)")
         }
     }
     
