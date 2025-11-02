@@ -14,6 +14,8 @@ class AuthViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var rePassword: String = ""
 
+    
+    @Published var currentUser: User? = nil
     @Published var isAuthenticated: Bool = false
 
     // Injected dependencies
@@ -27,7 +29,14 @@ class AuthViewModel: ObservableObject {
         self.authService = authService
         self.loadingManager = loading
         if let toast { self.showToastMessage = toast }
-        Task { await checkIfSignedIn() }
+        Task {
+            await checkIfSignedIn()
+            if let user = await authService.currentUser() {
+                self.currentUser = user
+            }else{
+                self.currentUser = nil
+            }
+        }
     }
 
     func checkIfSignedIn() async {
@@ -35,7 +44,7 @@ class AuthViewModel: ObservableObject {
         isAuthenticated = await auth.isSignedIn()
     }
 
-    private func execute(_ operation: @escaping @Sendable () async throws -> Void,
+    private func execute(_ operation: @escaping @MainActor @Sendable () async throws -> Void,
                          setAuthStateOnSuccess: Bool? = nil,
                          successMessage: String? = nil) async {
         guard authService != nil else { return }
@@ -64,23 +73,25 @@ class AuthViewModel: ObservableObject {
 
     func signIn() async {
         await execute({
-            guard let s = await self.authService else { return }
-            _ = try await s.signIn(email: self.email, password: self.password)
+            guard let s = self.authService else { return }
+            let user = try await s.signIn(email: self.email, password: self.password)
+            self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Signed in successfully")
     }
 
     func signUp() async {
         await execute({
-            guard let s = await self.authService else { return }
-            _ = try await s.signUp(email: self.email, password: self.password, name: self.name)
+            guard let s = self.authService else { return }
+            let user = try await s.signUp(email: self.email, password: self.password, name: self.name)
+            self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Account created successfully")
     }
 
     func signOut() async {
         await execute({
-            guard let s = await self.authService else { return }
+            guard let s = self.authService else { return }
             try await s.signOut()
         }, setAuthStateOnSuccess: false,
            successMessage: "Signed out successfully")
@@ -93,3 +104,4 @@ class AuthViewModel: ObservableObject {
         rePassword = ""
     }
 }
+

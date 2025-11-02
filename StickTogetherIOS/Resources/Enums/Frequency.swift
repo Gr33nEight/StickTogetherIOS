@@ -90,20 +90,15 @@ extension Frequency {
             let interval = intervalDays ?? 0
             let diff = calendar.dateComponents([.day], from: start, to: day).day ?? 0
             if interval == 0 { return true }
-            return diff % (interval + 1) == 0
+            return diff % (interval) == 0
         case .weekly:
             let intervalW = intervalWeeks ?? 0
-            let startWeek = calendar.component(.weekOfYear, from: start)
-            let dayWeek = calendar.component(.weekOfYear, from: day)
-            let startYear = calendar.component(.yearForWeekOfYear, from: start)
-            let dayYear = calendar.component(.yearForWeekOfYear, from: day)
-            
             let daysDiff = calendar.dateComponents([.day], from: start, to: day).day ?? 0
             let weeksDiff = daysDiff / 7
             if (intervalW == 0) {
                 return dayMatchesWeekly(day: day, calendar: calendar)
             } else {
-                if weeksDiff % (intervalW + 1) != 0 { return false }
+                if weeksDiff % (intervalW) != 0 { return false }
                 return dayMatchesWeekly(day: day, calendar: calendar)
             }
         case .monthly:

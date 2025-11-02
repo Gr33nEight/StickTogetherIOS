@@ -34,7 +34,7 @@ extension CreateHabitView {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
-            Stepper("Every \(stepper == 1 ? pickedFrequency.value.dropLast() : ("\(stepper) \(pickedFrequency.value)"))", value: $stepper, in: 1...(pickedFrequency.limit))
+            Stepper("Every \(interval == 1 ? pickedFrequency.value.dropLast() : ("\(interval) \(pickedFrequency.value)"))", value: $interval, in: 1...(pickedFrequency.limit))
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(
@@ -62,7 +62,7 @@ extension CreateHabitView {
                     }
                 }
             }
-            DatePicker("Start date", selection: $date, displayedComponents: .date)
+            DatePicker("Start date", selection: $startDate, displayedComponents: .date)
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(
@@ -70,8 +70,5 @@ extension CreateHabitView {
                         .fill(Color.custom.lightGrey)
                 )
         }.customCellViewModifier()
-            .onChange(of: stepper) { _,_ in
-                stepper = 0
-            }
     }
 }

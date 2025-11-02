@@ -10,7 +10,8 @@ import SwiftUI
 extension HomeView {
     var header: some View {
         HStack {
-            Text("Good Morning, Natanael 👋")
+            //TODO: Handle that optional later
+            Text("Good Morning,\n\(currentUser.name.capitalized) 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {

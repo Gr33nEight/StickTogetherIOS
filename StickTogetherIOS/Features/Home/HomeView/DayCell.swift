@@ -8,21 +8,33 @@
 import SwiftUI
 
 struct DayCell: View {
-    let dayOfWeek: String
-    let dayOfMonth: Int
+    let date: Date
+    let isSelected: Bool
+
+    private var dayName: String {
+        let df = DateFormatter()
+        df.dateFormat = "E" // short weekday
+        return df.string(from: date)
+    }
+
+    private var dayNumber: String {
+        let df = DateFormatter()
+        df.dateFormat = "d"
+        return df.string(from: date)
+    }
+
     var body: some View {
-        VStack(alignment: .center){
-            Text("\(dayOfMonth)")
-                .font(.myBody)
-            Text(dayOfWeek)
-                .font(.myCaption)
+        VStack(spacing: 6) {
+            Text(dayName)
+                .font(.customAppFont(size: 12, weight: .medium))
                 .fixedSize()
-        }.frame(width: 24, height: 40)
-        .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.custom.primary)
-            )
-            
+            Text(dayNumber)
+                .font(.customAppFont(size: 16, weight: .bold))
+                .frame(width: 40, height: 40)
+                .background(isSelected ? Color.custom.primary : Color.custom.lightGrey)
+                .clipShape(Circle())
+                .foregroundColor(isSelected ? Color.custom.text : Color(.systemGray))
+        }
+        .padding(6)
     }
 }
