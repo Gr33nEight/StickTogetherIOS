@@ -25,7 +25,7 @@ extension CreateHabitView {
                 Text("Habit Title")
                     .font(.myBody)
                     .foregroundStyle(Color.custom.primary)
-                TextField(text: $title, axis: .vertical) {
+                TextField(text: $title, axis: .horizontal) {
                     Text("Type here")
                 }.font(.customAppFont(size: 26, weight: .medium))
             }
