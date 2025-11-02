@@ -23,6 +23,7 @@ struct HabitCell: View {
                 Text(habit.title)
                     .font(.myBody)
                     .foregroundStyle(Color.custom.text)
+                    .multilineTextAlignment(.leading)
                 Text(habit.frequency.type.rawValue)
                     .font(.customAppFont(size: 12, weight: .medium))
                     .foregroundStyle(Color.custom.primary)

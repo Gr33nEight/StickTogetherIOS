@@ -28,7 +28,6 @@ struct HomeView: View {
             header
             calendar
             content
-                .padding(.horizontal, 20)
         }
         .background(Color.custom.background)
         .navigationBarBackButtonHidden()

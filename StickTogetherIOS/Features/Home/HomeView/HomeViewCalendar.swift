@@ -30,7 +30,7 @@ extension HomeView {
                     }
                     .padding()
                     .tag(idx)
-                }
+                }.padding(.horizontal, 20)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 60)
