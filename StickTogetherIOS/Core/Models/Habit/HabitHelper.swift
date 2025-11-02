@@ -32,7 +32,7 @@ extension Habit {
         while cursor >= calendar.startOfDay(for: startDate) {
             if frequency.occurs(on: cursor, startDate: startDate, calendar: calendar) {
                 let state = completionState(on: cursor, calendar: calendar)
-                if state == .neither {
+                if state != .both {
                     break
                 } else {
                     streak += 1

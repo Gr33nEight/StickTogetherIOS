@@ -9,6 +9,14 @@ import SwiftUI
 
 struct HabitCell: View {
     let habit: Habit
+    let updateCompletion: () -> Void
+    let selectedDate: Date
+    
+    var state: CompletionState {
+        guard let s = habit.completion[Habit.dayKey(for: selectedDate)] else { return .neither }
+        return s
+    }
+    
     var body: some View {
         HStack(spacing: 15) {
             Text(habit.icon)
@@ -28,15 +36,29 @@ struct HabitCell: View {
                     .foregroundStyle(Color.custom.primary)
             }.multilineTextAlignment(.leading)
             Spacer()
-            ZStack{
-                Circle()
-                    .fill(Color.custom.lightGrey)
-                Circle()
-                    .stroke(lineWidth: 1.2)
-                    .fill(Color.custom.text)
-                    .padding(15)
-            }.frame(height: 50)
-                .padding(.vertical)
+            Button {
+                updateCompletion()
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            } label: {
+                ZStack{
+                    Circle()
+                        .fill(Color.custom.lightGrey)
+                    
+                    ZStack {
+                        if state == .both || state == .me {
+                            Image(systemName: "checkmark")
+                                .font(.mySubtitle)
+                                .foregroundStyle(Color.custom.primary)
+                        }else{
+                            Circle()
+                                .stroke(lineWidth: 1.2)
+                                .fill(Color.custom.text)
+                        }
+                    }.padding(15)
+                }.frame(height: 50)
+                    .padding(.vertical)
+            }
+
         }.padding(.horizontal)
         .background(
             RoundedRectangle(cornerRadius: 10)

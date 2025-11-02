@@ -33,17 +33,18 @@ extension HomeView {
 
         ZStack(alignment: .bottom) {
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 15) {
+                VStack(spacing: 0) {
                     if visible.isEmpty {
                         Text("No habits scheduled for this day")
                             .foregroundStyle(Color.custom.lightGrey)
                             .font(.mySubtitle)
                             .padding(.top, UIScreen.main.bounds.width / 3)
                     } else {
-                        HabitListSection(visible: visible, state: .neither, selectedDate: selectedDate)
-                        HabitListSection(visible: visible, state: .buddy, selectedDate: selectedDate)
-                        HabitListSection(visible: visible, state: .me, selectedDate: selectedDate)
-                        HabitListSection(visible: visible, state: .both, selectedDate: selectedDate)
+                        ForEach(CompletionState.allCases, id: \.self) { state in
+                            HabitListSection(visible: visible, state: state, selectedDate: selectedDate) { habit in
+                                Task { await vm.markHabitAsCompleted(habit, date: selectedDate) }
+                            }
+                        }
                     }
                 }
                 .padding(.vertical, 10)
