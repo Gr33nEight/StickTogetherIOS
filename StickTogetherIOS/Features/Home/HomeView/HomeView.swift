@@ -24,7 +24,7 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: 15) {
             header
             calendar
             content

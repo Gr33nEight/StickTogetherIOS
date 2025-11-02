@@ -13,7 +13,7 @@ struct HabitCell: View {
         HStack(spacing: 15) {
             Text(habit.icon)
                 .font(.system(size: 23))
-                .shadow(color: .black, radius: 5)
+                .shadow(color: .black.opacity(0.5), radius: 5)
                 .padding(10)
                 .background(
                     RoundedRectangle(cornerRadius: 5)
@@ -23,11 +23,10 @@ struct HabitCell: View {
                 Text(habit.title)
                     .font(.myBody)
                     .foregroundStyle(Color.custom.text)
-                    .multilineTextAlignment(.leading)
-                Text(habit.frequency.type.rawValue)
+                Text(habit.frequency.readableDescription)
                     .font(.customAppFont(size: 12, weight: .medium))
                     .foregroundStyle(Color.custom.primary)
-            }
+            }.multilineTextAlignment(.leading)
             Spacer()
             ZStack{
                 Circle()

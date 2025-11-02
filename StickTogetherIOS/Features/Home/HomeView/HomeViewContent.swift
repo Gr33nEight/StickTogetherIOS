@@ -36,25 +36,25 @@ extension HomeView {
                 VStack(spacing: 15) {
                     if visible.isEmpty {
                         Text("No habits scheduled for this day")
-                            .foregroundStyle(Color.custom.grey)
-                            .padding(.top, 20)
+                            .foregroundStyle(Color.custom.lightGrey)
+                            .font(.mySubtitle)
+                            .padding(.top, UIScreen.main.bounds.width / 3)
                     } else {
-                        ForEach(visible) { habit in
-                            NavigationLink {
-                                HabitView(habit: habit, selectedDate: selectedDate)
-                            } label: {
-                                HabitCell(habit: habit)
-                            }
-                        }
+                        HabitListSection(visible: visible, state: .neither, selectedDate: selectedDate)
+                        HabitListSection(visible: visible, state: .buddy, selectedDate: selectedDate)
+                        HabitListSection(visible: visible, state: .me, selectedDate: selectedDate)
+                        HabitListSection(visible: visible, state: .both, selectedDate: selectedDate)
                     }
                 }
                 .padding(.vertical, 10)
                 .padding(.horizontal, 20)
             }
             if !Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
-                Color.black.opacity(0.5)
+                Color.black.opacity(0.3)
                 Button {
                     selectedDate = Date()
+                    pageIndex = centerPage
+                    baseWeekAnchor = selectedDate
                 } label: {
                     Text("Return to today")
                 }.customButtonStyle(.primary)

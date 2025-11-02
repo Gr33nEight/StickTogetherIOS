@@ -9,11 +9,35 @@ import SwiftUI
 
 extension HomeView {
     // adjust these constants if you want more/less history/future
-    private var pagesRange: ClosedRange<Int> { 0...1000 }
-    private var centerPage: Int { (pagesRange.lowerBound + pagesRange.upperBound) / 2 }
+    var pagesRange: ClosedRange<Int> { 0...1000 }
+    var centerPage: Int { (pagesRange.lowerBound + pagesRange.upperBound) / 2 }
 
     var calendar: some View {
         VStack(spacing: 8) {
+            HStack {
+                Button {
+                    withAnimation { pageIndex = max(pagesRange.lowerBound, pageIndex - 1) }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .padding(8)
+                }
+
+                Spacer()
+
+                Text(weekLabel(for: selectedDate))
+                    .font(.customAppFont(size: 14, weight: .semibold))
+                    .foregroundStyle(Color.custom.text)
+
+                Spacer()
+
+                Button {
+                    withAnimation { pageIndex = min(pagesRange.upperBound, pageIndex + 1) }
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .padding(8)
+                }
+            }
+            .padding(.horizontal, 15)
             TabView(selection: $pageIndex) {
                 ForEach(pagesRange, id: \.self) { idx in
                     let weekOffset = idx - centerPage
@@ -33,7 +57,7 @@ extension HomeView {
                 }.padding(.horizontal, 20)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .frame(height: 60)
+            .frame(height: 62)
             .onChange(of: pageIndex) { _, new in
                 // when page changes, compute the week's dates (for the new page)
                 let weekOffset = new - centerPage
@@ -78,6 +102,17 @@ extension HomeView {
             return [anchorStart]
         }
         return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: weekStart) }
+    }
+    
+    private func weekLabel(for anchor: Date) -> String {
+        let calendar = Calendar.current
+        let week = weekDates(around: anchor)
+        guard let first = week.first, let last = week.last else {
+            return DateFormatter.localizedString(from: anchor, dateStyle: .medium, timeStyle: .none)
+        }
+        let df = DateFormatter()
+        df.dateFormat = "d MMM"
+        return "\(df.string(from: first)) — \(df.string(from: last))"
     }
 }
 

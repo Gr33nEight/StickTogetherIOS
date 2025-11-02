@@ -33,7 +33,6 @@ class HabitViewModel: ObservableObject {
     }
     
     func createHabit(_ habit: Habit) async {
-        guard let uid = await authService.currentUser()?.id else { return }
         do {
             let savedHabit = try await service.createHabit(habit)
             habits.append(savedHabit)

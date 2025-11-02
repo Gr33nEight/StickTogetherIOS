@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ElegantEmojiPicker
 
 struct CreateHabitView: View {
     @State var title = ""
@@ -17,8 +18,13 @@ struct CreateHabitView: View {
     @State var reminderTime = Date()
     @State var alone = false
     @Namespace var frequencyAnimation
+    
+    @Environment(\.showToastMessage) var showToastMessage
     @Environment(\.dismiss) var dismiss
 
+    @State var isEmojiPickerPresented = false
+    @State var selectedEmoji: Emoji? = nil
+    
     let currentUser: User
     let createHabit: (Habit) -> Void
 
@@ -52,11 +58,17 @@ struct CreateHabitView: View {
                 }
             } icons: {}
             .ignoresSafeArea(.keyboard)
-        }
+        }.emojiPicker(isPresented: $isEmojiPickerPresented, selectedEmoji: $selectedEmoji)
     }
 
     private func create() {
-        guard let userId = currentUser.id else { return }
+        guard let userId = currentUser.id,
+        let icon = selectedEmoji?.emoji
+        else {
+            showToastMessage(.warning("You didn't choose icon."))
+            return
+        }
+        
         let habitFrequency: Frequency
         switch pickedFrequency {
         case .daily:
@@ -70,7 +82,7 @@ struct CreateHabitView: View {
         let initialKey = Habit.dayKey(for: startDate)
         let habit = Habit(
             title: title,
-            icon: "❤️",
+            icon: icon,
             ownerId: userId,
             buddyId: nil,
             frequency: habitFrequency,

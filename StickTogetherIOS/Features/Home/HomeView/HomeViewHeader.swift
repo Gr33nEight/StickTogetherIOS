@@ -20,6 +20,6 @@ extension HomeView {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
             }
         }.foregroundStyle(Color.custom.text)
-            .padding(20)
+            .padding([.top, .horizontal], 20)
     }
 }

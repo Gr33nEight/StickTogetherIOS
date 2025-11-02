@@ -55,6 +55,8 @@
 		3C6688252EB6816400DE45E8 /* HabitServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */; };
 		3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */; };
 		3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */; };
+		3C6688322EB7499F00DE45E8 /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */; };
+		3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */; };
 		3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */; };
 		3C70E0962EB3DE4E00C325D9 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */; };
 		3C70E09A2EB3DE7B00C325D9 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0992EB3DE7B00C325D9 /* DateExtension.swift */; };
@@ -154,6 +156,7 @@
 		3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitServiceProtocol.swift; sourceTree = "<group>"; };
 		3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
 		3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitHelper.swift; sourceTree = "<group>"; };
+		3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitListSection.swift; sourceTree = "<group>"; };
 		3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellViewModifier.swift; sourceTree = "<group>"; };
 		3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		3C70E0992EB3DE7B00C325D9 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -194,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C70E0BA2EB3FE3D00C325D9 /* FirebaseMessaging in Frameworks */,
+				3C6688322EB7499F00DE45E8 /* ElegantEmojiPicker in Frameworks */,
 				3C70E0B42EB3FE3D00C325D9 /* FirebaseAnalytics in Frameworks */,
 				3C70E0B62EB3FE3D00C325D9 /* FirebaseAuth in Frameworks */,
 				3C70E0B82EB3FE3D00C325D9 /* FirebaseFirestore in Frameworks */,
@@ -265,6 +269,7 @@
 		3C42E7012EB3671600D0D58C /* HomeView */ = {
 			isa = PBXGroup;
 			children = (
+				3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */,
 				3C42E6F92EB3562400D0D58C /* HomeView.swift */,
 				3C42E7042EB3677200D0D58C /* HabitCell.swift */,
 				3C42E7062EB3678200D0D58C /* DayCell.swift */,
@@ -583,6 +588,7 @@
 				3C70E0B52EB3FE3D00C325D9 /* FirebaseAuth */,
 				3C70E0B72EB3FE3D00C325D9 /* FirebaseFirestore */,
 				3C70E0B92EB3FE3D00C325D9 /* FirebaseMessaging */,
+				3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */,
 			);
 			productName = StickTogetherIOS;
 			productReference = 3C4D40092EB229BC00DD51A5 /* StickTogetherIOS.app */;
@@ -658,6 +664,7 @@
 			mainGroup = 3C4D40002EB229BC00DD51A5;
 			packageReferences = (
 				3C70E0B22EB3FE3D00C325D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */,
 			);
 			productRefGroup = 3C4D400A2EB229BC00DD51A5 /* Products */;
 			projectDirPath = "";
@@ -749,6 +756,7 @@
 				3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */,
 				3C70E0AA2EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift in Sources */,
 				3C42E7112EB36CEB00D0D58C /* CreateHabitView.swift in Sources */,
+				3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */,
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
 				3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */,
 				3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */,
@@ -1101,6 +1109,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Finalet/Elegant-Emoji-Picker";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		3C70E0B22EB3FE3D00C325D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1112,6 +1128,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */;
+			productName = ElegantEmojiPicker;
+		};
 		3C70E0B32EB3FE3D00C325D9 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3C70E0B22EB3FE3D00C325D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
