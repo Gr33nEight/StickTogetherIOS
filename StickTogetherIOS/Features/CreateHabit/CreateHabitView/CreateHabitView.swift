@@ -67,7 +67,6 @@ struct CreateHabitView: View {
             habitFrequency = Frequency.monthly(everyMonths: interval)
         }
 
-        // initial completion map: mark startDate as neither (or omit if you prefer empty)
         let initialKey = Habit.dayKey(for: startDate)
         let habit = Habit(
             title: title,

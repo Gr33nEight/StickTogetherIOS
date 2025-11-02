@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HabitView: View {
     let habit: Habit
+    let selectedDate: Date
     @State var pickedFrequency: Frequency = .daily()
     @Namespace var frequencyAnimation
     var body: some View {
@@ -27,12 +28,16 @@ struct HabitView: View {
                         Spacer()
                     }.customCellViewModifier()
                     HStack {
-//                        HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak) days")
-//                        HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted)")
+                        HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak()) days")
+                        HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted())")
                     }
                     HStack {
-                        HabitViewCell(title: "Buddy 👋", value: habit.buddyId ?? "Alex")
-//                        HabitViewCell(title: "Current state 🎯", value: habit.state.text, font: .myBody)
+                        if let buddyId = habit.buddyId {
+                            HabitViewCell(title: "Buddy 👋", value: buddyId)
+                        }else{
+                            HabitViewCell(title: "", value: "Alone")
+                        }
+                        HabitViewCell(title: "Current state 🎯", value: habit.completionState(on: selectedDate).text, font: .myBody)
                     }
                     CalendarView()
                 }.padding()

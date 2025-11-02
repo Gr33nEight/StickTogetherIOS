@@ -13,11 +13,19 @@ struct HabitViewCell: View {
     var font: Font = Font.mySubtitle
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title)
-                .font(.myCaption)
+            if !title.isEmpty {
+                Text(title)
+                    .font(.myCaption)
+            }
             Text(value)
                 .font(font)
-        }.frame(maxWidth: .infinity, alignment: .leading)
+        }.frame(
+            minWidth: 0,
+            maxWidth: .infinity,
+            minHeight: 0,
+            maxHeight: .infinity,
+            alignment: .leading
+          )
         .customCellViewModifier()
     }
 }

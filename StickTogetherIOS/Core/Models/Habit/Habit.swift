@@ -20,10 +20,8 @@ struct Habit: Identifiable, Codable {
     var alone: Bool = false
     var createdAt: Date = Date()
 
-    /// completion: map dayKey("yyyy-MM-dd") -> CompletionState
     var completion: [String: CompletionState] = [:]
 
-    // convenience init for previews/tests
     init(id: String? = nil,
          title: String,
          icon: String,

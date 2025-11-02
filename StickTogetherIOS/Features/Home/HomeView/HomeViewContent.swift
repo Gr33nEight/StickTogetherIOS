@@ -40,7 +40,7 @@ extension HomeView {
                 } else {
                     ForEach(visible) { habit in
                         NavigationLink {
-                            HabitView(habit: habit)
+                            HabitView(habit: habit, selectedDate: selectedDate)
                         } label: {
                             HabitCell(habit: habit)
                         }
