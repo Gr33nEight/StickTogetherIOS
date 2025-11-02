@@ -94,3 +94,15 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+extension Date {
+    var timeOfDayGreeting: String {
+        let hour = Calendar.current.component(.hour, from: self)
+        switch hour {
+        case 5..<12: return "Good Morning"
+        case 12..<17: return "Good Afternoon"
+        case 17..<22: return "Good Evening"
+        default: return "Good Night"
+        }
+    }
+}

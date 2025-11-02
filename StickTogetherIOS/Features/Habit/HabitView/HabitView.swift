@@ -11,6 +11,8 @@ struct HabitView: View {
     let habit: Habit
     let selectedDate: Date
     @State var pickedFrequency: Frequency = .daily()
+    @State private var showEditHabitView = false
+    @Environment(\.confirm) var confirm
     @Namespace var frequencyAnimation
     var body: some View {
         CustomView(title: "Habit") {
@@ -58,16 +60,23 @@ struct HabitView: View {
         } icons: {
             HStack(spacing: 0) {
                 Button {
-                    
+                    showEditHabitView.toggle()
                 } label: {
                     Image(systemName: "pencil.line")
                 }.padding(.trailing, 8)
                 Button {
-                    
+                    confirm(question: "Are you sure you want to delete this habit?") {
+                        // delete
+                    }
                 } label: {
                     Image(systemName: "trash")
                 }.padding(.leading, 8)
 
+            }
+        }
+        .fullScreenCover(isPresented: $showEditHabitView) {
+            CreateHabitView(currentUser: User(name: "", email: "")) { i in
+                
             }
         }
 

@@ -23,6 +23,7 @@ struct StickTogetherIOSApp: App {
         WindowGroup {
             AppEntry()
                 .customToastMessage()
+                .confirmation()
                 .environmentObject(diContainer)
                 .environmentObject(loading)
                 .preferredColorScheme(.dark)

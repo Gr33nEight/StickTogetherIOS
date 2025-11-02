@@ -37,6 +37,9 @@
 		3C4D401E2EB229BD00DD51A5 /* StickTogetherIOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D401D2EB229BD00DD51A5 /* StickTogetherIOSTests.swift */; };
 		3C4D40282EB229BD00DD51A5 /* StickTogetherIOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */; };
 		3C4D402A2EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */; };
+		3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6159102EB79EEF00F9B65A /* ConfirmView.swift */; };
+		3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */; };
+		3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */; };
 		3C6687E62EB4D61D00DE45E8 /* LoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */; };
 		3C6687E82EB4D6F000DE45E8 /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E72EB4D6F000DE45E8 /* LoadingOverlay.swift */; };
 		3C6687EA2EB4DAA900DE45E8 /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E92EB4DAA900DE45E8 /* UIApplicationExtension.swift */; };
@@ -50,7 +53,6 @@
 		3C6687FC2EB4F5A600DE45E8 /* ValidationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687FB2EB4F5A600DE45E8 /* ValidationResult.swift */; };
 		3C6687FE2EB4F5AE00DE45E8 /* DefaultAuthValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687FD2EB4F5AE00DE45E8 /* DefaultAuthValidator.swift */; };
 		3C6688022EB4F5D800DE45E8 /* AuthForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688012EB4F5D800DE45E8 /* AuthForm.swift */; };
-		3C6688052EB4F71A00DE45E8 /* AuthViewModelValidation.swift in Resources */ = {isa = PBXBuildFile; fileRef = 3C6688042EB4F71A00DE45E8 /* AuthViewModelValidation.swift */; };
 		3C6688222EB6807300DE45E8 /* FirebaseHabitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688212EB6807300DE45E8 /* FirebaseHabitService.swift */; };
 		3C6688252EB6816400DE45E8 /* HabitServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */; };
 		3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */; };
@@ -138,6 +140,9 @@
 		3C4D40232EB229BD00DD51A5 /* StickTogetherIOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StickTogetherIOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITests.swift; sourceTree = "<group>"; };
 		3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
+		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
+		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
 		3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingManager.swift; sourceTree = "<group>"; };
 		3C6687E72EB4D6F000DE45E8 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		3C6687E92EB4DAA900DE45E8 /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
@@ -307,6 +312,8 @@
 				3C70E0942EB3DE2300C325D9 /* CustomCalendar */,
 				3C42E6E82EB28AB300D0D58C /* CustomTextField.swift */,
 				3C70E0A32EB3E2AE00C325D9 /* CustomView.swift */,
+				3C6159112EB79EEF00F9B65A /* Confirmation */,
+				3C6687F12EB4EA6900DE45E8 /* ToastMessage */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -389,6 +396,16 @@
 			path = StickTogetherIOSUITests;
 			sourceTree = "<group>";
 		};
+		3C6159112EB79EEF00F9B65A /* Confirmation */ = {
+			isa = PBXGroup;
+			children = (
+				3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */,
+				3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */,
+				3C6159102EB79EEF00F9B65A /* ConfirmView.swift */,
+			);
+			path = Confirmation;
+			sourceTree = "<group>";
+		};
 		3C6687F12EB4EA6900DE45E8 /* ToastMessage */ = {
 			isa = PBXGroup;
 			children = (
@@ -458,7 +475,6 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3C6687F12EB4EA6900DE45E8 /* ToastMessage */,
 				3C70E0912EB3A48E00C325D9 /* ViewModifiers */,
 				3C42E7122EB3815600D0D58C /* Components */,
 				3C42E6EA2EB28C4300D0D58C /* Enums */,
@@ -684,7 +700,6 @@
 			files = (
 				3C4D40142EB229BD00DD51A5 /* Preview Assets.xcassets in Resources */,
 				3C4D40112EB229BD00DD51A5 /* Assets.xcassets in Resources */,
-				3C6688052EB4F71A00DE45E8 /* AuthViewModelValidation.swift in Resources */,
 				3C70E0B02EB3FB6000C325D9 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -755,6 +770,9 @@
 				3C6687E62EB4D61D00DE45E8 /* LoadingManager.swift in Sources */,
 				3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */,
 				3C70E0AA2EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift in Sources */,
+				3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */,
+				3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */,
+				3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */,
 				3C42E7112EB36CEB00D0D58C /* CreateHabitView.swift in Sources */,
 				3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */,
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,

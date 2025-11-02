@@ -17,3 +17,14 @@ extension EnvironmentValues {
         set { self[ToastMessageEnvironmentKey.self] = newValue }
     }
 }
+
+struct ConfirmatiomEnvironmentKey: EnvironmentKey {
+    static var defaultValue: ConfirmationService = ConfirmationService { _ in}
+}
+
+extension EnvironmentValues {
+    var confirm: (ConfirmationService) {
+        get { self[ConfirmatiomEnvironmentKey.self] }
+        set { self[ConfirmatiomEnvironmentKey.self] = newValue }
+    }
+}

@@ -50,7 +50,7 @@ extension HomeView {
                 .padding(.horizontal, 20)
             }
             if !Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
-                Color.black.opacity(0.3)
+//                Color.black.opacity(0.3)
                 Button {
                     selectedDate = Date()
                     pageIndex = centerPage
