@@ -17,8 +17,16 @@ struct AppCoordinatorView: View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
-                    HomeView {
-                        Task { await authVM.signOut() }
+                    if let user = authVM.currentUser {
+                        HomeView(
+                            signOut: { Task { await authVM.signOut() } },
+                            currentUser: user,
+                            habitService: di.habitService,
+                            authService: di.authService
+                        )
+                    } else {
+                        //TODO: Handle later
+                        LoadingOverlay()
                     }
                 } else {
                     LogInView(vm: authVM)
