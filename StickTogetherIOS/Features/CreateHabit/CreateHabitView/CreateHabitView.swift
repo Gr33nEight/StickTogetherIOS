@@ -29,7 +29,7 @@ struct CreateHabitView: View {
 
     @State var isEmojiPickerPresented = false
     @State var selectedEmoji: Emoji? = nil
-    
+
     let currentUser: User
     let createHabit: (Habit) -> Void
 

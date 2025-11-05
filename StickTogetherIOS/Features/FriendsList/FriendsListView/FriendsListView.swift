@@ -13,9 +13,9 @@ enum FriendsListType: CaseIterable {
     
     var text: String {
         switch self {
-        case .allFriends: return "All Friends"
-        case .invitationSent: return "Invitation Sent"
-        case .invitationReceived: return "Invitation Received"
+        case .allFriends: return "All\nFriends"
+        case .invitationSent: return "Invitation\nSent"
+        case .invitationReceived: return "Invitation\nReceived"
         }
     }
 }
@@ -33,6 +33,8 @@ struct FriendsListView: View {
     @Environment(\.showModal) var showModal
     @Environment(\.dismiss) var dismiss
     
+    @State private var removingStarted = false
+    
     var body: some View {
         CustomView(title: "Friends List", dismissIcon: fullList ? "chevron.left" : "xmark") {
             VStack {
@@ -48,7 +50,7 @@ struct FriendsListView: View {
                                             .fill(Color.custom.primary)
                                             .matchedGeometryEffect(id: "friendsList-bg", in: friendsListAnimation)
                                     }
-                                Text(type.text)
+                                    Text(type.text)
                                         .font(.customAppFont(size: 13, weight: .bold))
                                         .foregroundColor(pickedFriendsListType == type ? Color.custom.text : Color(.systemGray))
                                         .frame(width: (UIScreen.main.bounds.size.width-60)/3, height: 45)
@@ -94,26 +96,31 @@ struct FriendsListView: View {
                     dismiss()
                 }
             } label: {
-                Text((invitedBuddy == nil || fullList) ? "Add a Friend" : "Add \(invitedBuddy!.name) as a buddy")
+                Text((invitedBuddy == nil || fullList) ? "Invite a Friend" : "Add \(invitedBuddy!.name) as a buddy")
             }.customButtonStyle(.primary)
             
         } icons: {
             Button {
-                // delete
+                removingStarted.toggle()
             } label: {
                 Image(systemName: "trash")
+                    .foregroundStyle(removingStarted ? Color.custom.red : Color.custom.primary)
             }
             
-        }
-        .task {
-            await friendsVM.fetchFriendsByIds(currentUser.friendsIds)
-            if fullList {
-                let result = await friendsVM.fetchAllInvitation()
-                if let errorMessage = result.errorMessage {
-                    toastMessage(.failed(errorMessage))
+        }.animation(.easeInOut, value: removingStarted)
+            .task {
+                await friendsVM.startFriendsListener()
+
+                if fullList {
+                    let result = await friendsVM.fetchAllInvitation()
+                    if let errorMessage = result.errorMessage {
+                        toastMessage(.failed(errorMessage))
+                    }
                 }
             }
-        }
+            .onDisappear {
+                friendsVM.stopFriendsListener()
+            }
     }
 }
 
@@ -127,13 +134,32 @@ extension FriendsListView {
                     Text("You don't have any friends yet.")
                         .foregroundStyle(Color.custom.lightGrey)
                         .font(.mySubtitle)
+                        .multilineTextAlignment(.center)
                     Spacer()
                 }
             }else{
                 ScrollView {
                     VStack {
                         ForEach(friendsVM.friends) { friend in
-                            FriendCellView(friend: friend, invitedUser: $invitedBuddy, fullList: fullList)
+                            if let uid = friend.id {
+                                ZStack(alignment: .trailing) {
+                                    FriendCellView(friend: friend, invitedUser: $invitedBuddy, fullList: fullList)
+                                        .offset(x: removingStarted ? -65 : 0)
+                                    Button {
+                                        removingStarted.toggle()
+                                        Task { await friendsVM.removeFromFriendsList(userId: uid)}
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .foregroundStyle(Color.custom.text)
+                                            .padding(15)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.custom.red)
+                                            )
+                                    }.offset(x: removingStarted ? 0 : 65)
+                                    
+                                }
+                            }
                         }
                     }.padding([.top, .horizontal])
                 }
@@ -152,40 +178,58 @@ extension FriendsListView {
                     Text("You don't have any\n\(type == .invitationReceived ? "invitations" : "sent invitations") yet.")
                         .foregroundStyle(Color.custom.lightGrey)
                         .font(.mySubtitle)
+                        .multilineTextAlignment(.center)
                     Spacer()
                 }
             } else {
                 ScrollView {
                     VStack {
                         ForEach(list) { invitation in
-                            if let invitationId = invitation.id {
-                                let friend = friendsVM.friendsFromInvitation[type]?[invitationId]
-                                if type == .invitationReceived {
-                                    InvitationReceivedView(invitation: invitation, accept: {
-                                        Task {
-                                            let result = await friendsVM.acceptInvitation(invitation: invitation)
-                                            if let errorMessage = result.errorMessage {
-                                                toastMessage(.failed(errorMessage))
-                                            }
+                            ZStack(alignment: .trailing) {
+                                if let invitationId = invitation.id {
+                                    ZStack {
+                                        let friend = friendsVM.friendsFromInvitation[type]?[invitationId]
+                                        if type == .invitationReceived {
+                                            InvitationReceivedView(invitation: invitation, accept: {
+                                                Task {
+                                                    let result = await friendsVM.acceptInvitation(invitation: invitation)
+                                                    if let errorMessage = result.errorMessage {
+                                                        toastMessage(.failed(errorMessage))
+                                                    }
+                                                }
+                                            }, decline: {
+                                                Task {
+                                                    let result = await friendsVM.declineInvitation(with: invitationId)
+                                                    if let errorMessage = result.errorMessage {
+                                                        toastMessage(.failed(errorMessage))
+                                                    }
+                                                }
+                                            }, friend: friend)
+                                        }else{
+                                            InvitationSentView(invitation: invitation, cancel: {
+                                                Task {
+                                                    let result = await friendsVM.cancelInvitation(with: invitationId)
+                                                    if let errorMessage = result.errorMessage {
+                                                        toastMessage(.failed(errorMessage))
+                                                    }
+                                                }
+                                            }, friend: friend)
                                         }
-                                    }, decline: {
-                                        Task {
-                                            let result = await friendsVM.declineInvitation(with: invitationId)
-                                            if let errorMessage = result.errorMessage {
-                                                toastMessage(.failed(errorMessage))
-                                            }
-                                        }
-                                    }, friend: friend)
-                                }else{
-                                    InvitationSentView(invitation: invitation, cancel: {
-                                        Task {
-                                            let result = await friendsVM.cancelInvitation(with: invitationId)
-                                            if let errorMessage = result.errorMessage {
-                                                toastMessage(.failed(errorMessage))
-                                            }
-                                        }
-                                    }, friend: friend)
+                                    }.offset(x: removingStarted ? -65 : 0)
+                                    Button {
+                                        removingStarted.toggle()
+                                        Task { await friendsVM.cancelInvitation(with: invitationId) }
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .foregroundStyle(Color.custom.text)
+                                            .padding(15)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.custom.red)
+                                            )
+                                    }.offset(x: removingStarted ? 0 : 65)
                                 }
+                                
                             }
                         }
                     }.padding([.top, .horizontal])
@@ -235,7 +279,7 @@ struct InvitationReceivedView: View {
                             }.customButtonStyle(.secondary)
                         }.padding(.top, 5)
                     }.multilineTextAlignment(.leading)
-                    .layoutPriority(1)
+                        .layoutPriority(1)
                     Spacer()
                 }
                 .padding()
@@ -281,10 +325,10 @@ struct InvitationSentView: View {
                         .layoutPriority(1)
                     Spacer()
                 }.padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.custom.background)
-                )
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.custom.background)
+                    )
             }
         }
     }

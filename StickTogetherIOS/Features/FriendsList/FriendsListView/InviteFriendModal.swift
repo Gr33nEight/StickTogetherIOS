@@ -18,6 +18,7 @@ struct InviteFriendModal: View {
                 .padding(.vertical, 10)
                 .autocorrectionDisabled()
                 .textCase(.lowercase)
+                .keyboardType(.emailAddress)
             Button {
                 invite(email.lowercased())
             } label: {

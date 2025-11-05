@@ -17,19 +17,40 @@ class AuthViewModel: ObservableObject {
     private var loadingManager: LoadingManager?
     private var showToastMessage: ToastMessageService = .init { _ in }
 
+    // Task that listens to auth state changes
+    private var authStateTask: Task<Void, Never>?
+
     func setup(authService: any AuthServiceProtocol,
                loading: LoadingManager? = nil,
                toast: ToastMessageService? = nil) {
         self.authService = authService
         self.loadingManager = loading
         if let toast { self.showToastMessage = toast }
+
+        // cancel previous subscriber if any
+        authStateTask?.cancel()
+
+        // start listening to auth state stream
+        authStateTask = Task { [weak self] in
+            guard let strong = self, let svc = strong.authService else { return }
+            // first emit: current value from service + then subsequent updates from stream
+            // but rely on stream for ongoing updates
+            for await user in svc.authStateStream() {
+                // don't use weak self here, we already captured strong
+                await MainActor.run {
+                    strong.currentUser = user
+                    strong.isAuthenticated = (user != nil)
+                }
+            }
+        }
+
         Task {
             await checkIfSignedIn()
             if let user = await authService.currentUser() {
                 self.currentUser = user
-            }else{
+            } else {
                 self.currentUser = nil
-            }
+            }        
         }
     }
 
@@ -69,6 +90,7 @@ class AuthViewModel: ObservableObject {
         await execute({
             guard let s = self.authService else { return }
             let user = try await s.signIn(email: email, password: password)
+            // set currentUser immediately (stream will also emit)
             self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Signed in successfully")
@@ -78,6 +100,7 @@ class AuthViewModel: ObservableObject {
         await execute({
             guard let s = self.authService else { return }
             let user = try await s.signUp(email: email, password: password, name: name)
+            // set currentUser immediately
             self.currentUser = user
         }, setAuthStateOnSuccess: true,
            successMessage: "Account created successfully")
@@ -87,8 +110,15 @@ class AuthViewModel: ObservableObject {
         await execute({
             guard let s = self.authService else { return }
             try await s.signOut()
+            // ensure UI reflects sign out immediately
+            self.currentUser = nil
+            self.isAuthenticated = false
         }, setAuthStateOnSuccess: false,
            successMessage: "Signed out successfully")
     }
-}
 
+    deinit {
+        authStateTask?.cancel()
+        authStateTask = nil
+    }
+}

@@ -27,6 +27,13 @@ class FriendsViewModel: ObservableObject {
     // ensure loader shown only for the very first fetch
     private var didInitialLoad: Bool = false
     
+    // Add these properties near the top of FriendsViewModel:
+    private var userDocListener: ListenerRegistration?
+    private var userDocRef: DocumentReference? {
+        // non-optional: uses Firestore directly. We fetch the current user id when starting the listener.
+        return firestore.collection("users").document("") // placeholder — not used directly
+    }
+    
     init(authService: any AuthServiceProtocol,
          friendsService: FriendsServiceProtocol,
          loading: LoadingManager? = nil) {
@@ -95,17 +102,87 @@ class FriendsViewModel: ObservableObject {
             return nil
         }
     }
-    
-    func fetchFriendsByIds(_ ids: [String]) async {
-        do {
-            if let loader = loadingManager {
-                friends = try await loader.run { try await self.authService.getUsersByIds(ids) }
-            } else {
-                friends = try await authService.getUsersByIds(ids)
-            }
-        } catch {
-            print("Failed to load friends: \(error)")
+
+    // Utility: chunking helper
+    private func chunked<T>(_ array: [T], chunkSize: Int) -> [[T]] {
+        guard chunkSize > 0 else { return [array] }
+        var result: [[T]] = []
+        var i = 0
+        while i < array.count {
+            let end = Swift.min(i + chunkSize, array.count)
+            result.append(Array(array[i..<end]))
+            i += chunkSize
         }
+        return result
+    }
+
+    // MARK: - Friends listener (listen to current user's document for friendsIds changes)
+    func startFriendsListener() async {
+        // stop existing to avoid duplicates
+        stopFriendsListener()
+        guard let currentUserId = await authService.currentUser()?.id else { return }
+
+        userDocListener = firestore.collection("users").document(currentUserId)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self, let snapshot = snapshot, snapshot.exists else { return }
+
+                // read friendsIds from snapshot safely
+                if let data = snapshot.data(), let raw = data["friendsIds"] as? [String] {
+                    Task { @MainActor in
+                        await self.loadFriendsFromIds(raw, preferLoader: false)
+                    }
+                } else {
+                    // no friends yet
+                    Task { @MainActor in
+                        self.friends = []
+                    }
+                }
+            }
+    }
+
+    @MainActor
+    func stopFriendsListener() {
+        userDocListener?.remove()
+        userDocListener = nil
+    }
+
+    // Helper: load friends by ids with chunking (uses authService.getUsersByIds)
+    private func loadFriendsFromIds(_ ids: [String], preferLoader: Bool = false) async {
+        // quick exit
+        if ids.isEmpty {
+            self.friends = []
+            return
+        }
+
+        // Firestore 'in' supports up to 10 items; chunk the ids
+        let chunks = chunked(ids, chunkSize: 10)
+        var aggregated: [User] = []
+
+        await withTaskGroup(of: [User].self) { group in
+            for chunk in chunks {
+                group.addTask { [authService, loadingManager] in
+                    do {
+                        if let loader = loadingManager, preferLoader {
+                            return try await loader.run { try await authService.getUsersByIds(chunk) }
+                        } else {
+                            return try await authService.getUsersByIds(chunk)
+                        }
+                    } catch {
+                        print("Failed fetching friend chunk: \(error)")
+                        return []
+                    }
+                }
+            }
+
+            for await sub in group {
+                aggregated.append(contentsOf: sub)
+            }
+        }
+
+        // preserve ordering from ids (optional)
+        let byId = Dictionary(uniqueKeysWithValues: aggregated.map { ($0.id ?? UUID().uuidString, $0) })
+        let ordered = ids.compactMap { byId[$0] }
+        self.friends = ordered
     }
     
     private func fetchFriendByEmail(_ email: String) async -> User? {
@@ -281,6 +358,19 @@ class FriendsViewModel: ObservableObject {
             return .success
         } catch {
             return .error("Couldn't cancel invitation: \(error)")
+        }
+    }
+    
+    func removeFromFriendsList(userId: String) async -> SuccessOrError {
+        guard let currentUserId = await authService.currentUser()?.id else {
+            return .error("Couldn't get current user")
+        }
+        do {
+            try await self.authService.removeFromFriendsList(friendId: userId, for: currentUserId)
+            try await self.authService.removeFromFriendsList(friendId: currentUserId, for: userId)
+            return .success
+        } catch {
+            return .error("Couldn't remove from friends list: \(error)")
         }
     }
 }
