@@ -75,7 +75,7 @@ struct HabitView: View {
             }
         }
         .fullScreenCover(isPresented: $showEditHabitView) {
-            CreateHabitView(currentUser: User(name: "", email: "")) { i in
+            CreateHabitView(friendsVM: FriendsViewModel(authService: FirebaseAuthService(), friendsService: FirebaseFriendsService()), currentUser: User(name: "", email: "")) { i in
                 
             }
         }

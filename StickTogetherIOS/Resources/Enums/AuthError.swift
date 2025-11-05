@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum AuthError: Error, LocalizedError {
-    case invalidCredentials, missingUserId
+    case invalidCredentials, missingUserId, currentUserNotFound
     
     var errorDescription: String? {
         switch self {
@@ -16,6 +16,8 @@ enum AuthError: Error, LocalizedError {
             return "Invalid email or password."
         case .missingUserId:
             return "Missing user id."
+        case .currentUserNotFound:
+            return "Current user not found."
         }
     }
 }

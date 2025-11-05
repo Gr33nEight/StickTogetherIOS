@@ -15,10 +15,8 @@ extension HomeView {
                 .font(.myTitle)
             Spacer()
             NavigationLink {
-                if let currentUser = userVm.currentUser {
-                    CreateHabitView(currentUser: currentUser) { habit in
-                        Task { await vm.createHabit(habit) }
-                    }
+                CreateHabitView(friendsVM: friendsVM, currentUser: currentUser) { habit in
+                    Task { await habitVM.createHabit(habit) }
                 }
             } label: {
                 ZStack {
@@ -31,7 +29,7 @@ extension HomeView {
         }.padding(.horizontal, 20)
         .foregroundColor(.custom.text)
 
-        let visible = vm.habits.filter { $0.isScheduled(on: selectedDate) }
+        let visible = habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
 
         ZStack(alignment: .bottom) {
             ScrollView(showsIndicators: false) {
@@ -44,7 +42,7 @@ extension HomeView {
                     } else {
                         ForEach(CompletionState.allCases, id: \.self) { state in
                             HabitListSection(visible: visible, state: state, selectedDate: selectedDate) { habit in
-                                Task { await vm.markHabitAsCompleted(habit, date: selectedDate) }
+                                Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
                             }
                         }
                     }

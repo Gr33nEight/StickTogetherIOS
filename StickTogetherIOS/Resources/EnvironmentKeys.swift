@@ -28,3 +28,14 @@ extension EnvironmentValues {
         set { self[ConfirmatiomEnvironmentKey.self] = newValue }
     }
 }
+
+struct ModalEnvironmentKey: EnvironmentKey {
+    static var defaultValue: ModalService = ModalService { _ in}
+}
+
+extension EnvironmentValues {
+    var showModal: (ModalService) {
+        get { self[ModalEnvironmentKey.self] }
+        set { self[ModalEnvironmentKey.self] = newValue }
+    }
+}

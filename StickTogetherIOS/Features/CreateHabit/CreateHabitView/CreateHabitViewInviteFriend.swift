@@ -13,15 +13,22 @@ extension CreateHabitView {
             Toggle("Alone", isOn: $alone)
                 .tint(Color.custom.primary)
                 .padding(5)
-            if let hid = id, !alone {
-                let inviteText = "Hey! I just created a new habit on StickTogether — join me and let’s stay consistent together 💪"
-                if let link = URL(string: "sticktogether://habit/\(hid)") {
-                    ShareLink(item: link, preview: SharePreview(inviteText, image: Image(.logo))) {
-                        Text("Invite a friend")
-                    }
-                    .customButtonStyle(.primary)
-                }
+            if !alone {
+                Button {
+                    showFriendsList.toggle()
+                } label: {
+                    Text("Invite a friend")
+                }.customButtonStyle(.primary)
             }
+
+//            if let hid = id, !alone {
+//                let inviteText = "Hey! I just created a new habit on StickTogether — join me and let’s stay consistent together 💪"
+//                if let link = URL(string: "sticktogether://habit/\(hid)") {
+//                    ShareLink(item: link, preview: SharePreview(inviteText, image: Image(.logo))) {
+//                        
+//                    }
+//                }
+//            }
         }.customCellViewModifier()
             .animation(.default, value: setReminder)
     }

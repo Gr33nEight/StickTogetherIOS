@@ -7,8 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C27EA322EB7EBB100BB39F7 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */; };
 		3C27EB352EB7FC1200BB39F7 /* DeepLinkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */; };
+		3C27EB382EB8B80700BB39F7 /* FriendsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB372EB8B80700BB39F7 /* FriendsListView.swift */; };
+		3C27EB3C2EB9234100BB39F7 /* ModalViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB3A2EB9234100BB39F7 /* ModalViewModifier.swift */; };
+		3C27EB3D2EB9234100BB39F7 /* ModalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB392EB9234100BB39F7 /* ModalService.swift */; };
+		3C27EB402EB9237E00BB39F7 /* ScreenOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB3F2EB9237E00BB39F7 /* ScreenOverlay.swift */; };
+		3C27EB422EB923A100BB39F7 /* Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB412EB923A100BB39F7 /* Blur.swift */; };
+		3C27EB442EBA4E1A00BB39F7 /* InviteFriendModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB432EBA4E1A00BB39F7 /* InviteFriendModal.swift */; };
+		3C27EB462EBA4E2E00BB39F7 /* FriendListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB452EBA4E2E00BB39F7 /* FriendListViewModel.swift */; };
+		3C27EB492EBA515A00BB39F7 /* FriendsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB482EBA515A00BB39F7 /* FriendsServiceProtocol.swift */; };
+		3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */; };
+		3C27EB4E2EBA527E00BB39F7 /* FirebaseFriendsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4D2EBA527E00BB39F7 /* FirebaseFriendsService.swift */; };
+		3C27EB502EBA5A2000BB39F7 /* FriendCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4F2EBA5A2000BB39F7 /* FriendCellView.swift */; };
+		3C27EB522EBB632400BB39F7 /* ValueOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB512EBB632400BB39F7 /* ValueOrError.swift */; };
+		3C27EB552EBB636100BB39F7 /* SuccessOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */; };
 		3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E12EB2627500D0D58C /* LogInView.swift */; };
 		3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */; };
 		3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */; };
@@ -109,8 +121,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkService.swift; sourceTree = "<group>"; };
+		3C27EB372EB8B80700BB39F7 /* FriendsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListView.swift; sourceTree = "<group>"; };
+		3C27EB392EB9234100BB39F7 /* ModalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalService.swift; sourceTree = "<group>"; };
+		3C27EB3A2EB9234100BB39F7 /* ModalViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewModifier.swift; sourceTree = "<group>"; };
+		3C27EB3F2EB9237E00BB39F7 /* ScreenOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOverlay.swift; sourceTree = "<group>"; };
+		3C27EB412EB923A100BB39F7 /* Blur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blur.swift; sourceTree = "<group>"; };
+		3C27EB432EBA4E1A00BB39F7 /* InviteFriendModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendModal.swift; sourceTree = "<group>"; };
+		3C27EB452EBA4E2E00BB39F7 /* FriendListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListViewModel.swift; sourceTree = "<group>"; };
+		3C27EB482EBA515A00BB39F7 /* FriendsServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsServiceProtocol.swift; sourceTree = "<group>"; };
+		3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invitation.swift; sourceTree = "<group>"; };
+		3C27EB4D2EBA527E00BB39F7 /* FirebaseFriendsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFriendsService.swift; sourceTree = "<group>"; };
+		3C27EB4F2EBA5A2000BB39F7 /* FriendCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCellView.swift; sourceTree = "<group>"; };
+		3C27EB512EBB632400BB39F7 /* ValueOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueOrError.swift; sourceTree = "<group>"; };
+		3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessOrError.swift; sourceTree = "<group>"; };
 		3C42E6E12EB2627500D0D58C /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		3C42E6E42EB27DF000D0D58C /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		3C42E6E62EB27E0B00D0D58C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
@@ -230,6 +254,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C27EB362EB8B7E600BB39F7 /* FriendsList */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB562EBB7D1E00BB39F7 /* FriendsListView */,
+				3C27EB452EBA4E2E00BB39F7 /* FriendListViewModel.swift */,
+			);
+			path = FriendsList;
+			sourceTree = "<group>";
+		};
+		3C27EB3E2EB9234C00BB39F7 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB392EB9234100BB39F7 /* ModalService.swift */,
+				3C27EB3A2EB9234100BB39F7 /* ModalViewModifier.swift */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		3C27EB4A2EBA516100BB39F7 /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB482EBA515A00BB39F7 /* FriendsServiceProtocol.swift */,
+				3C27EB4D2EBA527E00BB39F7 /* FirebaseFriendsService.swift */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		3C27EB532EBB634D00BB39F7 /* ErrorHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */,
+				3C27EB512EBB632400BB39F7 /* ValueOrError.swift */,
+			);
+			path = ErrorHelpers;
+			sourceTree = "<group>";
+		};
+		3C27EB562EBB7D1E00BB39F7 /* FriendsListView */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB4F2EBA5A2000BB39F7 /* FriendCellView.swift */,
+				3C27EB432EBA4E1A00BB39F7 /* InviteFriendModal.swift */,
+				3C27EB372EB8B80700BB39F7 /* FriendsListView.swift */,
+			);
+			path = FriendsListView;
+			sourceTree = "<group>";
+		};
 		3C42E6E02EB2626700D0D58C /* LogInView */ = {
 			isa = PBXGroup;
 			children = (
@@ -312,12 +382,15 @@
 		3C42E7122EB3815600D0D58C /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EB3F2EB9237E00BB39F7 /* ScreenOverlay.swift */,
 				3C6687E72EB4D6F000DE45E8 /* LoadingOverlay.swift */,
 				3C70E0942EB3DE2300C325D9 /* CustomCalendar */,
 				3C42E6E82EB28AB300D0D58C /* CustomTextField.swift */,
 				3C70E0A32EB3E2AE00C325D9 /* CustomView.swift */,
 				3C6159112EB79EEF00F9B65A /* Confirmation */,
 				3C6687F12EB4EA6900DE45E8 /* ToastMessage */,
+				3C27EB3E2EB9234C00BB39F7 /* Modal */,
+				3C27EB412EB923A100BB39F7 /* Blur.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -479,6 +552,7 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EB532EBB634D00BB39F7 /* ErrorHelpers */,
 				3C70E0912EB3A48E00C325D9 /* ViewModifiers */,
 				3C42E7122EB3815600D0D58C /* Components */,
 				3C42E6EA2EB28C4300D0D58C /* Enums */,
@@ -495,6 +569,7 @@
 		3CB504192EB2315F004AF0A9 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EB362EB8B7E600BB39F7 /* FriendsList */,
 				3C42E7152EB38C1E00D0D58C /* Habit */,
 				3C42E70E2EB36CC100D0D58C /* CreateHabit */,
 				3CB5041D2EB2319B004AF0A9 /* Home */,
@@ -526,7 +601,6 @@
 		3CB5041C2EB23193004AF0A9 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				3C27EA312EB7EBAB00BB39F7 /* UserViewModel.swift */,
 				3C42E6F22EB2984B00D0D58C /* CreateAccountView */,
 				3C42E6E02EB2626700D0D58C /* LogInView */,
 				3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */,
@@ -546,12 +620,12 @@
 		3CB504222EB2326A004AF0A9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3C27EB4A2EBA516100BB39F7 /* Friends */,
 				3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */,
 				3C6687FF2EB4F5B500DE45E8 /* Validation */,
 				3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */,
 				3C70E0BF2EB4026C00C325D9 /* Mappers */,
 				3CB504232EB2326F004AF0A9 /* Auth */,
-				3C70E0BB2EB3FFC200C325D9 /* FirebaseAuthService.swift */,
 				3C6688232EB6815100DE45E8 /* Habit */,
 			);
 			path = Services;
@@ -560,6 +634,7 @@
 		3CB504232EB2326F004AF0A9 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				3C70E0BB2EB3FFC200C325D9 /* FirebaseAuthService.swift */,
 				3CB504242EB23283004AF0A9 /* AuthServiceProtocol.swift */,
 				3CB504262EB2328F004AF0A9 /* MockAuthService.swift */,
 			);
@@ -571,6 +646,7 @@
 			children = (
 				3C66882B2EB6B52800DE45E8 /* Habit */,
 				3CB5042A2EB232F6004AF0A9 /* User.swift */,
+				3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -733,8 +809,12 @@
 			files = (
 				3C42E6E92EB28AB300D0D58C /* CustomTextField.swift in Sources */,
 				3C42E6F42EB2986D00D0D58C /* LoginViewHeader.swift in Sources */,
+				3C27EB442EBA4E1A00BB39F7 /* InviteFriendModal.swift in Sources */,
 				3C42E6F62EB2987A00D0D58C /* LoginViewContent.swift in Sources */,
 				3C42E6F82EB2988200D0D58C /* LoginViewFooter.swift in Sources */,
+				3C27EB402EB9237E00BB39F7 /* ScreenOverlay.swift in Sources */,
+				3C27EB3C2EB9234100BB39F7 /* ModalViewModifier.swift in Sources */,
+				3C27EB3D2EB9234100BB39F7 /* ModalService.swift in Sources */,
 				3C70E0A42EB3E2AE00C325D9 /* CustomView.swift in Sources */,
 				3CB504212EB231F4004AF0A9 /* AppEntry.swift in Sources */,
 				3C4D400F2EB229BC00DD51A5 /* AppCoordinatorView.swift in Sources */,
@@ -754,22 +834,26 @@
 				3C6688252EB6816400DE45E8 /* HabitServiceProtocol.swift in Sources */,
 				3C70E09C2EB3E1DA00C325D9 /* Frequency.swift in Sources */,
 				3C6687E82EB4D6F000DE45E8 /* LoadingOverlay.swift in Sources */,
+				3C27EB4E2EBA527E00BB39F7 /* FirebaseFriendsService.swift in Sources */,
 				3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */,
+				3C27EB422EB923A100BB39F7 /* Blur.swift in Sources */,
 				3C70E0AC2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift in Sources */,
 				3C70E0A22EB3E22600C325D9 /* ButtonStyles.swift in Sources */,
 				3C42E6FC2EB365F300D0D58C /* CreateAccountHeader.swift in Sources */,
 				3C42E70B2EB367E100D0D58C /* HomeViewHeader.swift in Sources */,
 				3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */,
+				3C27EB462EBA4E2E00BB39F7 /* FriendListViewModel.swift in Sources */,
 				3C70E0962EB3DE4E00C325D9 /* CalendarView.swift in Sources */,
 				3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */,
 				3C6688222EB6807300DE45E8 /* FirebaseHabitService.swift in Sources */,
+				3C27EB552EBB636100BB39F7 /* SuccessOrError.swift in Sources */,
 				3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */,
-				3C27EA322EB7EBB100BB39F7 /* UserViewModel.swift in Sources */,
 				3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */,
 				3C42E6E22EB2627500D0D58C /* LogInView.swift in Sources */,
 				3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */,
 				3C70E0BC2EB3FFC200C325D9 /* FirebaseAuthService.swift in Sources */,
 				3C70E0A02EB3E20800C325D9 /* AuthError.swift in Sources */,
+				3C27EB522EBB632400BB39F7 /* ValueOrError.swift in Sources */,
 				3C70E0A82EB3E34800C325D9 /* CreateHabitViewTitleTextField.swift in Sources */,
 				3C42E6FA2EB3562400D0D58C /* HomeView.swift in Sources */,
 				3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */,
@@ -781,6 +865,8 @@
 				3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */,
 				3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */,
 				3C42E7112EB36CEB00D0D58C /* CreateHabitView.swift in Sources */,
+				3C27EB382EB8B80700BB39F7 /* FriendsListView.swift in Sources */,
+				3C27EB492EBA515A00BB39F7 /* FriendsServiceProtocol.swift in Sources */,
 				3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */,
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
 				3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */,
@@ -789,6 +875,7 @@
 				3C6687F92EB4EA8A00DE45E8 /* EnvironmentKeys.swift in Sources */,
 				3C42E7002EB3660300D0D58C /* CreateAccountFooter.swift in Sources */,
 				3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */,
+				3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */,
 				3C6688022EB4F5D800DE45E8 /* AuthForm.swift in Sources */,
 				3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */,
 				3C70E09E2EB3E1F600C325D9 /* CompletionState.swift in Sources */,
@@ -796,6 +883,7 @@
 				3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */,
 				3C6687FC2EB4F5A600DE45E8 /* ValidationResult.swift in Sources */,
 				3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */,
+				3C27EB502EBA5A2000BB39F7 /* FriendCellView.swift in Sources */,
 				3C70E0C12EB4027600C325D9 /* UserMapper.swift in Sources */,
 				3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */,
 				3C70E0A62EB3E2C200C325D9 /* HabitViewCell.swift in Sources */,

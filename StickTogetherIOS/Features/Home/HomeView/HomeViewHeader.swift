@@ -10,11 +10,18 @@ import SwiftUI
 extension HomeView {
     var header: some View {
         HStack {
-            Text("\(Date().timeOfDayGreeting),\n\(userVm.currentUser?.name.capitalized ?? "") 👋")
+            Text("\(Date().timeOfDayGreeting),\n\(currentUser.name.capitalized) 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
+            NavigationLink {
+                FriendsListView(fullList: true, friendsVM: friendsVM, currentUser: currentUser)
+            } label: {
+                Image(systemName: "person.3")
+            }
             Button {
-                signOut()
+                confirm(question: "Are you sure you want to sign out?") {
+                    signOut()
+                }
             } label: {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
             }

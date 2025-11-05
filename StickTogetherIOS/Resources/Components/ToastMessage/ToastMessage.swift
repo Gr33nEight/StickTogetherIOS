@@ -34,7 +34,7 @@ enum ToastMessage: Identifiable, Hashable, Equatable {
     var title: String {
         switch self {
         case .failed:
-            return "Error"
+            return "Failure"
         case .warning:
             return "Warning"
         case .info:

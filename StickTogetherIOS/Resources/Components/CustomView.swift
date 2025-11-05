@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CustomView<Content: View, Buttons: View, Icons: View>: View {
     let title: String
+    var dismissIcon: String = "chevron.left"
     @ViewBuilder var content: Content
     @ViewBuilder var buttons: Buttons
     @ViewBuilder var icons: Icons
@@ -17,7 +18,7 @@ struct CustomView<Content: View, Buttons: View, Icons: View>: View {
         VStack {
             HStack {
                 Button(action: { dismiss() }, label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: dismissIcon)
                         .bold()
                 })
                 Spacer()

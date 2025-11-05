@@ -9,6 +9,8 @@ import SwiftUI
 import ElegantEmojiPicker
 
 struct CreateHabitView: View {
+    @ObservedObject var friendsVM: FriendsViewModel
+    
     @State var id: String? = nil
     @State var title = ""
     @State var pickedFrequency: FrequencyType = .daily
@@ -19,6 +21,7 @@ struct CreateHabitView: View {
     @State var reminderTime = Date()
     @State var alone = false
     @State var buddyId: String = ""
+    @State var showFriendsList = false
     @Namespace var frequencyAnimation
     
     @Environment(\.showToastMessage) var showToastMessage
@@ -64,6 +67,10 @@ struct CreateHabitView: View {
             .onAppear {
                 id = UUID().uuidString
             }
+            .fullScreenCover(isPresented: $showFriendsList, content: {
+                FriendsListView(friendsVM: friendsVM, currentUser: currentUser)
+                    .modal()
+            })
     }
 
     private func create() {
