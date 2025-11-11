@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 actor MockAuthService: @preconcurrency AuthServiceProtocol {
+    func signInWithApple(_ result: Result<ASAuthorization, any Error>, nonce: String) async throws -> ValueOrError<User> {
+        return .error("")
+    }
+    
     func addToFriendsList(friendId: String, for userId: String) async throws {
         // add friendId to user's friendsIds (if not present)
         if var user = users[userId] {

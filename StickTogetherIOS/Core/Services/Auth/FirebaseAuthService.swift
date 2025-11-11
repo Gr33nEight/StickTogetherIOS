@@ -5,12 +5,13 @@
 //  Created by Natanael Jop on 30/10/2025.
 //
 
+import AuthenticationServices
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import Firebase
 
-actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {    
+actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -128,5 +129,38 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
             .updateData([
                 "friendsIds": FieldValue.arrayRemove([friendId])
             ])
+    }
+    
+    func signInWithApple(_ result: Result<ASAuthorization, Error>, nonce: String) async throws -> ValueOrError<User> {
+        switch result {
+        case .success(let authorization):
+            guard let appleID = authorization.credential as? ASAuthorizationAppleIDCredential else {
+                return .error("Invalid Apple credential")
+            }
+            
+            guard let idTokenData = appleID.identityToken,
+                  let idTokenString = String(data: idTokenData, encoding: .utf8) else {
+                return .error("Unable to fetch Apple idToken or nonce")
+            }
+            
+            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString,
+                                                           rawNonce: nonce,
+                                                           fullName: appleID.fullName)
+            
+            do {
+                let authResult = try await self.auth.signIn(with: credential)
+                let firebaseUser = authResult.user
+                
+                let user = UserMapper.fromFirebaseUser(firebaseUser)
+                try firestore.collection("users").document(user.id ?? "").setData(from: user)
+                
+                return .value(user)
+            } catch {
+                return .error(error.localizedDescription)
+            }
+            
+        case .failure(_):
+            return .error("Something went wrong with Apple sign in")
+        }
     }
 }

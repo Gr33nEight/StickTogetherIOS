@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 extension CreateAccountView {
     @ViewBuilder
@@ -76,16 +77,16 @@ extension CreateAccountView {
                 .font(.myCaption)
             VStack { Divider() }
         }
-        HStack(spacing: 30) {
-            Button(action: {}, label: {
-                Image(.google)
-            })
-            Button(action: {}, label: {
-                Image(.apple)
-            })
-            Button(action: {}, label: {
-                Image(.facebook)
-            })
-        }
+        SignInWithAppleButton(.signUp) { request in
+            let nonce = Constants.randomNonceString()
+            vm.currentNonce = nonce
+            request.requestedScopes = [.fullName, .email]
+            request.nonce = Constants.sha256(nonce)
+        } onCompletion: { result in
+            Task {
+                await vm.handleAppleSignInResult(result)
+            }
+        }.signInWithAppleButtonStyle(.black)
+            .frame(height: 44)
     }
 }

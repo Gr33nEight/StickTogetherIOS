@@ -43,7 +43,7 @@
 		3C42E70D2EB3680A00D0D58C /* HomeViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E70C2EB3680A00D0D58C /* HomeViewContent.swift */; };
 		3C42E7112EB36CEB00D0D58C /* CreateHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7102EB36CEB00D0D58C /* CreateHabitView.swift */; };
 		3C42E7182EB38C2F00D0D58C /* HabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7172EB38C2F00D0D58C /* HabitView.swift */; };
-		3C42E71A2EB39EE400D0D58C /* Consants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7192EB39EE400D0D58C /* Consants.swift */; };
+		3C42E71A2EB39EE400D0D58C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7192EB39EE400D0D58C /* Constants.swift */; };
 		3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D400C2EB229BC00DD51A5 /* StickTogetherIOSApp.swift */; };
 		3C4D400F2EB229BC00DD51A5 /* AppCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D400E2EB229BC00DD51A5 /* AppCoordinatorView.swift */; };
 		3C4D40112EB229BD00DD51A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D40102EB229BD00DD51A5 /* Assets.xcassets */; };
@@ -161,7 +161,7 @@
 		3C42E70C2EB3680A00D0D58C /* HomeViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewContent.swift; sourceTree = "<group>"; };
 		3C42E7102EB36CEB00D0D58C /* CreateHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitView.swift; sourceTree = "<group>"; };
 		3C42E7172EB38C2F00D0D58C /* HabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitView.swift; sourceTree = "<group>"; };
-		3C42E7192EB39EE400D0D58C /* Consants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consants.swift; sourceTree = "<group>"; };
+		3C42E7192EB39EE400D0D58C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3C4D40092EB229BC00DD51A5 /* StickTogetherIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickTogetherIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D400C2EB229BC00DD51A5 /* StickTogetherIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSApp.swift; sourceTree = "<group>"; };
 		3C4D400E2EB229BC00DD51A5 /* AppCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorView.swift; sourceTree = "<group>"; };
@@ -176,6 +176,7 @@
 		3C5C13842EC3698E00693ED0 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 		3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewAddToCalendar.swift; sourceTree = "<group>"; };
 		3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPicker.swift; sourceTree = "<group>"; };
+		3C5C13AC2EC3C88F00693ED0 /* StickTogetherIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StickTogetherIOS.entitlements; sourceTree = "<group>"; };
 		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
 		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
 		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
@@ -445,6 +446,7 @@
 		3C4D400B2EB229BC00DD51A5 /* StickTogetherIOS */ = {
 			isa = PBXGroup;
 			children = (
+				3C5C13AC2EC3C88F00693ED0 /* StickTogetherIOS.entitlements */,
 				3C70E0AF2EB3FB6000C325D9 /* GoogleService-Info.plist */,
 				3CB5043B2EB24E7C004AF0A9 /* Info.plist */,
 				3CB5041B2EB23168004AF0A9 /* App */,
@@ -596,7 +598,7 @@
 				3CB504382EB24A82004AF0A9 /* Font */,
 				3CB504392EB24ACC004AF0A9 /* CustomFont.swift */,
 				3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */,
-				3C42E7192EB39EE400D0D58C /* Consants.swift */,
+				3C42E7192EB39EE400D0D58C /* Constants.swift */,
 				3C6687F82EB4EA8A00DE45E8 /* EnvironmentKeys.swift */,
 			);
 			path = Resources;
@@ -896,7 +898,7 @@
 				3C70E0A82EB3E34800C325D9 /* CreateHabitViewTitleTextField.swift in Sources */,
 				3C42E6FA2EB3562400D0D58C /* HomeView.swift in Sources */,
 				3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */,
-				3C42E71A2EB39EE400D0D58C /* Consants.swift in Sources */,
+				3C42E71A2EB39EE400D0D58C /* Constants.swift in Sources */,
 				3C6687E62EB4D61D00DE45E8 /* LoadingManager.swift in Sources */,
 				3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */,
 				3C70E0AA2EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift in Sources */,
@@ -1090,6 +1092,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StickTogetherIOS/StickTogetherIOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StickTogetherIOS/Preview Content\"";
@@ -1098,7 +1101,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need access to your calendar to add habits as events";
-				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need access to your calendar to add habits as events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1122,6 +1124,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StickTogetherIOS/StickTogetherIOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StickTogetherIOS/Preview Content\"";
@@ -1130,7 +1133,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need access to your calendar to add habits as events";
-				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need access to your calendar to add habits as events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

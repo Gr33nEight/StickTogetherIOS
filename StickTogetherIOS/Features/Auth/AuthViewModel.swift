@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import AuthenticationServices
+import FirebaseAuth
 
 @MainActor
 class AuthViewModel: ObservableObject {
     @Published var currentUser: User? = nil
     @Published var isAuthenticated: Bool = false
 
+    var currentNonce: String?
+    
     // Injected dependencies
     private var authService: (any AuthServiceProtocol)?
     private var loadingManager: LoadingManager?
@@ -117,6 +121,21 @@ class AuthViewModel: ObservableObject {
            successMessage: "Signed out successfully")
     }
 
+    func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) async {
+        await execute ({
+            guard let s = self.authService,
+                  let currentNonce = self.currentNonce
+            else { return }
+            let result = try await s.signInWithApple(result, nonce: currentNonce)
+            switch result {
+            case .value(let user):
+                self.currentUser = user
+            case .error(let string):
+                print(string)
+            }
+        }, setAuthStateOnSuccess: true, successMessage: "Signed in successfully with Apple")
+    }
+    
     deinit {
         authStateTask?.cancel()
         authStateTask = nil
