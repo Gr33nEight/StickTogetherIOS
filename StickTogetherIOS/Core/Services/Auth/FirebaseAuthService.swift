@@ -10,6 +10,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import Firebase
+import GoogleSignIn
 
 actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
     private let auth = Auth.auth()
@@ -62,6 +63,7 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
     }
     
     func signOut() async throws {
+        GIDSignIn.sharedInstance.signOut()
         try auth.signOut()
     }
     
@@ -162,5 +164,27 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
         case .failure(_):
             return .error("Something went wrong with Apple sign in")
         }
+    }
+    
+    func signInWithGoogle() async throws -> ValueOrError<User> {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return .error("Missing Google client ID") }
+        
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+        
+        let scene = await UIApplication.shared.connectedScenes.first as? UIWindowScene
+        guard let rootViewControler = await scene?.windows.first?.rootViewController else { return .error("Unable to get root view controller") }
+        
+        let authResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewControler)
+        let googleUser = authResult.user
+        guard let idToken = googleUser.idToken?.tokenString else { return .error("Unable to get idToken") }
+        
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: googleUser.accessToken.tokenString)
+        
+        let result = try await auth.signIn(with: credential)
+        let user = UserMapper.fromFirebaseUser(result.user)
+        try firestore.collection("users").document(user.id ?? "").setData(from: user)
+        
+        return .value(user)
     }
 }

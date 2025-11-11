@@ -55,6 +55,10 @@
 		3C5C13852EC3698E00693ED0 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13842EC3698E00693ED0 /* CalendarManager.swift */; };
 		3C5C138A2EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */; };
 		3C5C138E2EC3ABE400693ED0 /* IconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */; };
+		3C5C13B22EC3D72600693ED0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 3C5C13B12EC3D72600693ED0 /* GoogleSignIn */; };
+		3C5C13B42EC3D72600693ED0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3C5C13B32EC3D72600693ED0 /* GoogleSignInSwift */; };
+		3C5C13B62EC3DB0F00693ED0 /* GoogleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13B52EC3DB0F00693ED0 /* GoogleButton.swift */; };
+		3C5C13B82EC3DF6A00693ED0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C5C13B72EC3DF6A00693ED0 /* GoogleService-Info.plist */; };
 		3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6159102EB79EEF00F9B65A /* ConfirmView.swift */; };
 		3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */; };
 		3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */; };
@@ -90,7 +94,6 @@
 		3C70E0AA2EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0A92EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift */; };
 		3C70E0AC2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0AB2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift */; };
 		3C70E0AE2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0AD2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift */; };
-		3C70E0B02EB3FB6000C325D9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C70E0AF2EB3FB6000C325D9 /* GoogleService-Info.plist */; };
 		3C70E0B42EB3FE3D00C325D9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C70E0B32EB3FE3D00C325D9 /* FirebaseAnalytics */; };
 		3C70E0B62EB3FE3D00C325D9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C70E0B52EB3FE3D00C325D9 /* FirebaseAuth */; };
 		3C70E0B82EB3FE3D00C325D9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3C70E0B72EB3FE3D00C325D9 /* FirebaseFirestore */; };
@@ -177,6 +180,8 @@
 		3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewAddToCalendar.swift; sourceTree = "<group>"; };
 		3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPicker.swift; sourceTree = "<group>"; };
 		3C5C13AC2EC3C88F00693ED0 /* StickTogetherIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StickTogetherIOS.entitlements; sourceTree = "<group>"; };
+		3C5C13B52EC3DB0F00693ED0 /* GoogleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleButton.swift; sourceTree = "<group>"; };
+		3C5C13B72EC3DF6A00693ED0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
 		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
 		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
@@ -212,7 +217,6 @@
 		3C70E0A92EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewFrequencySelection.swift; sourceTree = "<group>"; };
 		3C70E0AB2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewReminderView.swift; sourceTree = "<group>"; };
 		3C70E0AD2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewInviteFriend.swift; sourceTree = "<group>"; };
-		3C70E0AF2EB3FB6000C325D9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3C70E0BB2EB3FFC200C325D9 /* FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = "<group>"; };
 		3C70E0C02EB4027600C325D9 /* UserMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMapper.swift; sourceTree = "<group>"; };
 		3CB5041E2EB231DB004AF0A9 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
@@ -240,9 +244,11 @@
 			files = (
 				3C70E0BA2EB3FE3D00C325D9 /* FirebaseMessaging in Frameworks */,
 				3C6688322EB7499F00DE45E8 /* ElegantEmojiPicker in Frameworks */,
+				3C5C13B42EC3D72600693ED0 /* GoogleSignInSwift in Frameworks */,
 				3C70E0B42EB3FE3D00C325D9 /* FirebaseAnalytics in Frameworks */,
 				3C70E0B62EB3FE3D00C325D9 /* FirebaseAuth in Frameworks */,
 				3C70E0B82EB3FE3D00C325D9 /* FirebaseFirestore in Frameworks */,
+				3C5C13B22EC3D72600693ED0 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				3C5C13AC2EC3C88F00693ED0 /* StickTogetherIOS.entitlements */,
-				3C70E0AF2EB3FB6000C325D9 /* GoogleService-Info.plist */,
+				3C5C13B72EC3DF6A00693ED0 /* GoogleService-Info.plist */,
 				3CB5043B2EB24E7C004AF0A9 /* Info.plist */,
 				3CB5041B2EB23168004AF0A9 /* App */,
 				3CB5041A2EB23164004AF0A9 /* Core */,
@@ -640,6 +646,7 @@
 		3CB5041C2EB23193004AF0A9 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				3C5C13B52EC3DB0F00693ED0 /* GoogleButton.swift */,
 				3C42E6F22EB2984B00D0D58C /* CreateAccountView */,
 				3C42E6E02EB2626700D0D58C /* LogInView */,
 				3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */,
@@ -725,6 +732,8 @@
 				3C70E0B72EB3FE3D00C325D9 /* FirebaseFirestore */,
 				3C70E0B92EB3FE3D00C325D9 /* FirebaseMessaging */,
 				3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */,
+				3C5C13B12EC3D72600693ED0 /* GoogleSignIn */,
+				3C5C13B32EC3D72600693ED0 /* GoogleSignInSwift */,
 			);
 			productName = StickTogetherIOS;
 			productReference = 3C4D40092EB229BC00DD51A5 /* StickTogetherIOS.app */;
@@ -801,6 +810,7 @@
 			packageReferences = (
 				3C70E0B22EB3FE3D00C325D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */,
+				3C5C13B02EC3D72600693ED0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 3C4D400A2EB229BC00DD51A5 /* Products */;
 			projectDirPath = "";
@@ -820,7 +830,7 @@
 			files = (
 				3C4D40142EB229BD00DD51A5 /* Preview Assets.xcassets in Resources */,
 				3C4D40112EB229BD00DD51A5 /* Assets.xcassets in Resources */,
-				3C70E0B02EB3FB6000C325D9 /* GoogleService-Info.plist in Resources */,
+				3C5C13B82EC3DF6A00693ED0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +859,7 @@
 				3C42E6F42EB2986D00D0D58C /* LoginViewHeader.swift in Sources */,
 				3C27EB442EBA4E1A00BB39F7 /* InviteFriendModal.swift in Sources */,
 				3C42E6F62EB2987A00D0D58C /* LoginViewContent.swift in Sources */,
+				3C5C13B62EC3DB0F00693ED0 /* GoogleButton.swift in Sources */,
 				3C42E6F82EB2988200D0D58C /* LoginViewFooter.swift in Sources */,
 				3C27EB402EB9237E00BB39F7 /* ScreenOverlay.swift in Sources */,
 				3C27EB3C2EB9234100BB39F7 /* ModalViewModifier.swift in Sources */,
@@ -1269,6 +1280,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3C5C13B02EC3D72600693ED0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Finalet/Elegant-Emoji-Picker";
@@ -1288,6 +1307,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3C5C13B12EC3D72600693ED0 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C5C13B02EC3D72600693ED0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		3C5C13B32EC3D72600693ED0 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C5C13B02EC3D72600693ED0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */;

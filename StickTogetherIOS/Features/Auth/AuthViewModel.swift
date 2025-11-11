@@ -4,6 +4,7 @@
 //
 //  Created by Natanael Jop on 29/10/2025.
 //
+// TODO: Somewhere far away I need to handle what happens when user is using providerr to signup and user used that email somewhere
 
 import SwiftUI
 import AuthenticationServices
@@ -71,8 +72,8 @@ class AuthViewModel: ObservableObject {
         if let loader = loadingManager {
             do {
                 try await loader.run { try await operation() }
-                if let success = setAuthStateOnSuccess { isAuthenticated = success }
-                if let message = successMessage { print(message) }
+//                if let success = setAuthStateOnSuccess { isAuthenticated = success }
+//                if let message = successMessage { print(message) }
             } catch {
                 showToastMessage(.failed(error.localizedDescription))
                 if setAuthStateOnSuccess != nil { isAuthenticated = false }
@@ -82,8 +83,8 @@ class AuthViewModel: ObservableObject {
 
         do {
             try await operation()
-            if let success = setAuthStateOnSuccess { isAuthenticated = success }
-            if let message = successMessage { showToastMessage(.succes(message)) }
+//            if let success = setAuthStateOnSuccess { isAuthenticated = success }
+//            if let message = successMessage { showToastMessage(.succes(message)) }
         } catch {
             showToastMessage(.failed(error.localizedDescription))
             if setAuthStateOnSuccess != nil { isAuthenticated = false }
@@ -134,6 +135,20 @@ class AuthViewModel: ObservableObject {
                 print(string)
             }
         }, setAuthStateOnSuccess: true, successMessage: "Signed in successfully with Apple")
+    }
+    
+    func handleGoogleSignInResult() async {
+        await execute ({
+            guard let s = self.authService else { return }
+            let result = try await s.signInWithGoogle()
+            switch result {
+            case .value(let user):
+                self.currentUser = user
+                self.isAuthenticated = true
+            case .error(let string):
+                print(string)
+            }
+        }, setAuthStateOnSuccess: true, successMessage: "Signed in successfully with Google")
     }
     
     deinit {

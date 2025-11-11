@@ -77,16 +77,24 @@ extension CreateAccountView {
                 .font(.myCaption)
             VStack { Divider() }
         }
-        SignInWithAppleButton(.signUp) { request in
-            let nonce = Constants.randomNonceString()
-            vm.currentNonce = nonce
-            request.requestedScopes = [.fullName, .email]
-            request.nonce = Constants.sha256(nonce)
-        } onCompletion: { result in
-            Task {
-                await vm.handleAppleSignInResult(result)
+        VStack {
+            SignInWithAppleButton(.signUp) { request in
+                let nonce = Constants.randomNonceString()
+                vm.currentNonce = nonce
+                request.requestedScopes = [.fullName, .email]
+                request.nonce = Constants.sha256(nonce)
+            } onCompletion: { result in
+                Task {
+                    await vm.handleAppleSignInResult(result)
+                }
+            }.signInWithAppleButtonStyle(.black)
+                .frame(height: 44)
+            
+            GoogleSignInButton(title: "Sign up with Google", style: .filled) {
+                Task {
+                    await vm.handleGoogleSignInResult()
+                }
             }
-        }.signInWithAppleButtonStyle(.black)
-            .frame(height: 44)
+        }
     }
 }

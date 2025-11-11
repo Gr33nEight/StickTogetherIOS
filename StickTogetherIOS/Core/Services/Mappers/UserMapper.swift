@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import GoogleSignIn
 
 enum UserMapper {
     static func fromFirebaseUser(_ fu: FirebaseAuth.User) -> User {

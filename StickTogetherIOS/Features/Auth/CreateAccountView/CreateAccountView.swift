@@ -23,7 +23,8 @@ struct CreateAccountView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(spacing: 38) {
+        VStack(spacing: 30) {
+            Spacer()
             header
             Divider()
             content

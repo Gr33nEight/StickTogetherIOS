@@ -17,7 +17,8 @@ struct LogInView: View {
     @State var passwordError: String?
     
     var body: some View {
-        VStack(spacing: 50) {
+        VStack(spacing: 40) {
+            Spacer()
             header
             Divider()
             content

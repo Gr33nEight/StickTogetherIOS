@@ -10,7 +10,6 @@ import SwiftUI
 extension CreateAccountView {
     var header: some View {
         VStack(spacing: 20) {
-            Spacer()
             Text("Welcome Back")
                 .font(.customAppFont(size: 34, weight: .bold))
             Text("Login to you account with\nEmail and Password")

@@ -9,6 +9,11 @@ import SwiftUI
 import AuthenticationServices
 
 actor MockAuthService: @preconcurrency AuthServiceProtocol {
+    
+    func signInWithGoogle() async throws -> ValueOrError<User> {
+        return .error("")
+    }
+    
     func signInWithApple(_ result: Result<ASAuthorization, any Error>, nonce: String) async throws -> ValueOrError<User> {
         return .error("")
     }

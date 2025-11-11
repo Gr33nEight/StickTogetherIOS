@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
+import GoogleSignIn
 
 @main
 struct StickTogetherIOSApp: App {
@@ -29,6 +30,9 @@ struct StickTogetherIOSApp: App {
                 .environmentObject(diContainer)
                 .environmentObject(loading)
                 .preferredColorScheme(.dark)
+                .onOpenURL { url in
+                    GIDSignIn.sharedInstance.handle(url)
+                }
         }
     }
 }
