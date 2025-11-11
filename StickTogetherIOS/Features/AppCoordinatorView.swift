@@ -17,7 +17,8 @@ struct AppCoordinatorView: View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
-                    if let currentUser = authVM.currentUser {
+                    if let currentUser = authVM.currentUser,
+                       let _ = currentUser.id {
                         HomeView(
                             signOut: { Task { await authVM.signOut() } },
                             currentUser: currentUser,

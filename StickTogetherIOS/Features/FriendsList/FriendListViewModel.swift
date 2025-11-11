@@ -29,17 +29,16 @@ class FriendsViewModel: ObservableObject {
     
     // Add these properties near the top of FriendsViewModel:
     private var userDocListener: ListenerRegistration?
-    private var userDocRef: DocumentReference? {
-        // non-optional: uses Firestore directly. We fetch the current user id when starting the listener.
-        return firestore.collection("users").document("") // placeholder — not used directly
-    }
+    private var currentUser: User
     
     init(authService: any AuthServiceProtocol,
          friendsService: FriendsServiceProtocol,
-         loading: LoadingManager? = nil) {
+         loading: LoadingManager? = nil,
+         currentUser: User) {
         self.friendsService = friendsService
         self.authService = authService
         self.loadingManager = loading
+        self.currentUser = currentUser
     }
     
     deinit {
@@ -51,10 +50,8 @@ class FriendsViewModel: ObservableObject {
     // MARK: - Listeners
     func startInvitationListeners() async {
         stopInvitationListeners()
-        guard let currentUserId = await authService.currentUser()?.id else { return }
-
         receivedListener = firestore.collection("invitations")
-            .whereField("receiverId", isEqualTo: currentUserId)
+            .whereField("receiverId", isEqualTo: currentUser.safeID)
             .addSnapshotListener { [weak self] snapshot, _ in
                 guard let snapshot = snapshot else { return }
                 let invitations: [Invitation] = snapshot.documents.compactMap { try? $0.data(as: Invitation.self) }
@@ -68,7 +65,7 @@ class FriendsViewModel: ObservableObject {
             }
 
         sentListener = firestore.collection("invitations")
-            .whereField("senderId", isEqualTo: currentUserId)
+            .whereField("senderId", isEqualTo: currentUser.safeID)
             .addSnapshotListener { [weak self] snapshot, _ in
                 guard let snapshot = snapshot else { return }
                 let invitations: [Invitation] = snapshot.documents.compactMap { try? $0.data(as: Invitation.self) }
@@ -120,9 +117,7 @@ class FriendsViewModel: ObservableObject {
     func startFriendsListener() async {
         // stop existing to avoid duplicates
         stopFriendsListener()
-        guard let currentUserId = await authService.currentUser()?.id else { return }
-
-        userDocListener = firestore.collection("users").document(currentUserId)
+        userDocListener = firestore.collection("users").document(currentUser.safeID)
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self, let snapshot = snapshot, snapshot.exists else { return }
 
@@ -187,7 +182,7 @@ class FriendsViewModel: ObservableObject {
     
     private func fetchFriendByEmail(_ email: String) async -> User? {
         do {
-            return try await authService.getUserByEmail(email)
+            return try await authService.getUserByEmail(email.lowercased())
         } catch {
             print("Failed to load friend: \(error)")
             return nil
@@ -195,7 +190,7 @@ class FriendsViewModel: ObservableObject {
     }
     
     func sendInvitation(to userEmail: String) async -> SuccessOrError {
-        guard let senderUserId = await authService.currentUser()?.id else { return .error("Couldn't get current user") }
+        let senderUserId = currentUser.safeID
         guard let receiverUserId = await self.fetchFriendByEmail(userEmail)?.id else {
             return .error("Couldn't find user with this email.")
         }
@@ -292,15 +287,12 @@ class FriendsViewModel: ObservableObject {
     }
     
     private func fetchReceivedInvitation(useLoader: Bool = false) async -> SuccessOrError {
-        guard let currentUserId = await authService.currentUser()?.id else {
-            return .error("Couldn't get current user")
-        }
         do {
             if useLoader, let loader = loadingManager {
-                invitationReceived = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: currentUserId, sent: false) }
+                invitationReceived = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: self.currentUser.safeID, sent: false) }
                 return .success
             } else {
-                invitationReceived = try await self.friendsService.fetchAllUsersInvitation(for: currentUserId, sent: false)
+                invitationReceived = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: false)
                 return .success
             }
         } catch {
@@ -309,15 +301,12 @@ class FriendsViewModel: ObservableObject {
     }
     
     private func fetchSentInvitation(useLoader: Bool = false) async -> SuccessOrError {
-        guard let currentUserId = await authService.currentUser()?.id else {
-            return .error("Couldn't get current user")
-        }
         do {
             if useLoader, let loader = loadingManager {
-                invitationSent = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: currentUserId, sent: true) }
+                invitationSent = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: self.currentUser.safeID, sent: true) }
                 return .success
             } else {
-                invitationSent = try await self.friendsService.fetchAllUsersInvitation(for: currentUserId, sent: true)
+                invitationSent = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: true)
                 return .success
             }
         } catch {
@@ -327,15 +316,12 @@ class FriendsViewModel: ObservableObject {
     
     
     func acceptInvitation(invitation: Invitation) async -> SuccessOrError {
-        guard let currentUserId = await authService.currentUser()?.id else {
-            return .error("Couldn't get current user")
-        }
         guard let invitationId = invitation.id else {
             return .error("Couldn't get invitation id")
         }
         do {
-            try await self.authService.addToFriendsList(friendId: invitation.senderId, for: currentUserId)
-            try await self.authService.addToFriendsList(friendId: currentUserId, for: invitation.senderId)
+            try await self.authService.addToFriendsList(friendId: invitation.senderId, for: currentUser.safeID)
+            try await self.authService.addToFriendsList(friendId: currentUser.safeID, for: invitation.senderId)
             try await self.friendsService.deleteInvitation(byId: invitationId)
             return .success
         } catch {
@@ -362,12 +348,9 @@ class FriendsViewModel: ObservableObject {
     }
     
     func removeFromFriendsList(userId: String) async -> SuccessOrError {
-        guard let currentUserId = await authService.currentUser()?.id else {
-            return .error("Couldn't get current user")
-        }
         do {
-            try await self.authService.removeFromFriendsList(friendId: userId, for: currentUserId)
-            try await self.authService.removeFromFriendsList(friendId: currentUserId, for: userId)
+            try await self.authService.removeFromFriendsList(friendId: userId, for: currentUser.safeID)
+            try await self.authService.removeFromFriendsList(friendId: currentUser.safeID, for: userId)
             return .success
         } catch {
             return .error("Couldn't remove from friends list: \(error)")

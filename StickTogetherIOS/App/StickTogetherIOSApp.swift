@@ -17,6 +17,12 @@ struct StickTogetherIOSApp: App {
     
     init() {
         FirebaseApp.configure()
+        NotificationManager.shared.configure()
+        Task {
+            NotificationManager.shared.requestAuthorization { granted in
+                print("Notification allowed:", granted)
+            }
+        }
     }
     
     var body: some Scene {

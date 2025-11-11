@@ -19,8 +19,7 @@ struct Habit: Identifiable, Codable {
     var reminderTime: Date? = nil
     var alone: Bool = false
     var createdAt: Date = Date()
-
-    var completion: [String: CompletionState] = [:]
+    var completion: [String: [String]]
 
     init(id: String? = nil,
          title: String,
@@ -32,7 +31,7 @@ struct Habit: Identifiable, Codable {
          reminderTime: Date? = nil,
          alone: Bool = false,
          createdAt: Date = Date(),
-         completion: [String: CompletionState] = [:]) {
+         completion: [String: [String]] = [:]) {
         self.id = id
         self.title = title
         self.icon = icon

@@ -11,10 +11,13 @@ struct HabitCell: View {
     let habit: Habit
     let updateCompletion: () -> Void
     let selectedDate: Date
+    let currentUserId: String?
     
     var state: CompletionState {
-        guard let s = habit.completion[Habit.dayKey(for: selectedDate)] else { return .neither }
-        return s
+        guard let currentUserId = currentUserId else {
+            return .neither
+        }
+        return habit.completionState(on: selectedDate, currentUserId: currentUserId, buddyId: nil)
     }
     
     var body: some View {
@@ -36,29 +39,32 @@ struct HabitCell: View {
                     .foregroundStyle(Color.custom.primary)
             }.multilineTextAlignment(.leading)
             Spacer()
-            Button {
-                updateCompletion()
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-            } label: {
-                ZStack{
-                    Circle()
-                        .fill(Color.custom.lightGrey)
-                    
-                    ZStack {
-                        if state == .both || state == .me {
-                            Image(systemName: "checkmark")
-                                .font(.mySubtitle)
-                                .foregroundStyle(Color.custom.primary)
-                        }else{
+            ZStack {
+                if Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
+                    Button {
+                        updateCompletion()
+                        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                    } label: {
+                        ZStack{
                             Circle()
-                                .stroke(lineWidth: 1.2)
-                                .fill(Color.custom.text)
+                                .fill(Color.custom.lightGrey)
+                            
+                            ZStack {
+                                if state == .both || state == .me {
+                                    Image(systemName: "checkmark")
+                                        .font(.mySubtitle)
+                                        .foregroundStyle(Color.custom.primary)
+                                }else{
+                                    Circle()
+                                        .stroke(lineWidth: 1.2)
+                                        .fill(Color.custom.text)
+                                }
+                            }.padding(15)
                         }
-                    }.padding(15)
-                }.frame(height: 50)
-                    .padding(.vertical)
-            }
-
+                    }
+                }
+            }.frame(height: 50)
+            .padding(.vertical)
         }.padding(.horizontal)
         .background(
             RoundedRectangle(cornerRadius: 10)

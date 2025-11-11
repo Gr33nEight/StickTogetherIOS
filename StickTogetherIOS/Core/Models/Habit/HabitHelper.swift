@@ -9,40 +9,82 @@ import Foundation
 
 extension Habit {
     static func dayKey(for date: Date, calendar: Calendar = .current) -> String {
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
-        let y = components.year!, m = components.month!, d = components.day!
-        return String(format: "%04d-%02d-%02d", y, m, d)
+        let comps = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let d = calendar.date(from: comps) else { return ISO8601DateFormatter().string(from: date) }
+        let fmt = DateFormatter()
+        fmt.timeZone = calendar.timeZone
+        fmt.dateFormat = "yyyy-MM-dd"
+        return fmt.string(from: d)
     }
-    
-    func completionState(on date: Date, calendar: Calendar = .current) -> CompletionState {
-        let key = Habit.dayKey(for: date, calendar: calendar)
-        return completion[key] ?? .neither
+
+    func completionState(on date: Date, currentUserId: String, buddyId: String?) -> CompletionState {
+        let key = Habit.dayKey(for: date)
+        let users = completion[key] ?? []
+
+        let meDid = users.contains(currentUserId)
+        
+        guard let buddyId else { return meDid ? .both : .neither }
+        let buddyDid = users.contains(buddyId)
+        
+        print(currentUserId, " current user")
+        print(buddyId, " buddy")
+        
+        print(meDid, " me did")
+        print(buddyDid, " buddy did")
+
+        switch (meDid, buddyDid) {
+        case (true, true): return .both
+        case (true, false): return .me
+        case (false, true): return .buddy
+        default: return .neither
+        }
     }
-    
+
+    mutating func markCompleted(by userId: String, on date: Date) {
+        let key = Habit.dayKey(for: date)
+        var list = completion[key] ?? []
+        if !list.contains(userId) {
+            list.append(userId)
+            completion[key] = list
+        }
+    }
+
+    mutating func unmarkCompleted(by userId: String, on date: Date) {
+        let key = Habit.dayKey(for: date)
+        guard var list = completion[key] else { return }
+        list.removeAll { $0 == userId }
+        if list.isEmpty {
+            completion.removeValue(forKey: key)
+        } else {
+            completion[key] = list
+        }
+    }
+
     func totalCompleted() -> Int {
-        completion.values.filter { $0 == .both }.count
+        //TODO: $0.count == 2 zmieni się jak będzie można mieć więcej niż 1 buddiego!
+        completion.values.filter { $0.count == 2 }.count
     }
     
-    func streak(endingAt endDate: Date = Date(), calendar: Calendar = .current) -> Int {
+    func streak(referenceDate: Date = Date(), calendar: Calendar = .current) -> Int {
         var streak = 0
-        var cursor = calendar.startOfDay(for: endDate)
-        
-        guard cursor >= calendar.startOfDay(for: startDate) else { return 0 }
-        
-        while cursor >= calendar.startOfDay(for: startDate) {
-            if frequency.occurs(on: cursor, startDate: startDate, calendar: calendar) {
-                let state = completionState(on: cursor, calendar: calendar)
-                if state != .both {
-                    break
-                } else {
-                    streak += 1
-                }
+        var cursor = calendar.startOfDay(for: referenceDate)
+        while true {
+            let key = Habit.dayKey(for: cursor, calendar: calendar)
+            //TODO: list.count == 2 zmieni się jak będzie można mieć więcej niż 1 buddiego!
+            if let list = completion[key], list.count == 2 {
+                streak += 1
+                guard let prev = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+                cursor = prev
+            } else {
+                break
             }
-            
-            guard let prev = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
-            cursor = prev
         }
         return streak
+    }
+    
+    func isMarkedAsDone(by userId: String, on date: Date) -> Bool {
+        let key = Habit.dayKey(for: date)
+        return completion[key]?.contains(userId) == true
     }
     
     func isScheduled(on date: Date, calendar: Calendar = .current) -> Bool {

@@ -17,7 +17,7 @@ enum CompletionState: Int, Codable, CaseIterable {
         case .me:
             "You did it, buddy not yet"
         case .buddy:
-            "Buddy did it and wait for you"
+            "Buddy did it and waits for you"
         case .neither:
             "Neither of you checked in yet"
         }

@@ -20,7 +20,7 @@ struct CreateHabitView: View {
     @State var setReminder = false
     @State var reminderTime = Date()
     @State var alone = false
-    @State var buddyId: String = ""
+    @State var buddy: User? = nil
     @State var showFriendsList = false
     @Namespace var frequencyAnimation
     
@@ -36,7 +36,7 @@ struct CreateHabitView: View {
     var body: some View {
         GeometryReader { _ in
             CustomView(title: "Create Habit") {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         titleTextField
                         frequencySelection
@@ -68,8 +68,9 @@ struct CreateHabitView: View {
                 id = UUID().uuidString
             }
             .fullScreenCover(isPresented: $showFriendsList, content: {
-                FriendsListView(friendsVM: friendsVM, currentUser: currentUser)
-                    .modal()
+                FriendsListView(friendsVM: friendsVM, currentUser: currentUser) { buddy in
+                    self.buddy = buddy
+                }.modal()
             })
     }
 
@@ -97,12 +98,12 @@ struct CreateHabitView: View {
             title: title,
             icon: icon,
             ownerId: userId,
-            buddyId: alone ? nil : buddyId,
+            buddyId: buddy?.id,
             frequency: habitFrequency,
             startDate: startDate,
             reminderTime: setReminder ? reminderTime : nil,
             alone: alone,
-            completion: [initialKey: .neither]
+            completion: [initialKey: []]
         )
 
         createHabit(habit)

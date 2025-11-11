@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CalendarView: View {
+    let wasDone: (Date) -> Bool
+    let startDate: Date
+    
     @State private var currentMonth = Date.now
     @State private var days: [Date] = []
     
@@ -54,7 +57,7 @@ struct CalendarView: View {
                         .frame(maxWidth: .infinity, minHeight: 40)
                         .background(
                             Circle()
-                                .foregroundStyle(.clear)
+                                .foregroundStyle(Calendar.current.startOfDay(for: Date()) == day ? Color.custom.primary : wasDone(day) ? Color.custom.secondary : .clear)
                         )
                         .disabled(day < Date.now.startOfDay || day.monthInt != currentMonth.monthInt)
                 }
@@ -71,15 +74,27 @@ struct CalendarView: View {
     }
     
     private func foregroundStyle(for day: Date) -> Color {
+        let isToday = Calendar.current.isDateInToday(day)
         let isDifferentMonth = day.monthInt != currentMonth.monthInt
-        let isPastDate = day < Date.now.startOfDay
-        
-        if isDifferentMonth {
-            return Color(.systemGray)
-        } else if isPastDate {
+        let isPast = day < Date.now.startOfDay
+        let isOlderThanHabit = day < startDate
+
+        if isToday {
             return Color.custom.text
-        } else {
+        }
+
+        if wasDone(day) {
+            return Color.custom.grey
+        }
+
+        if isDifferentMonth || isOlderThanHabit {
             return Color(.systemGray)
         }
+
+        if isPast {
+            return Color.custom.text
+        }
+
+        return Color(.systemGray)
     }
 }

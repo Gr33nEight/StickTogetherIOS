@@ -28,9 +28,7 @@ extension HomeView {
             }
         }.padding(.horizontal, 20)
         .foregroundColor(.custom.text)
-
-        let visible = habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
-
+        
         ZStack(alignment: .bottom) {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
@@ -41,7 +39,7 @@ extension HomeView {
                             .padding(.top, UIScreen.main.bounds.width / 3)
                     } else {
                         ForEach(CompletionState.allCases, id: \.self) { state in
-                            HabitListSection(visible: visible, state: state, selectedDate: selectedDate) { habit in
+                            HabitListSection(habitVM: habitVM, visible: visible, state: state, selectedDate: selectedDate, currentUserId: currentUser.safeID, friends: friendsVM.friends) { habit in
                                 Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
                             }
                         }
@@ -52,7 +50,6 @@ extension HomeView {
                 .padding(.bottom, 80)
             }
             if !Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
-//                Color.black.opacity(0.3)
                 Button {
                     selectedDate = Date()
                     pageIndex = centerPage

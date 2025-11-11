@@ -20,6 +20,10 @@ struct HomeView: View {
     let signOut: () -> Void
     let currentUser: User
 
+    var visible: [Habit] {
+        habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
+    }
+    
     init(signOut: @escaping () -> Void,
          currentUser: User,
          habitService: HabitServiceProtocol,
@@ -28,12 +32,12 @@ struct HomeView: View {
          loading: LoadingManager? = nil) {
 
         let habitVM = HabitViewModel(service: habitService,
-                                     authService: authService,
-                                     loading: loading)
+                                     loading: loading,
+                                     currentUser: currentUser)
         _habitVM = StateObject(wrappedValue: habitVM)
         
         let friendsVM = FriendsViewModel(authService: authService, friendsService: friendsService,
-                                     loading: loading)
+                                         loading: loading, currentUser: currentUser)
         _friendsVM = StateObject(wrappedValue: friendsVM)
 
         self.signOut = signOut
@@ -50,7 +54,8 @@ struct HomeView: View {
         .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
         .task {
-            await habitVM.loadUserHabits()
+            await habitVM.startListening()
+            await friendsVM.startFriendsListener()
         }
     }
 }

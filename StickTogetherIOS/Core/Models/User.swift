@@ -15,3 +15,9 @@ struct User: Codable, Identifiable {
     var email: String
     var friendsIds: [String] = []
 }
+
+extension User {
+    var safeID: String {
+        id ?? "UNKNOWN_USER_ID"
+    }
+}

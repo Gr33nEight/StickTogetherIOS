@@ -45,34 +45,83 @@ actor FirebaseHabitService: @preconcurrency HabitServiceProtocol {
     }
 
     func fetchAllHabits(for userId: String) async throws -> [Habit] {
-        let snapshot = try await db.collection(collection)
+        async let ownedSnap = db.collection(collection)
             .whereField("ownerId", isEqualTo: userId)
             .getDocuments()
-        return snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
+        async let buddySnap = db.collection(collection)
+            .whereField("buddyId", isEqualTo: userId)
+            .getDocuments()
+
+        let (owned, buddy) = try await (ownedSnap, buddySnap)
+
+        let allDocs = owned.documents + buddy.documents
+        var seen = Set<String>()
+        var result: [Habit] = []
+
+        for doc in allDocs {
+            if let id = doc.documentID as String?,
+               !seen.contains(id),
+               let habit = try? doc.data(as: Habit.self) {
+                seen.insert(id)
+                result.append(habit)
+            }
+        }
+
+        return result
     }
 
     func listenToHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
-        let listener = db.collection(collection)
+        var latestOwned: [Habit] = []
+        var latestBuddy: [Habit] = []
+
+        func mergeAndSend() {
+            var map: [String: Habit] = [:]
+            for h in latestOwned { if let id = h.id { map[id] = h } }
+            for h in latestBuddy { if let id = h.id { map[id] = h } }
+            update(Array(map.values))
+        }
+
+        let ownedListener = db.collection(collection)
             .whereField("ownerId", isEqualTo: userId)
-            .addSnapshotListener { snapshot, error in
-                guard let snapshot else { return }
-                let habits = snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
-                update(habits)
+            .addSnapshotListener { snapshot, _ in
+                guard let snapshot = snapshot else { return }
+                latestOwned = snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
+                mergeAndSend()
             }
-        let token = FirestoreListenerToken(listener: listener)
+
+        let buddyListener = db.collection(collection)
+            .whereField("buddyId", isEqualTo: userId)
+            .addSnapshotListener { snapshot, _ in
+                guard let snapshot = snapshot else { return }
+                latestBuddy = snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
+                mergeAndSend()
+            }
+
+        let token = CombinedListenerToken(listeners: [ownedListener, buddyListener])
         listeners.append(token)
         return token
     }
 
-    func updatedCompletionState(for habitId: String, date: Date, state: CompletionState) async throws {
+    func updatedCompletionState(for habitId: String, date: Date, userId: String, markCompleted: Bool) async throws {
         let key = "completion.\(Habit.dayKey(for: date))"
-        try await db.collection(collection)
-            .document(habitId)
-            .updateData([key: state.rawValue])
+        if markCompleted {
+            try await db.collection(collection).document(habitId)
+                .updateData([ key : FieldValue.arrayUnion([userId]) ])
+        } else {
+            try await db.collection(collection).document(habitId)
+                .updateData([ key : FieldValue.arrayRemove([userId]) ])
+        }
     }
 }
 
 private struct FirestoreListenerToken: ListenerToken {
     let listener: ListenerRegistration
     func remove() { listener.remove() }
+}
+
+private struct CombinedListenerToken: ListenerToken {
+    let listeners: [ListenerRegistration]
+    func remove() {
+        for l in listeners { l.remove() }
+    }
 }

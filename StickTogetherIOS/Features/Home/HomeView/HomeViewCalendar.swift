@@ -41,23 +41,24 @@ extension HomeView {
             TabView(selection: $pageIndex) {
                 ForEach(pagesRange, id: \.self) { idx in
                     let weekOffset = idx - centerPage
-                    // compute anchor date for this page (shift by weeks from the baseSelectedDate)
+                    
                     let anchor = Calendar.current.date(byAdding: .weekOfYear, value: weekOffset, to: baseWeekAnchor) ?? baseWeekAnchor
                     
-                    HStack(spacing: 0) {
+                    HStack(spacing: 10) {
                         ForEach(weekDates(around: anchor), id: \.self) { date in
-                            DayCell(date: date, isSelected: Calendar.current.isDate(date, inSameDayAs: selectedDate))
+                            let isSelected = Calendar.current.isDate(date, inSameDayAs: selectedDate)
+                            
+                            DayCell(date: date, isSelected: isSelected, wasDone: habitVM.wasDone(on: date))
                                 .onTapGesture {
                                     selectedDate = date
                                 }
                         }
                     }
-                    .padding()
+                    .padding(.vertical)
                     .tag(idx)
-                }.padding(.horizontal, 20)
-            }
+                }.padding(.horizontal)
+            }.frame(height: 68)
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .frame(height: 62)
             .onChange(of: pageIndex) { _, new in
                 // when page changes, compute the week's dates (for the new page)
                 let weekOffset = new - centerPage

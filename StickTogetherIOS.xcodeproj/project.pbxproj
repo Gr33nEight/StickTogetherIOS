@@ -51,6 +51,7 @@
 		3C4D401E2EB229BD00DD51A5 /* StickTogetherIOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D401D2EB229BD00DD51A5 /* StickTogetherIOSTests.swift */; };
 		3C4D40282EB229BD00DD51A5 /* StickTogetherIOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */; };
 		3C4D402A2EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */; };
+		3C5C13822EC342B200693ED0 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13812EC342B200693ED0 /* NotificationManager.swift */; };
 		3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6159102EB79EEF00F9B65A /* ConfirmView.swift */; };
 		3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */; };
 		3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */; };
@@ -168,6 +169,7 @@
 		3C4D40232EB229BD00DD51A5 /* StickTogetherIOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StickTogetherIOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITests.swift; sourceTree = "<group>"; };
 		3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3C5C13812EC342B200693ED0 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
 		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
 		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
@@ -627,6 +629,7 @@
 				3C70E0BF2EB4026C00C325D9 /* Mappers */,
 				3CB504232EB2326F004AF0A9 /* Auth */,
 				3C6688232EB6815100DE45E8 /* Habit */,
+				3C5C13812EC342B200693ED0 /* NotificationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -825,6 +828,7 @@
 				3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */,
 				3C6687F22EB4EA6900DE45E8 /* ToastDelegator.swift in Sources */,
 				3C6687F32EB4EA6900DE45E8 /* ToastMessageService.swift in Sources */,
+				3C5C13822EC342B200693ED0 /* NotificationManager.swift in Sources */,
 				3C6687F42EB4EA6900DE45E8 /* ToastMessage.swift in Sources */,
 				3C6687F52EB4EA6900DE45E8 /* ToastMessageView.swift in Sources */,
 				3C6687F62EB4EA6900DE45E8 /* ToastMessageViewModifier.swift in Sources */,

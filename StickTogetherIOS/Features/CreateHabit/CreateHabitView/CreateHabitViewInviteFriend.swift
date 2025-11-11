@@ -14,22 +14,50 @@ extension CreateHabitView {
                 .tint(Color.custom.primary)
                 .padding(5)
             if !alone {
-                Button {
-                    showFriendsList.toggle()
-                } label: {
-                    Text("Invite a friend")
-                }.customButtonStyle(.primary)
+                if let buddy = buddy {
+                    HStack(spacing: 15) {
+                        Text("🙍‍♂️")
+                            .font(.system(size: 23))
+                            .shadow(color: .black.opacity(0.5), radius: 5)
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.custom.text)
+                            )
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(buddy.name)
+                                .font(.myBody)
+                                .foregroundStyle(Color.custom.text)
+                            Text(buddy.email)
+                                .font(.customAppFont(size: 12, weight: .medium))
+                                .foregroundStyle(Color.custom.primary)
+                        }.multilineTextAlignment(.leading)
+                        Spacer()
+                        Button {
+                            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                            self.buddy = nil
+                        } label: {
+                            Image(systemName: "minus")
+                                .font(.mySubtitle)
+                                .foregroundStyle(Color.custom.primary)
+                                .padding()
+                                .background { Color.custom.grey }
+                        }
+                    }
+                }else{
+                    Button {
+                        showFriendsList.toggle()
+                    } label: {
+                        Text("Invite a friend")
+                    }.customButtonStyle(.primary)
+                }
             }
-
-//            if let hid = id, !alone {
-//                let inviteText = "Hey! I just created a new habit on StickTogether — join me and let’s stay consistent together 💪"
-//                if let link = URL(string: "sticktogether://habit/\(hid)") {
-//                    ShareLink(item: link, preview: SharePreview(inviteText, image: Image(.logo))) {
-//                        
-//                    }
-//                }
-//            }
         }.customCellViewModifier()
             .animation(.default, value: setReminder)
+            .onChange(of: alone) { oldValue, newValue in
+                if newValue {
+                    self.buddy = nil
+                }
+            }
     }
 }

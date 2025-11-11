@@ -7,16 +7,23 @@
 import SwiftUI
 
 struct HabitListSection: View {
+    @ObservedObject var habitVM: HabitViewModel
     let visible: [Habit]
     let state: CompletionState
     let selectedDate: Date
+    let currentUserId: String
+    let friends: [User]
     
     let updateCompletion: (Habit) -> Void
     
     var filteredHabits: [Habit] {
         visible.filter { habit in
-            let stateForDay = habit.completion[Habit.dayKey(for: selectedDate)] ?? .neither
-            return stateForDay == state
+            let computedState = habit.completionState(
+                on: selectedDate,
+                currentUserId: currentUserId,
+                buddyId: currentUserId == habit.ownerId ? habit.buddyId : habit.ownerId
+            )
+            return computedState == state
         }
     }
     
@@ -29,9 +36,9 @@ struct HabitListSection: View {
             }
             ForEach(filteredHabits) { habit in
                 NavigationLink {
-                    HabitView(habit: habit, selectedDate: selectedDate)
+                    HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, currentUserId: currentUserId, friends: friends)
                 } label: {
-                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate)
+                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, currentUserId: currentUserId)
                 }
             }
             if !filteredHabits.isEmpty {

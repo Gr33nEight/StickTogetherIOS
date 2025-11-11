@@ -8,12 +8,36 @@
 import SwiftUI
 
 struct HabitView: View {
+    @ObservedObject var habitVM: HabitViewModel
+    
     let habit: Habit
     let selectedDate: Date
     @State var pickedFrequency: Frequency = .daily()
     @State private var showEditHabitView = false
+    
     @Environment(\.confirm) var confirm
+    @Environment(\.showToastMessage) var toastMessage
     @Namespace var frequencyAnimation
+    
+    let currentUserId: String
+    let friends: [User]
+    
+    var iAmOwner: Bool {
+        currentUserId == habit.ownerId
+    }
+    
+    func buddy() -> User? {
+        guard let buddyId = habit.buddyId else { return nil }
+        
+        return friends.first(where: {
+            if let id = $0.id {
+                return iAmOwner ? id == buddyId : id == habit.ownerId
+            }else{
+                return false
+            }
+        })
+    }
+    
     var body: some View {
         CustomView(title: "Habit") {
             ScrollView(showsIndicators: false){
@@ -33,29 +57,50 @@ struct HabitView: View {
                         HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak()) days")
                         HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted())")
                     }
-                    HStack {
-                        if let buddyId = habit.buddyId {
-                            HabitViewCell(title: "Buddy 👋", value: buddyId)
-                        }else{
-                            HabitViewCell(title: "", value: "Alone")
+                    if let buddy = buddy(), !habit.alone {
+                        HStack {
+                            HabitViewCell(title: "Buddy 👋", value: buddy.name.capitalized)
+                            HabitViewCell(title: "Current state 🎯", value: habit.completionState(
+                                on: selectedDate,
+                                currentUserId: currentUserId,
+                                buddyId: currentUserId == habit.ownerId ? habit.buddyId : habit.ownerId
+                            ).text, font: .myBody)
                         }
-                        HabitViewCell(title: "Current state 🎯", value: habit.completionState(on: selectedDate).text, font: .myBody)
                     }
-                    CalendarView()
+                    CalendarView(wasDone: {habitVM.wasDone(on: $0, habit: habit)}, startDate: habit.startDate)
                 }.padding()
-                .foregroundStyle(Color.custom.text)
+                    .foregroundStyle(Color.custom.text)
                     .font(.myBody)
             }
         } buttons: {
-            VStack(spacing: 20) {
-                Button(action: {}, label: {
-                    Text("Mark as done")
-                })
-                .customButtonStyle(.primary)
-                Button(action: {}, label: {
-                    Text("Encourage your buddy")
-                })
-                .customButtonStyle(.secondary)
+            if Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
+                VStack(spacing: 20) {
+                    if habit.isMarkedAsDone(by: currentUserId, on: selectedDate) {
+                        Button(action: {
+                            Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
+                        }, label: {
+                            Text("Mark as undone")
+                        })
+                        .customButtonStyle(.secondary)
+                    }else{
+                        Button(action: {
+                            Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
+                        }, label: {
+                            Text("Mark as done")
+                        })
+                        .customButtonStyle(.primary)
+                    }
+                    if !habit.alone {
+                        Button(action: {
+                            Task {
+                                await habitVM.encourageYourBuddy()
+                            }
+                        }, label: {
+                            Text("Encourage your buddy")
+                        })
+                        .customButtonStyle(.secondary)
+                    }
+                }
             }
         } icons: {
             HStack(spacing: 0) {
@@ -66,19 +111,21 @@ struct HabitView: View {
                 }.padding(.trailing, 8)
                 Button {
                     confirm(question: "Are you sure you want to delete this habit?") {
-                        // delete
+                        Task {
+                            let result = await habitVM.deleteHabit(habit.id)
+                            if let error = result.errorMessage {
+                                toastMessage(.failed(error))
+                            }
+                        }
                     }
                 } label: {
                     Image(systemName: "trash")
                 }.padding(.leading, 8)
-
-            }
-        }
-        .fullScreenCover(isPresented: $showEditHabitView) {
-            CreateHabitView(friendsVM: FriendsViewModel(authService: FirebaseAuthService(), friendsService: FirebaseFriendsService()), currentUser: User(name: "", email: "")) { i in
                 
             }
         }
-
+        .fullScreenCover(isPresented: $showEditHabitView) {
+            
+        }
     }
 }

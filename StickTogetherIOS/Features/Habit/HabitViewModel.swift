@@ -11,37 +11,48 @@ import SwiftUI
 class HabitViewModel: ObservableObject {
     @Published var habits: [Habit] = []
     private let service: HabitServiceProtocol
-    private let authService: any AuthServiceProtocol
     private var listenerToken: ListenerToken?
     private var loadingManager: LoadingManager?
+    private var currentUser: User
     
     init(service: HabitServiceProtocol,
-         authService: any AuthServiceProtocol,
-         loading: LoadingManager? = nil) {
+         loading: LoadingManager? = nil,
+         currentUser: User) {
         self.service = service
-        self.authService = authService
         self.loadingManager = loading
+        self.currentUser = currentUser
     }
     
-    func loadUserHabits() async {
-        guard let uid = await authService.currentUser()?.id else { return }
+    @MainActor
+    func startListening() async {
+        if listenerToken != nil {
+            return
+        }
+        await loadUserHabits()
+    }
+
+    private func loadUserHabits() async {
+        guard listenerToken == nil else { return }
+
         do {
             if let loader = loadingManager {
-                let loaded: [Habit] = try await loader.run { [self] in
-                    try await service.fetchAllHabits(for: uid)
+                let loaded: [Habit] = try await loader.run {
+                    try await self.service.fetchAllHabits(for: self.currentUser.safeID)
                 }
                 habits = loaded
-                listenerToken = service.listenToHabits(for: uid) { [weak self] newHabits in
-                    self?.habits = newHabits
-                }
             } else {
-                habits = try await service.fetchAllHabits(for: uid)
-                listenerToken = service.listenToHabits(for: uid) { [weak self] newHabits in
+                habits = try await service.fetchAllHabits(for: currentUser.safeID)
+            }
+
+            listenerToken = service.listenToHabits(for: currentUser.safeID) { [weak self] newHabits in
+                Task { @MainActor in
                     self?.habits = newHabits
+                    await NotificationManager.shared.rescheduleAll(habits: newHabits)
                 }
             }
         } catch {
             print("Failed to load habits: \(error)")
+            habits = []
         }
     }
     
@@ -62,15 +73,20 @@ class HabitViewModel: ObservableObject {
     
     func createHabit(_ habit: Habit) async {
         do {
+            var savedHabit: Habit? = nil
             if let loader = loadingManager {
-                let savedHabit: Habit = try await loader.run { [self] in
+                savedHabit = try await loader.run { [self] in
                     try await service.createHabit(habit)
                 }
-                habits.append(savedHabit)
             } else {
-                let savedHabit = try await service.createHabit(habit)
-                habits.append(savedHabit)
+                savedHabit = try await service.createHabit(habit)
             }
+            
+            guard let savedHabit else { return }
+            
+            habits.append(savedHabit)
+            await NotificationManager.shared.scheduleNotifications(for: savedHabit)
+            
         } catch {
             print("Failed to create habit: \(error)")
         }
@@ -88,69 +104,66 @@ class HabitViewModel: ObservableObject {
             if let index = habits.firstIndex(where: { $0.id == habit.id }) {
                 habits[index] = habit
             }
+            if let id = habit.id {
+                await NotificationManager.shared.cancelNotifications(for: id)
+                await NotificationManager.shared.scheduleNotifications(for: habit)
+            }
         } catch {
             print("Failed to update habit: \(error)")
         }
     }
     
-    func deleteHabit(_ habitId: String) async {
-        guard let habit = habits.first(where: { $0.id == habitId }) else {
-            do {
-                if let loader = loadingManager {
-                    try await loader.run { try await self.service.deleteHabit(habitId) }
-                } else {
-                    try await service.deleteHabit(habitId)
-                }
-            } catch {
-                print("Failed to delete habit: \(error)")
-            }
-            return
+    func deleteHabit(_ habitId: String?) async -> SuccessOrError {
+        guard let habitId  else {
+            return .error("Couldn't find habit to delete")
         }
-
         do {
             if let loader = loadingManager {
                 try await loader.run { try await self.service.deleteHabit(habitId) }
+                await NotificationManager.shared.cancelNotifications(for: habitId)
+                return .success
             } else {
                 try await service.deleteHabit(habitId)
+                await NotificationManager.shared.cancelNotifications(for: habitId)
+                return .success
             }
-            habits.removeAll { $0.id == habitId }
         } catch {
-            print("Failed to delete habit: \(error)")
+            return .error("Failed to delete habit: \(error)")
         }
     }
     
     func markHabitAsCompleted(_ habit: Habit, date: Date) async {
         guard let habitId = habit.id else { return }
-        let state = habit.completionState(on: date)
+
+        let key = Habit.dayKey(for: date)
+        let users = habit.completion[key] ?? []
+        let isMarked = users.contains(currentUser.safeID)
+
         do {
-            if let loader = loadingManager {
-                try await loader.run { [self] in
-                    switch state {
-                    case .both:
-                        try await service.updatedCompletionState(for: habitId, date: date, state: .buddy)
-                    case .me:
-                        try await service.updatedCompletionState(for: habitId, date: date, state: .neither)
-                    case .buddy:
-                        try await service.updatedCompletionState(for: habitId, date: date, state: .both)
-                    case .neither:
-                        try await service.updatedCompletionState(for: habitId, date: date, state: .me)
-                    }
-                }
-            } else {
-                switch state {
-                case .both:
-                    try await service.updatedCompletionState(for: habitId, date: date, state: .buddy)
-                case .me:
-                    try await service.updatedCompletionState(for: habitId, date: date, state: .neither)
-                case .buddy:
-                    try await service.updatedCompletionState(for: habitId, date: date, state: .both)
-                case .neither:
-                    try await service.updatedCompletionState(for: habitId, date: date, state: .me)
-                }
-            }
+            try await service.updatedCompletionState(for: habitId, date: date, userId: currentUser.safeID, markCompleted: !isMarked)
         } catch {
-            print("Failed to update habit: \(error)")
+            print("Failed to update completion: \(error)")
         }
+    }
+    
+    func encourageYourBuddy() async {
+        print("Encouraging buddy...")
+    }
+    
+    func wasDone(on date: Date, habit: Habit? = nil) -> Bool {
+        let isPast = date < Calendar.current.startOfDay(for: Date())
+        let key = Habit.dayKey(for: date)
+        var wasDone = false
+        
+        if let habit = habit {
+            wasDone = habit.completion[key]?.contains(currentUser.safeID) ?? false
+        }else{
+            wasDone = isPast && habits.contains { habit in
+                habit.completion[key]?.contains(currentUser.safeID) ?? false
+            }
+        }
+
+        return wasDone
     }
     
     deinit {

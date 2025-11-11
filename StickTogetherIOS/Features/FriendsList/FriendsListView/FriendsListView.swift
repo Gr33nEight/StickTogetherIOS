@@ -35,6 +35,8 @@ struct FriendsListView: View {
     
     @State private var removingStarted = false
     
+    var onDismiss: ((User) -> Void)?
+    
     var body: some View {
         CustomView(title: "Friends List", dismissIcon: fullList ? "chevron.left" : "xmark") {
             VStack {
@@ -75,6 +77,12 @@ struct FriendsListView: View {
             
         } buttons: {
             Button {
+                if let buddy = invitedBuddy,
+                   let onDismiss = onDismiss {
+                    onDismiss(buddy)
+                    dismiss()
+                }
+                
                 if invitedBuddy == nil || fullList {
                     showModal(.inviteFriend(invite: { email in
                         Task {
@@ -92,8 +100,6 @@ struct FriendsListView: View {
                             }
                         }
                     }))
-                }else{
-                    dismiss()
                 }
             } label: {
                 Text((invitedBuddy == nil || fullList) ? "Invite a Friend" : "Add \(invitedBuddy!.name) as a buddy")
@@ -109,8 +115,6 @@ struct FriendsListView: View {
             
         }.animation(.easeInOut, value: removingStarted)
             .task {
-                await friendsVM.startFriendsListener()
-
                 if fullList {
                     let result = await friendsVM.fetchAllInvitation()
                     if let errorMessage = result.errorMessage {
@@ -164,7 +168,7 @@ extension FriendsListView {
                     }.padding([.top, .horizontal])
                 }
             }
-        }
+        }.frame(maxWidth: .infinity)
     }
     
     @ViewBuilder

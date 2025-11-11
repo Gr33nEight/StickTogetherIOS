@@ -32,24 +32,20 @@ struct FriendCellView: View {
                     .foregroundStyle(invited ? Color.custom.background : Color.custom.primary)
             }.multilineTextAlignment(.leading)
             Spacer()
-            if !fullList {
-                Button {
+        }.padding()
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(invited ? Color.custom.primary : Color.custom.background)
+            )
+            .onTapGesture {
+                if !fullList {
                     if invited {
                         invitedUser = nil
                     }else{
                         invitedUser = friend
                     }
                     UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-                } label: {
-                    Image(systemName: invited ? "minus" : "plus")
-                        .font(.mySubtitle)
-                        .foregroundStyle(invited ? Color.custom.background : Color.custom.primary)
                 }
             }
-        }.padding()
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(invited ? Color.custom.primary : Color.custom.background)
-            )
     }
 }
