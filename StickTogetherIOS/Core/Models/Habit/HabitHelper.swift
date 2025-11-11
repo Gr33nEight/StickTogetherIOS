@@ -25,12 +25,6 @@ extension Habit {
         
         guard let buddyId else { return meDid ? .both : .neither }
         let buddyDid = users.contains(buddyId)
-        
-        print(currentUserId, " current user")
-        print(buddyId, " buddy")
-        
-        print(meDid, " me did")
-        print(buddyDid, " buddy did")
 
         switch (meDid, buddyDid) {
         case (true, true): return .both

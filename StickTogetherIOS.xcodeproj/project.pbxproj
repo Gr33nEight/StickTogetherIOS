@@ -52,6 +52,9 @@
 		3C4D40282EB229BD00DD51A5 /* StickTogetherIOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */; };
 		3C4D402A2EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */; };
 		3C5C13822EC342B200693ED0 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13812EC342B200693ED0 /* NotificationManager.swift */; };
+		3C5C13852EC3698E00693ED0 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13842EC3698E00693ED0 /* CalendarManager.swift */; };
+		3C5C138A2EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */; };
+		3C5C138E2EC3ABE400693ED0 /* IconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */; };
 		3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6159102EB79EEF00F9B65A /* ConfirmView.swift */; };
 		3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */; };
 		3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */; };
@@ -170,6 +173,9 @@
 		3C4D40272EB229BD00DD51A5 /* StickTogetherIOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITests.swift; sourceTree = "<group>"; };
 		3C4D40292EB229BD00DD51A5 /* StickTogetherIOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickTogetherIOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3C5C13812EC342B200693ED0 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		3C5C13842EC3698E00693ED0 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
+		3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewAddToCalendar.swift; sourceTree = "<group>"; };
+		3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPicker.swift; sourceTree = "<group>"; };
 		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
 		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
 		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
@@ -377,6 +383,7 @@
 				3C70E0A92EB3E3B000C325D9 /* CreateHabitViewFrequencySelection.swift */,
 				3C70E0AB2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift */,
 				3C70E0AD2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift */,
+				3C5C13892EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift */,
 			);
 			path = CreateHabitView;
 			sourceTree = "<group>";
@@ -475,6 +482,32 @@
 			path = StickTogetherIOSUITests;
 			sourceTree = "<group>";
 		};
+		3C5C13832EC3697100693ED0 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */,
+				3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */,
+				3C5C13812EC342B200693ED0 /* NotificationManager.swift */,
+				3C5C13842EC3698E00693ED0 /* CalendarManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		3C5C13862EC36FE100693ED0 /* Migrations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Migrations;
+			sourceTree = "<group>";
+		};
+		3C5C138C2EC3ABDC00693ED0 /* IconPicker */ = {
+			isa = PBXGroup;
+			children = (
+				3C5C138D2EC3ABE400693ED0 /* IconPicker.swift */,
+			);
+			path = IconPicker;
+			sourceTree = "<group>";
+		};
 		3C6159112EB79EEF00F9B65A /* Confirmation */ = {
 			isa = PBXGroup;
 			children = (
@@ -554,6 +587,7 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3C5C138C2EC3ABDC00693ED0 /* IconPicker */,
 				3C27EB532EBB634D00BB39F7 /* ErrorHelpers */,
 				3C70E0912EB3A48E00C325D9 /* ViewModifiers */,
 				3C42E7122EB3815600D0D58C /* Components */,
@@ -584,6 +618,7 @@
 		3CB5041A2EB23164004AF0A9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				3C5C13862EC36FE100693ED0 /* Migrations */,
 				3CB504292EB232F0004AF0A9 /* Models */,
 				3CB504222EB2326A004AF0A9 /* Services */,
 				3CB5041E2EB231DB004AF0A9 /* DIContainer.swift */,
@@ -622,14 +657,12 @@
 		3CB504222EB2326A004AF0A9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3C5C13832EC3697100693ED0 /* Managers */,
 				3C27EB4A2EBA516100BB39F7 /* Friends */,
-				3C27EB342EB7FC1200BB39F7 /* DeepLinkService.swift */,
 				3C6687FF2EB4F5B500DE45E8 /* Validation */,
-				3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */,
 				3C70E0BF2EB4026C00C325D9 /* Mappers */,
 				3CB504232EB2326F004AF0A9 /* Auth */,
 				3C6688232EB6815100DE45E8 /* Habit */,
-				3C5C13812EC342B200693ED0 /* NotificationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -838,6 +871,7 @@
 				3C6688252EB6816400DE45E8 /* HabitServiceProtocol.swift in Sources */,
 				3C70E09C2EB3E1DA00C325D9 /* Frequency.swift in Sources */,
 				3C6687E82EB4D6F000DE45E8 /* LoadingOverlay.swift in Sources */,
+				3C5C138A2EC3755B00693ED0 /* CreateHabitViewAddToCalendar.swift in Sources */,
 				3C27EB4E2EBA527E00BB39F7 /* FirebaseFriendsService.swift in Sources */,
 				3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */,
 				3C27EB422EB923A100BB39F7 /* Blur.swift in Sources */,
@@ -850,6 +884,7 @@
 				3C70E0962EB3DE4E00C325D9 /* CalendarView.swift in Sources */,
 				3C42E6E52EB27DF000D0D58C /* ViewExtension.swift in Sources */,
 				3C6688222EB6807300DE45E8 /* FirebaseHabitService.swift in Sources */,
+				3C5C138E2EC3ABE400693ED0 /* IconPicker.swift in Sources */,
 				3C27EB552EBB636100BB39F7 /* SuccessOrError.swift in Sources */,
 				3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */,
 				3C4D400D2EB229BC00DD51A5 /* StickTogetherIOSApp.swift in Sources */,
@@ -894,6 +929,7 @@
 				3C70E09A2EB3DE7B00C325D9 /* DateExtension.swift in Sources */,
 				3C70E0AE2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift in Sources */,
 				3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */,
+				3C5C13852EC3698E00693ED0 /* CalendarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1061,6 +1097,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need access to your calendar to add habits as events";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need access to your calendar to add habits as events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1091,6 +1129,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StickTogetherIOS/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need access to your calendar to add habits as events";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need access to your calendar to add habits as events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

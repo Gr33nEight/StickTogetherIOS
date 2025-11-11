@@ -119,12 +119,20 @@ class HabitViewModel: ObservableObject {
         }
         do {
             if let loader = loadingManager {
-                try await loader.run { try await self.service.deleteHabit(habitId) }
                 await NotificationManager.shared.cancelNotifications(for: habitId)
+                if let habit = habits.first(where: { $0.id == habitId }) {
+                    CalendarManager.shared.removeHabit(habit)
+                }else{
+                    print("dalej nic?")
+                }
+                try await loader.run { try await self.service.deleteHabit(habitId) }
                 return .success
             } else {
-                try await service.deleteHabit(habitId)
                 await NotificationManager.shared.cancelNotifications(for: habitId)
+                if let habit = habits.first(where: { $0.id == habitId }) {
+                    CalendarManager.shared.removeHabit(habit)
+                }
+                try await service.deleteHabit(habitId)
                 return .success
             }
         } catch {
@@ -164,6 +172,11 @@ class HabitViewModel: ObservableObject {
         }
 
         return wasDone
+    }
+    
+    func addHabitToCalendar() {
+        // add to calendar
+        // But don't know for how long, we don't have end date and i am not sure i want to add that yet
     }
     
     deinit {

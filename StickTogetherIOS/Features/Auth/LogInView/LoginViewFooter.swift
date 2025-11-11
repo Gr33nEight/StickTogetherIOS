@@ -19,15 +19,8 @@ extension LogInView {
                     .underline()
                     .foregroundStyle(Color.custom.secondary)
             }
-
-//            Button {
-//                // go to register view
-//            } label: {
-//                Text("Create New")
-//                    .underline()
-//                    .foregroundStyle(Color.custom.secondary)
-//            }
         }.font(.myCaption)
+            .padding(.bottom, 5)
     }
 }
 

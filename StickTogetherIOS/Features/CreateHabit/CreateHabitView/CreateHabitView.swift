@@ -17,10 +17,12 @@ struct CreateHabitView: View {
     @State var pickedDays = [Weekday]()
     @State var interval = 1
     @State var startDate = Date()
+    @State var endDate = Date().addingTimeInterval(60 * 60 * 24 * 30)
     @State var setReminder = false
     @State var reminderTime = Date()
     @State var alone = false
     @State var buddy: User? = nil
+    @State var addToCalendar = false
     @State var showFriendsList = false
     @Namespace var frequencyAnimation
     
@@ -29,7 +31,8 @@ struct CreateHabitView: View {
 
     @State var isEmojiPickerPresented = false
     @State var selectedEmoji: Emoji? = nil
-
+    @State var autoEmoji = "➕"
+    
     let currentUser: User
     let createHabit: (Habit) -> Void
 
@@ -42,6 +45,7 @@ struct CreateHabitView: View {
                         frequencySelection
                         reminder
                         inviteFriend
+                        addToCalendarView
                     }
                     .font(.myBody)
                     .foregroundStyle(Color.custom.text)
@@ -75,11 +79,16 @@ struct CreateHabitView: View {
     }
 
     private func create() {
-        guard let userId = currentUser.id,
-        let icon = selectedEmoji?.emoji
+        guard let userId = currentUser.id
         else {
             showToastMessage(.warning("You didn't choose icon."))
             return
+        }
+        var icon = ""
+        if let emoji = selectedEmoji?.emoji {
+            icon = emoji
+        }else{
+            icon = autoEmoji
         }
         
         let habitFrequency: Frequency
@@ -91,7 +100,7 @@ struct CreateHabitView: View {
         case .monthly:
             habitFrequency = Frequency.monthly(everyMonths: interval)
         }
-
+        
         let initialKey = Habit.dayKey(for: startDate)
         let habit = Habit(
             id: id,
@@ -101,11 +110,20 @@ struct CreateHabitView: View {
             buddyId: buddy?.id,
             frequency: habitFrequency,
             startDate: startDate,
+            endDate: endDate,
             reminderTime: setReminder ? reminderTime : nil,
             alone: alone,
             completion: [initialKey: []]
         )
 
+        if addToCalendar {
+            do {
+                try CalendarManager.shared.addHabitToCalendar(habit: habit)
+            } catch {
+                print("gówno")
+            }
+        }
+        
         createHabit(habit)
         dismiss()
     }

@@ -12,6 +12,11 @@ struct AppEntry: View {
         ZStack {
             AppCoordinatorView()
             LoadingOverlay()
+        }.task {
+            await CalendarManager.shared.requestAccess()
+            NotificationManager.shared.requestAuthorization { granted in
+                print("Notification allowed:", granted)
+            }
         }
     }
 }

@@ -194,8 +194,8 @@ class FriendsViewModel: ObservableObject {
         guard let receiverUserId = await self.fetchFriendByEmail(userEmail)?.id else {
             return .error("Couldn't find user with this email.")
         }
-        if invitationSent.contains(where: { $0.senderId == senderUserId}) { return .error("You already sent an invitation to this user.") }
-        if invitationReceived.contains(where: { $0.senderId == receiverUserId}) { return .error("This user already sent you an invitation.") }
+        if invitationSent.contains(where: { $0.senderId == senderUserId && $0.receiverId == receiverUserId }) { return .error("You already sent an invitation to this user.") }
+        if invitationReceived.contains(where: { $0.senderId == receiverUserId && $0.receiverId == senderUserId}) { return .error("This user already sent you an invitation.") }
         
         do {
             let invitation = Invitation(senderId: senderUserId, receiverId: receiverUserId)

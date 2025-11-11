@@ -69,6 +69,13 @@ extension CreateHabitView {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
+            DatePicker("End date", selection: $endDate, displayedComponents: .date)
+                .padding(10)
+                .padding(.horizontal, 5)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.custom.lightGrey)
+                )
         }.customCellViewModifier()
     }
 }

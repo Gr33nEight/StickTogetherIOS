@@ -61,7 +61,7 @@ struct FriendsListView: View {
                         }
                     }.animation(.bouncy, value: pickedFriendsListType)
                         .frame(height: 60)
-                        .padding(.horizontal)
+                        .padding()
                     switch pickedFriendsListType {
                     case .allFriends:
                         allFriendsList

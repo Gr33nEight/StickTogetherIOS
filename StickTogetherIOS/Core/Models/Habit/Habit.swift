@@ -16,6 +16,7 @@ struct Habit: Identifiable, Codable {
     var buddyId: String? = nil
     var frequency: Frequency
     var startDate: Date
+    var endDate: Date
     var reminderTime: Date? = nil
     var alone: Bool = false
     var createdAt: Date = Date()
@@ -28,6 +29,7 @@ struct Habit: Identifiable, Codable {
          buddyId: String? = nil,
          frequency: Frequency,
          startDate: Date = Date(),
+         endDate: Date = Date(),
          reminderTime: Date? = nil,
          alone: Bool = false,
          createdAt: Date = Date(),
@@ -39,6 +41,7 @@ struct Habit: Identifiable, Codable {
         self.buddyId = buddyId
         self.frequency = frequency
         self.startDate = startDate
+        self.endDate = endDate
         self.reminderTime = reminderTime
         self.alone = alone
         self.createdAt = createdAt
