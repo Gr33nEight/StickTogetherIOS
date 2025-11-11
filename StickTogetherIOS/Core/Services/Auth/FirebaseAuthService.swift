@@ -152,9 +152,24 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
             do {
                 let authResult = try await self.auth.signIn(with: credential)
                 let firebaseUser = authResult.user
-                
-                let user = UserMapper.fromFirebaseUser(firebaseUser)
-                try firestore.collection("users").document(user.id ?? "").setData(from: user)
+
+                // Fetch existing user if exists
+                let userRef = firestore.collection("users").document(firebaseUser.uid)
+                let snapshot = try? await userRef.getDocument()
+                var user: User
+
+                if let snapshot, let existingUser = try? snapshot.data(as: User.self) {
+                    // Merge new info
+                    user = existingUser
+                    user.name = firebaseUser.displayName ?? existingUser.name
+                    user.email = firebaseUser.email ?? existingUser.email
+                } else {
+                    // No existing user, create new
+                    user = UserMapper.fromFirebaseUser(firebaseUser)
+                }
+
+                // Save user with merge: true to avoid overwriting other fields
+                try userRef.setData(from: user, merge: true)
                 
                 return .value(user)
             } catch {
@@ -181,9 +196,20 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
         
         let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: googleUser.accessToken.tokenString)
         
-        let result = try await auth.signIn(with: credential)
-        let user = UserMapper.fromFirebaseUser(result.user)
-        try firestore.collection("users").document(user.id ?? "").setData(from: user)
+        let result = try await self.auth.signIn(with: credential)
+        let firebaseUser = result.user
+
+        let userRef = firestore.collection("users").document(firebaseUser.uid)
+        let snapshot = try? await userRef.getDocument()
+        var user: User
+
+        if let snapshot, let existingUser = try? snapshot.data(as: User.self) {
+            user = existingUser
+            user.name = firebaseUser.displayName ?? existingUser.name
+            user.email = firebaseUser.email ?? existingUser.email
+        } else {
+            user = UserMapper.fromFirebaseUser(firebaseUser)
+        }
         
         return .value(user)
     }
