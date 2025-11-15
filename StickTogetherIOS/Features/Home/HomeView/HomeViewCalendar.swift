@@ -48,7 +48,7 @@ extension HomeView {
                         ForEach(weekDates(around: anchor), id: \.self) { date in
                             let isSelected = Calendar.current.isDate(date, inSameDayAs: selectedDate)
                             
-                            DayCell(date: date, isSelected: isSelected, wasDone: habitVM.wasDone(on: date))
+                            DayCell(date: date, isSelected: isSelected, completion: habitVM.completion(on: date))
                                 .onTapGesture {
                                     selectedDate = date
                                 }

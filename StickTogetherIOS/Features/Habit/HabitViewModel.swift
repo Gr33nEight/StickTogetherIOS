@@ -122,8 +122,6 @@ class HabitViewModel: ObservableObject {
                 await NotificationManager.shared.cancelNotifications(for: habitId)
                 if let habit = habits.first(where: { $0.id == habitId }) {
                     CalendarManager.shared.removeHabit(habit)
-                }else{
-                    print("dalej nic?")
                 }
                 try await loader.run { try await self.service.deleteHabit(habitId) }
                 return .success
@@ -158,25 +156,28 @@ class HabitViewModel: ObservableObject {
         print("Encouraging buddy...")
     }
     
-    func wasDone(on date: Date, habit: Habit? = nil) -> Bool {
-        let isPast = date < Calendar.current.startOfDay(for: Date())
+    func completion(on date: Date, habit: Habit? = nil) -> BaseCompletionState {
         let key = Habit.dayKey(for: date)
-        var wasDone = false
+        let isPast = date < Calendar.current.startOfDay(for: Date())
         
         if let habit = habit {
-            wasDone = habit.completion[key]?.contains(currentUser.safeID) ?? false
+            guard habit.frequency.occurs(on: date, startDate: habit.startDate) && isPast else { return .none }
+            guard let habitCompletion = habit.completion[key] else { return .skipped }
+            // TODO: change for more buddies
+            return habitCompletion.count == 2 ? .done : .skipped
         }else{
-            wasDone = isPast && habits.contains { habit in
-                habit.completion[key]?.contains(currentUser.safeID) ?? false
-            }
-        }
+            guard isPast else { return .none }
 
-        return wasDone
-    }
-    
-    func addHabitToCalendar() {
-        // add to calendar
-        // But don't know for how long, we don't have end date and i am not sure i want to add that yet
+            let relevantHabits = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
+               guard !relevantHabits.isEmpty else { return .none }
+               
+               let allComplete = relevantHabits.allSatisfy { habit in
+                   let completionsCount = habit.completion[key]?.count ?? 0
+                   print(completionsCount)
+                   return completionsCount == habit.numberOfParticipants()
+               }
+               return allComplete ? .done : .skipped
+        }
     }
     
     deinit {

@@ -21,7 +21,7 @@ struct Habit: Identifiable, Codable {
     var alone: Bool = false
     var createdAt: Date = Date()
     var completion: [String: [String]]
-
+    
     init(id: String? = nil,
          title: String,
          icon: String,

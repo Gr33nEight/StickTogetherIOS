@@ -67,7 +67,7 @@ struct HabitView: View {
                             ).text, font: .myBody)
                         }
                     }
-                    CalendarView(wasDone: {habitVM.wasDone(on: $0, habit: habit)}, startDate: habit.startDate)
+                    CalendarView(completion: {habitVM.completion(on: $0, habit: habit)}, startDate: habit.startDate)
                 }.padding()
                     .foregroundStyle(Color.custom.text)
                     .font(.myBody)

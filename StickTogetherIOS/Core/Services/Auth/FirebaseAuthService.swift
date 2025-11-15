@@ -56,7 +56,7 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
         }
         
         let user = UserMapper.fromFirebaseUser(firebaseUser)
-        // Needs to be fixed
+        //TODO: Needs to be fixed
         try firestore.collection("users").document(user.id ?? "").setData(from: user)
         
         return user

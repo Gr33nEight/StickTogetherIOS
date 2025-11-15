@@ -84,4 +84,8 @@ extension Habit {
     func isScheduled(on date: Date, calendar: Calendar = .current) -> Bool {
         frequency.occurs(on: date, startDate: startDate, calendar: calendar)
     }
+    
+    func numberOfParticipants() -> Int {
+        return alone ? 1 : 2
+    }
 }

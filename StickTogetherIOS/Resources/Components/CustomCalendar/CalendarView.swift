@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
-    let wasDone: (Date) -> Bool
+    let completion: (Date) -> BaseCompletionState
     let startDate: Date
     
     @State private var currentMonth = Date.now
@@ -56,8 +56,16 @@ struct CalendarView: View {
                         .foregroundStyle(foregroundStyle(for: day))
                         .frame(maxWidth: .infinity, minHeight: 40)
                         .background(
-                            Circle()
-                                .foregroundStyle(Calendar.current.startOfDay(for: Date()) == day ? Color.custom.primary : wasDone(day) ? Color.custom.secondary : .clear)
+                            ZStack {
+                                if Calendar.current.startOfDay(for: Date()) == day {
+                                    Circle()
+                                        .stroke(lineWidth: 2)
+                                        .fill(Color.custom.primary)
+                                }else{
+                                    Circle()
+                                        .fill(completion(day).color)
+                                }
+                            }
                         )
                         .disabled(day < Date.now.startOfDay || day.monthInt != currentMonth.monthInt)
                 }
@@ -79,11 +87,11 @@ struct CalendarView: View {
         let isPast = day < Date.now.startOfDay
         let isOlderThanHabit = day < startDate
 
-        if isToday {
+        if isToday || completion(day) == .skipped {
             return Color.custom.text
         }
 
-        if wasDone(day) {
+        if completion(day) == .done {
             return Color.custom.grey
         }
 
