@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
-    let completion: (Date) -> BaseCompletionState
+    let state: (Date) -> HabitState
     let startDate: Date
     
     @State private var currentMonth = Date.now
@@ -63,7 +63,7 @@ struct CalendarView: View {
                                         .fill(Color.custom.primary)
                                 }else{
                                     Circle()
-                                        .fill(completion(day).color)
+                                        .fill(state(day).color)
                                 }
                             }
                         )
@@ -87,11 +87,11 @@ struct CalendarView: View {
         let isPast = day < Date.now.startOfDay
         let isOlderThanHabit = day < startDate
 
-        if isToday || completion(day) == .skipped {
+        if isToday || state(day) == .skipped {
             return Color.custom.text
         }
 
-        if completion(day) == .done {
+        if state(day) == .done {
             return Color.custom.grey
         }
 

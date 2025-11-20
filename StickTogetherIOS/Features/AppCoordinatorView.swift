@@ -13,19 +13,21 @@ struct AppCoordinatorView: View {
     @Environment(\.showToastMessage) private var showToastMessage
 
     @StateObject private var authVM = AuthViewModel()
+    @State private var selectedView: NavigationDestinations = .home
+    
     var body: some View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
                     if let currentUser = authVM.currentUser,
                        let _ = currentUser.id {
-                        HomeView(
-                            signOut: { Task { await authVM.signOut() } },
+                        NavigationContainer(
                             currentUser: currentUser,
+                            selected: $selectedView,
                             habitService: di.habitService,
                             friendsService: di.friendsService,
                             authService: di.authService,
-                            loading: loading
+                            authVM: authVM
                         )
                     }else{
                         ProgressView()
@@ -36,7 +38,7 @@ struct AppCoordinatorView: View {
                         .navigationBarBackButtonHidden(true)
                 }
             }
-        }
+        }.environmentObject(authVM)
         .onAppear {
             authVM.setup(authService: di.authService,
                          loading: loading,

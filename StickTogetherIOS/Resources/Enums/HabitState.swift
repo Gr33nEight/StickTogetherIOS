@@ -7,24 +7,15 @@
 
 import SwiftUI
 
-enum BaseCompletionState: Int, Codable, CaseIterable {
-    case done, skipped, none
-    
-    var text: String {
-        switch self {
-        case .done:
-            "Done"
-        case .skipped:
-            "Skipped"
-        case .none:
-            ""
-        }
-    }
+enum HabitState {
+    case none
+    case skipped
+    case done
     
     var color: Color {
         switch self {
         case .done:
-            return Color.custom.secondary
+            return Color.custom.primary
         case .skipped:
             return Color.custom.red
         case .none:
@@ -35,7 +26,7 @@ enum BaseCompletionState: Int, Codable, CaseIterable {
     var textColor: Color {
         switch self {
         case .done:
-            return Color.custom.grey
+            return Color.custom.text
         case .skipped:
             return Color.custom.text
         case .none:

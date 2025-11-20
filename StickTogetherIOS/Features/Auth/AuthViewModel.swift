@@ -151,6 +151,13 @@ class AuthViewModel: ObservableObject {
         }, setAuthStateOnSuccess: true, successMessage: "Signed in successfully with Google")
     }
     
+    func updateUser(_ user: User) async {
+        await execute {
+            guard let s = self.authService else { return }
+            try await s.updateUser(user)
+        }
+    }
+    
     deinit {
         authStateTask?.cancel()
         authStateTask = nil

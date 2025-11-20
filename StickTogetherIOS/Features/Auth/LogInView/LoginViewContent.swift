@@ -17,7 +17,7 @@ extension LogInView {
             CustomTextField(
                 text: $email,
                 placeholder: "Email",
-                systemIcon: "envelope",
+                icon: .mail,
                 isSecure: false,
                 errorMessage: emailError
             )
@@ -25,7 +25,7 @@ extension LogInView {
             CustomTextField(
                 text: $password,
                 placeholder: "Password",
-                systemIcon: "lock",
+                icon: .lock,
                 isSecure: true,
                 errorMessage: passwordError
             )

@@ -6,42 +6,30 @@
 //
 
 import SwiftUI
+import ElegantEmojiPicker
 
 struct HomeView: View {
+    @EnvironmentObject var friendsVM: FriendsViewModel
+    @EnvironmentObject var habitVM: HabitViewModel
+    @EnvironmentObject var authVM: AuthViewModel
+    
     @Environment(\.confirm) var confirm
     
-    @StateObject var habitVM: HabitViewModel
-    @StateObject var friendsVM: FriendsViewModel
-
     @State var selectedDate: Date = Date()
     @State var pageIndex: Int = 0
     @State var baseWeekAnchor: Date = Date()
+    @State var pickedHabitType: HabitType = .coop
+    
+    @State var isEmojiPickerPresented = false
+    @State var selectedEmoji: Emoji? = nil
+    
+    @Namespace var dayAnimation
+    @Namespace var habitTypeAnimation
 
-    let signOut: () -> Void
     let currentUser: User
 
     var visible: [Habit] {
         habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
-    }
-    
-    init(signOut: @escaping () -> Void,
-         currentUser: User,
-         habitService: HabitServiceProtocol,
-         friendsService: FriendsServiceProtocol,
-         authService: any AuthServiceProtocol,
-         loading: LoadingManager? = nil) {
-
-        let habitVM = HabitViewModel(service: habitService,
-                                     loading: loading,
-                                     currentUser: currentUser)
-        _habitVM = StateObject(wrappedValue: habitVM)
-        
-        let friendsVM = FriendsViewModel(authService: authService, friendsService: friendsService,
-                                         loading: loading, currentUser: currentUser)
-        _friendsVM = StateObject(wrappedValue: friendsVM)
-
-        self.signOut = signOut
-        self.currentUser = currentUser
     }
 
     var body: some View {
@@ -53,9 +41,6 @@ struct HomeView: View {
         .background(Color.custom.background)
         .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
-        .task {
-            await habitVM.startListening()
-            await friendsVM.startFriendsListener()
-        }
+        .emojiPicker(isPresented: $isEmojiPickerPresented, selectedEmoji: $selectedEmoji)
     }
 }

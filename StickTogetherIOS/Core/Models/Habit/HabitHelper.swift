@@ -85,7 +85,16 @@ extension Habit {
         frequency.occurs(on: date, startDate: startDate, calendar: calendar)
     }
     
+    //TODO: Temporary
     func numberOfParticipants() -> Int {
-        return alone ? 1 : 2
+        return type == .alone ? 1 : (buddyId == nil ? 1 : 2)
+    }
+    
+    func completionCount(forDayKey key: String) -> Int {
+        completion[key]?.count ?? 0
+    }
+    
+    func userDidComplete(_ userId: String, forDayKey key: String) -> Bool {
+        completion[key]?.contains(userId) ?? false
     }
 }

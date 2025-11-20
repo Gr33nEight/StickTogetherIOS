@@ -38,7 +38,7 @@ struct FriendsListView: View {
     var onDismiss: ((User) -> Void)?
     
     var body: some View {
-        CustomView(title: "Friends List", dismissIcon: fullList ? "chevron.left" : "xmark") {
+        CustomView(title: "Friends List", dismissIcon: fullList ? "" : "xmark") {
             VStack {
                 if fullList {
                     HStack(spacing: 0) {
@@ -109,8 +109,11 @@ struct FriendsListView: View {
             Button {
                 removingStarted.toggle()
             } label: {
-                Image(systemName: "trash")
-                    .foregroundStyle(removingStarted ? Color.custom.red : Color.custom.primary)
+                Image(.trash)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 24)
+                    .tint(removingStarted ? Color.custom.red : Color.custom.primary)
             }
             
         }.animation(.easeInOut, value: removingStarted)
@@ -153,14 +156,17 @@ extension FriendsListView {
                                         removingStarted.toggle()
                                         Task { await friendsVM.removeFromFriendsList(userId: uid)}
                                     } label: {
-                                        Image(systemName: "trash")
+                                        Image(.trash)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 24)
                                             .foregroundStyle(Color.custom.text)
                                             .padding(15)
                                             .background(
                                                 Circle()
                                                     .fill(Color.custom.red)
                                             )
-                                    }.offset(x: removingStarted ? 0 : 65)
+                                    }.offset(x: removingStarted ? 0 : 75)
                                     
                                 }
                             }
@@ -224,14 +230,17 @@ extension FriendsListView {
                                         removingStarted.toggle()
                                         Task { await friendsVM.cancelInvitation(with: invitationId) }
                                     } label: {
-                                        Image(systemName: "trash")
+                                        Image(.trash)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 24)
                                             .foregroundStyle(Color.custom.text)
                                             .padding(15)
                                             .background(
                                                 Circle()
                                                     .fill(Color.custom.red)
                                             )
-                                    }.offset(x: removingStarted ? 0 : 65)
+                                    }.offset(x: removingStarted ? 0 : 75)
                                 }
                                 
                             }

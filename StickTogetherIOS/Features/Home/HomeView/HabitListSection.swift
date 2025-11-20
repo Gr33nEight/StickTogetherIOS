@@ -16,6 +16,22 @@ struct HabitListSection: View {
     
     let updateCompletion: (Habit) -> Void
     
+    func iAmOwner(_ ownerId: String) -> Bool {
+        currentUserId == ownerId
+    }
+    
+    func buddy(_ habit: Habit) -> User? {
+        guard let buddyId = habit.buddyId else { return nil }
+        
+        return friends.first(where: {
+            if let id = $0.id {
+                return iAmOwner(habit.ownerId) ? id == buddyId : id == habit.ownerId
+            }else{
+                return false
+            }
+        })
+    }
+    
     var filteredHabits: [Habit] {
         visible.filter { habit in
             let computedState = habit.completionState(
@@ -38,7 +54,7 @@ struct HabitListSection: View {
                 NavigationLink {
                     HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, currentUserId: currentUserId, friends: friends)
                 } label: {
-                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, currentUserId: currentUserId)
+                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, buddy: buddy(habit), currentUserId: currentUserId)
                 }
             }
             if !filteredHabits.isEmpty {

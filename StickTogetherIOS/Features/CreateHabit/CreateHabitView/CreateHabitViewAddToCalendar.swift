@@ -15,10 +15,5 @@ extension CreateHabitView {
                 .padding(5)
         }.customCellViewModifier()
             .animation(.default, value: setReminder)
-            .onChange(of: alone) { oldValue, newValue in
-                if newValue {
-                    self.buddy = nil
-                }
-            }
     }
 }

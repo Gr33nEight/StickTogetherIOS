@@ -33,7 +33,7 @@ struct CustomView<Content: View, Buttons: View, Icons: View>: View {
             content
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.darkGrey.opacity(0.33))
+                        .fill(Color.darkGrey)
                 )
             buttons.padding([.horizontal, .top])
         }.background(Color.custom.background.ignoresSafeArea())

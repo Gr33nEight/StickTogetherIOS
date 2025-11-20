@@ -18,9 +18,9 @@ struct CreateHabitView: View {
     @State var interval = 1
     @State var startDate = Date()
     @State var endDate = Date().addingTimeInterval(60 * 60 * 24 * 30)
+    @State var type: HabitType = .coop
     @State var setReminder = false
     @State var reminderTime = Date()
-    @State var alone = false
     @State var buddy: User? = nil
     @State var addToCalendar = false
     @State var showFriendsList = false
@@ -43,8 +43,8 @@ struct CreateHabitView: View {
                     VStack(spacing: 20) {
                         titleTextField
                         frequencySelection
-                        reminder
                         inviteFriend
+                        reminder
                         addToCalendarView
                     }
                     .font(.myBody)
@@ -112,14 +112,15 @@ struct CreateHabitView: View {
             startDate: startDate,
             endDate: endDate,
             reminderTime: setReminder ? reminderTime : nil,
-            alone: alone,
-            completion: [initialKey: []]
+            completion: [initialKey: []],
+            type: .alone
         )
 
         if addToCalendar {
             do {
                 try CalendarManager.shared.addHabitToCalendar(habit: habit)
             } catch {
+                // TODO: Handle it properly
                 print("gówno")
             }
         }

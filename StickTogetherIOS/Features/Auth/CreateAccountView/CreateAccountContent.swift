@@ -21,28 +21,28 @@ extension CreateAccountView {
             CustomTextField(
                 text: $name,
                 placeholder: "Name",
-                systemIcon: "person",
+                icon: .user,
                 isSecure: false,
                 errorMessage: nameError
             )
             CustomTextField(
                 text: $email,
                 placeholder: "Email",
-                systemIcon: "envelope",
+                icon: .mail,
                 isSecure: false,
                 errorMessage: emailError
             )
             CustomTextField(
                 text: $password,
                 placeholder: "New Password",
-                systemIcon: "lock",
+                icon: .lock,
                 isSecure: true,
                 errorMessage: passwordError
             )
             CustomTextField(
                 text: $rePassword,
                 placeholder: "Confirm Password",
-                systemIcon: "lock",
+                icon: .lock,
                 isSecure: true,
                 errorMessage: rePasswordError
             )

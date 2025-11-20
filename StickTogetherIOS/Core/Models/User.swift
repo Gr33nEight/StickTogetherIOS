@@ -14,6 +14,7 @@ struct User: Codable, Identifiable {
     var name: String
     var email: String
     var friendsIds: [String] = []
+    var icon: String = "🙎‍♂️"
 }
 
 extension User {

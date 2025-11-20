@@ -18,10 +18,10 @@ struct Habit: Identifiable, Codable {
     var startDate: Date
     var endDate: Date
     var reminderTime: Date? = nil
-    var alone: Bool = false
     var createdAt: Date = Date()
     var completion: [String: [String]]
-    
+    var type: HabitType = .alone
+
     init(id: String? = nil,
          title: String,
          icon: String,
@@ -31,9 +31,10 @@ struct Habit: Identifiable, Codable {
          startDate: Date = Date(),
          endDate: Date = Date(),
          reminderTime: Date? = nil,
-         alone: Bool = false,
          createdAt: Date = Date(),
-         completion: [String: [String]] = [:]) {
+         completion: [String: [String]] = [:],
+         type: HabitType = .alone
+    ) {
         self.id = id
         self.title = title
         self.icon = icon
@@ -43,8 +44,8 @@ struct Habit: Identifiable, Codable {
         self.startDate = startDate
         self.endDate = endDate
         self.reminderTime = reminderTime
-        self.alone = alone
         self.createdAt = createdAt
         self.completion = completion
+        self.type = type
     }
 }

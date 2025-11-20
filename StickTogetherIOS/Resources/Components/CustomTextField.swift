@@ -10,7 +10,7 @@ import SwiftUI
 struct CustomTextField: View {
     @Binding var text: String
     let placeholder: String
-    let systemIcon: String?
+    let icon: ImageResource?
     let isSecure: Bool
     let errorMessage: String?
 
@@ -38,9 +38,11 @@ struct CustomTextField: View {
                     .background(RoundedRectangle(cornerRadius: 10).fill(state.backgroundColor))
 
                 HStack(spacing: 12) {
-                    if let icon = systemIcon {
-                        Image(systemName: icon)
-                            .frame(width: 22)
+                    if let icon = icon {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 24)
                             .foregroundStyle(state.textColor)
                     }
 
@@ -61,7 +63,10 @@ struct CustomTextField: View {
 
                     Spacer()
                     if isSecure {
-                        Image(systemName: showPassword ? "eye" : "eye.slash")
+                        Image(showPassword ? .eye : .hide)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 24)
                             .onTapGesture {
                                 showPassword.toggle()
                             }
@@ -74,7 +79,7 @@ struct CustomTextField: View {
 
                 if text.isEmpty {
                     HStack {
-                        if systemIcon != nil {
+                        if icon != nil {
                             Spacer().frame(width: 22 + 12)
                         }
                         Text(placeholder)

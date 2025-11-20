@@ -57,7 +57,7 @@ struct HabitView: View {
                         HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak()) days")
                         HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted())")
                     }
-                    if let buddy = buddy(), !habit.alone {
+                    if let buddy = buddy(), habit.type != .alone {
                         HStack {
                             HabitViewCell(title: "Buddy 👋", value: buddy.name.capitalized)
                             HabitViewCell(title: "Current state 🎯", value: habit.completionState(
@@ -67,7 +67,7 @@ struct HabitView: View {
                             ).text, font: .myBody)
                         }
                     }
-                    CalendarView(completion: {habitVM.completion(on: $0, habit: habit)}, startDate: habit.startDate)
+                    CalendarView(state: {habitVM.habitState(habit, on: $0)}, startDate: habit.startDate)
                 }.padding()
                     .foregroundStyle(Color.custom.text)
                     .font(.myBody)
@@ -90,7 +90,7 @@ struct HabitView: View {
                         })
                         .customButtonStyle(.primary)
                     }
-                    if !habit.alone {
+                    if habit.type != .alone {
                         Button(action: {
                             Task {
                                 await habitVM.encourageYourBuddy()
@@ -107,7 +107,10 @@ struct HabitView: View {
                 Button {
                     showEditHabitView.toggle()
                 } label: {
-                    Image(systemName: "pencil.line")
+                    Image(.edit)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 24)
                 }.padding(.trailing, 8)
                 Button {
                     confirm(question: "Are you sure you want to delete this habit?") {
@@ -119,7 +122,10 @@ struct HabitView: View {
                         }
                     }
                 } label: {
-                    Image(systemName: "trash")
+                    Image(.trash)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 24)
                 }.padding(.leading, 8)
                 
             }

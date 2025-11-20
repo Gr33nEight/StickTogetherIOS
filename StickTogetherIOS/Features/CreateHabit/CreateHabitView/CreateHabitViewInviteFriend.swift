@@ -10,13 +10,23 @@ import SwiftUI
 extension CreateHabitView {
     var inviteFriend: some View {
         VStack {
-            Toggle("Alone", isOn: $alone)
-                .tint(Color.custom.primary)
-                .padding(5)
-            if !alone {
+            HStack {
+                Text("Habit Type")
+                Spacer()
+                Picker("", selection: $type) {
+                    ForEach(HabitType.allCases, id: \.self) { type in
+                        Text(type.text).tag(type)
+                    }
+                }.tint(Color.custom.text)
+                    .pickerStyle(.menu)
+                    .font(.myBody)
+            }
+            .padding(.horizontal, 5)
+            .padding(.bottom, type != .alone ? 8 : 0)
+            if type != .alone {
                 if let buddy = buddy {
                     HStack(spacing: 15) {
-                        Text("🙍‍♂️")
+                        Text(buddy.icon)
                             .font(.system(size: 23))
                             .shadow(color: .black.opacity(0.5), radius: 5)
                             .padding(10)
@@ -54,10 +64,16 @@ extension CreateHabitView {
             }
         }.customCellViewModifier()
             .animation(.default, value: setReminder)
-            .onChange(of: alone) { oldValue, newValue in
-                if newValue {
-                    self.buddy = nil
-                }
-            }
+//            .onChange(of: alone) { oldValue, newValue in
+//                if newValue {
+//                    self.buddy = nil
+//                }
+//            }
     }
+}
+
+#Preview {
+    CreateHabitView(friendsVM: FriendsViewModel(authService: MockAuthService(), friendsService: MockFriendsService(), currentUser: User(name: "Natan", email: "natan")), currentUser: User(name: "Natan", email: "natan"), createHabit: { _ in
+        
+    }).preferredColorScheme(.dark)
 }

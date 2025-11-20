@@ -9,7 +9,14 @@ import SwiftUI
 
 @MainActor
 class HabitViewModel: ObservableObject {
-    @Published var habits: [Habit] = []
+    @Published var habits: [Habit] = [
+//        Habit(id: "1", title: "Test", icon: "🔥", ownerId: "", frequency: Frequency.daily(), type: .Alone),
+        Habit(id: "2", title: "Test 2", icon: "🌈", ownerId: "", frequency: Frequency.daily(), type: .coop),
+        Habit(id: "4", title: "Test 4", icon: "🔁", ownerId: "", frequency: Frequency.daily(), type: .coop),
+        Habit(id: "5", title: "Test 5", icon: "📊", ownerId: "", frequency: Frequency.daily(), type: .coop),
+        Habit(id: "3", title: "Test 3", icon: "🏋️‍♀️", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
+        Habit(id: "6", title: "Test 6", icon: "🥺", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
+    ]
     private let service: HabitServiceProtocol
     private var listenerToken: ListenerToken?
     private var loadingManager: LoadingManager?
@@ -156,28 +163,40 @@ class HabitViewModel: ObservableObject {
         print("Encouraging buddy...")
     }
     
-    func completion(on date: Date, habit: Habit? = nil) -> BaseCompletionState {
+    func currentUserDidComplete(_ habit: Habit, on date: Date) -> Bool {
+        let key = Habit.dayKey(for: date)
+        return habit.userDidComplete(currentUser.safeID, forDayKey: key)
+    }
+    
+    func habitState(_ habit: Habit, on date: Date) -> HabitState {
         let key = Habit.dayKey(for: date)
         let isPast = date < Calendar.current.startOfDay(for: Date())
+        let isAfterStartDate = date >= habit.startDate
         
-        if let habit = habit {
-            guard habit.frequency.occurs(on: date, startDate: habit.startDate) && isPast else { return .none }
-            guard let habitCompletion = habit.completion[key] else { return .skipped }
-            // TODO: change for more buddies
-            return habitCompletion.count == 2 ? .done : .skipped
-        }else{
-            guard isPast else { return .none }
+        guard isPast && isAfterStartDate else { return .none }
+        
+        return habit.completionCount(forDayKey: key) >= habit.numberOfParticipants() ? .done : .skipped
+    }
+    
+    func habitState(on date: Date) -> HabitState {
+        let key = Habit.dayKey(for: date)
+        let isPast = date <= Calendar.current.startOfDay(for: Date())
 
-            let relevantHabits = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
-               guard !relevantHabits.isEmpty else { return .none }
-               
-               let allComplete = relevantHabits.allSatisfy { habit in
-                   let completionsCount = habit.completion[key]?.count ?? 0
-                   print(completionsCount)
-                   return completionsCount == habit.numberOfParticipants()
-               }
-               return allComplete ? .done : .skipped
+        guard isPast else { return .none }
+        
+        let isToday = Calendar.current.isDateInToday(date)
+        let hasNoCompletionsYet = habits.allSatisfy { $0.completion[key]?.isEmpty ?? true }
+
+        if isToday && hasNoCompletionsYet {
+            return .none
         }
+        
+        let relevant = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
+        if relevant.isEmpty { return .none }
+        
+        let anyIncomplete = relevant.contains { $0.completionCount(forDayKey: key) < $0.numberOfParticipants() }
+        
+        return anyIncomplete ? .skipped : .done
     }
     
     deinit {
