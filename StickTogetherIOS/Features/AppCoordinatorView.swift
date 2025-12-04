@@ -27,6 +27,7 @@ struct AppCoordinatorView: View {
                             habitService: di.habitService,
                             friendsService: di.friendsService,
                             profileService: di.profileService,
+                            appNotificationsService: di.appNotificationsService,
                             currentUser: user
                         )
                             .environmentObject(authVM)

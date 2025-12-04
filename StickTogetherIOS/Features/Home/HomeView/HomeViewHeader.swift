@@ -22,7 +22,7 @@ extension HomeView {
                     .scaledToFit()
                     .frame(height: 24)
             }.overlay {
-                Image(systemName: "2")
+                Image(systemName: "\(appNotificationsVM.appNotifications.count)")
                     .foregroundColor(Color.custom.red)
                     .symbolVariant(.fill)
                     .symbolVariant(.circle)
@@ -35,12 +35,12 @@ extension HomeView {
     }
 }
 
-#Preview {
-    let user = User(name: "Natanael", email: "")
-    HomeView()
-        .environmentObject(AuthViewModel())
-        .environmentObject(HabitViewModel(service: MockHabitService(), currentUser: user))
-        .environmentObject(FriendsViewModel(profileService: FirebaseProfileService(), friendsService: FirebaseFriendsService(), currentUser: user))
-        .environmentObject(ProfileViewModel(profileService: FirebaseProfileService()))
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    let user = User(name: "Natanael", email: "")
+//    HomeView()
+//        .environmentObject(AuthViewModel())
+//        .environmentObject(HabitViewModel(service: MockHabitService(), currentUser: user))
+//        .environmentObject(FriendsViewModel(profileService: FirebaseProfileService(), friendsService: FirebaseFriendsService(), currentUser: user))
+//        .environmentObject(ProfileViewModel(profileService: FirebaseProfileService()))
+//        .preferredColorScheme(.dark)
+//}

@@ -11,6 +11,7 @@ import ElegantEmojiPicker
 struct CreateHabitView: View {
     @EnvironmentObject var friendsVM: FriendsViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     
     @State var id: String? = nil
     @State var title = ""
@@ -103,6 +104,7 @@ struct CreateHabitView: View {
         }
         
         let initialKey = Habit.dayKey(for: startDate)
+        let finalType = buddy == nil ? .alone : type
         let habit = Habit(
             id: id,
             title: title,
@@ -114,9 +116,9 @@ struct CreateHabitView: View {
             endDate: endDate,
             reminderTime: setReminder ? reminderTime : nil,
             completion: [initialKey: []],
-            type: buddy == nil ? .alone : type
+            type: finalType
         )
-
+        
         if addToCalendar {
             do {
                 try CalendarManager.shared.addHabitToCalendar(habit: habit)
@@ -126,6 +128,27 @@ struct CreateHabitView: View {
         }
         
         createHabit(habit)
+        
+        if finalType != .alone {
+            guard
+                let buddyId = buddy?.id,
+                let currentUser = profileVM.currentUser,
+                let habitId = habit.id
+            else { return }
+            
+            let appNotification = AppNotification(
+                senderId: userId,
+                receiverId: buddyId,
+                content: "\(currentUser.name) invited you to join his/her habit: \(title) \(icon)",
+                date: Date(),
+                type: .habitInvite,
+                payload: ["habitId" : habitId])
+            
+            Task {
+                await appNotificationsVM.sendAppNotification(appNotification)
+            }
+        }
+                
         dismiss()
     }
 }

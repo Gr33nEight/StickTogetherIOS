@@ -13,6 +13,7 @@ struct HomeView: View {
     @EnvironmentObject var habitVM: HabitViewModel
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     
     @Environment(\.confirm) var confirm
     

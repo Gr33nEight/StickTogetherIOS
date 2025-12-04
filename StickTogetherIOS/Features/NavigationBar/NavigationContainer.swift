@@ -15,11 +15,13 @@ struct NavigationContainer: View {
     
     @StateObject private var habitVM: HabitViewModel
     @StateObject private var friendsVM: FriendsViewModel
+    @StateObject private var appNotificationsVM: AppNotificationsViewModel
     
     init(selected: Binding<NavigationDestinations>,
          habitService: HabitServiceProtocol,
          friendsService: FriendsServiceProtocol,
          profileService: ProfileServiceProtocol,
+         appNotificationsService: AppNotificationsServiceProtocol,
          currentUser: User,
          loading: LoadingManager? = nil) {
         
@@ -30,13 +32,14 @@ struct NavigationContainer: View {
                                                     friendsService: friendsService,
                                                     loading: loading,
                                                     currentUser: currentUser)
+        let appNotificationsVM = AppNotificationsViewModel.configured(service: appNotificationsService, currentUser: currentUser)
         
         _habitVM = StateObject(wrappedValue: habitVM)
         _friendsVM = StateObject(wrappedValue: friendsVM)
+        _appNotificationsVM = StateObject(wrappedValue: appNotificationsVM)
         
         self._selected = selected
     }
-    
     
     var body: some View {
         ZStack {
@@ -53,6 +56,7 @@ struct NavigationContainer: View {
         }.task {
             await habitVM.startListening()
             await friendsVM.startFriendsListener()
+            await appNotificationsVM.startListening()
         }
     }
     
@@ -63,6 +67,7 @@ struct NavigationContainer: View {
             HomeView()
                 .environmentObject(habitVM)
                 .environmentObject(friendsVM)
+                .environmentObject(appNotificationsVM)
 //        case .stats:
 //            StatsView()
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
