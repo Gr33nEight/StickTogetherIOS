@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct AppEntry: View {
+    @ObservedObject var di: DIContainer
     var body: some View {
         ZStack {
-            AppCoordinatorView()
+            AppCoordinatorView(di: di)
             LoadingOverlay()
         }.task {
             await CalendarManager.shared.requestAccess()

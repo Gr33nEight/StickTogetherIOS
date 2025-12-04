@@ -9,6 +9,14 @@
 import Foundation
 
 actor MockFriendsService: @preconcurrency FriendsServiceProtocol {
+    func addToFriendsList(friendId: String, for userId: String) async throws {
+        
+    }
+    
+    func removeFromFriendsList(friendId: String, for userId: String) async throws {
+        
+    }
+    
     private var store: [String: Invitation] = [:]
     private var nextId = 1
 

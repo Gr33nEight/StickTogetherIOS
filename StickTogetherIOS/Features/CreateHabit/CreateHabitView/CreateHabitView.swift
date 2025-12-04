@@ -9,7 +9,8 @@ import SwiftUI
 import ElegantEmojiPicker
 
 struct CreateHabitView: View {
-    @ObservedObject var friendsVM: FriendsViewModel
+    @EnvironmentObject var friendsVM: FriendsViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     
     @State var id: String? = nil
     @State var title = ""
@@ -33,7 +34,6 @@ struct CreateHabitView: View {
     @State var selectedEmoji: Emoji? = nil
     @State var autoEmoji = "➕"
     
-    let currentUser: User
     let createHabit: (Habit) -> Void
 
     var body: some View {
@@ -72,14 +72,15 @@ struct CreateHabitView: View {
                 id = UUID().uuidString
             }
             .fullScreenCover(isPresented: $showFriendsList, content: {
-                FriendsListView(friendsVM: friendsVM, currentUser: currentUser) { buddy in
+                FriendsListView() { buddy in
                     self.buddy = buddy
                 }.modal()
+                    .environmentObject(friendsVM)
             })
     }
 
     private func create() {
-        guard let userId = currentUser.id
+        guard let userId = profileVM.safeUser.id
         else {
             showToastMessage(.warning("You didn't choose icon."))
             return
@@ -113,7 +114,7 @@ struct CreateHabitView: View {
             endDate: endDate,
             reminderTime: setReminder ? reminderTime : nil,
             completion: [initialKey: []],
-            type: .alone
+            type: buddy == nil ? .alone : type
         )
 
         if addToCalendar {
@@ -121,7 +122,6 @@ struct CreateHabitView: View {
                 try CalendarManager.shared.addHabitToCalendar(habit: habit)
             } catch {
                 // TODO: Handle it properly
-                print("gówno")
             }
         }
         

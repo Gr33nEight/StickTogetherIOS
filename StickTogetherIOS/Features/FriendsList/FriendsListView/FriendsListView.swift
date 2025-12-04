@@ -22,9 +22,11 @@ enum FriendsListType: CaseIterable {
 
 struct FriendsListView: View {
     var fullList: Bool = false
-    @ObservedObject var friendsVM: FriendsViewModel
+    
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var friendsVM: FriendsViewModel
+    
     @State var pickedFriendsListType: FriendsListType = .allFriends
-    let currentUser: User
     
     @State var invitedBuddy: User? = nil
     @Namespace var friendsListAnimation
@@ -88,7 +90,7 @@ struct FriendsListView: View {
                         Task {
                             if friendsVM.friends.contains(where: {$0.email == email}) {
                                 toastMessage(.info("This user is already your friend!"))
-                            }else if email == currentUser.email {
+                            }else if email == profileVM.safeUser.email {
                                 toastMessage(.info("You can't invite yourself!"))
                             }else {
                                 let result = await friendsVM.sendInvitation(to: email)
@@ -116,7 +118,9 @@ struct FriendsListView: View {
                     .tint(removingStarted ? Color.custom.red : Color.custom.primary)
             }
             
-        }.animation(.easeInOut, value: removingStarted)
+        }.padding(.bottom, fullList ? 100 : 0)
+            .background(Color.custom.background)
+        .animation(.easeInOut, value: removingStarted)
             .task {
                 if fullList {
                     let result = await friendsVM.fetchAllInvitation()

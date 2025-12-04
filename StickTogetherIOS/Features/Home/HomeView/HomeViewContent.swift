@@ -15,7 +15,7 @@ extension HomeView {
     }
     
     func iAmOwner(_ ownerId: String) -> Bool {
-        currentUser.safeID == ownerId
+        profileVM.safeUser.safeID == ownerId
     }
     
     func buddy(_ habit: Habit) -> User? {
@@ -37,22 +37,36 @@ extension HomeView {
             ScrollView(showsIndicators: false) {
                 if filteredHabits.isEmpty {
                     Spacer()
-                    Text("There are no \(pickedHabitType.text.lowercased()) habits scheduled for this day")
-                        .foregroundStyle(Color.custom.lightGrey)
-                        .font(.mySubtitle)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        .padding(.top, UIScreen.main.bounds.height/5)
+                    VStack {
+                        Text("There are no \(pickedHabitType.text.lowercased()) habits scheduled for this day")
+                            .foregroundStyle(Color.custom.lightGrey)
+                            .font(.mySubtitle)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        NavigationLink(destination: {
+                            CreateHabitView() { habit in
+                                Task { await habitVM.createHabit(habit) }
+                            }.environmentObject(friendsVM)
+                        }, label: {
+                            HStack {
+                                Image(systemName: "plus")
+                                    .frame(height: 24)
+                                Text("Add new")
+                                    .font(.customAppFont(size: 15, weight: .semibold))
+                            }
+                        })
+                        .foregroundStyle(Color.custom.tertiary)
+                    }.padding(.top, UIScreen.main.bounds.height/5.5)
                     Spacer()
                 } else {
                     ForEach(filteredHabits) { habit in
                         
                         NavigationLink {
-                            HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, currentUserId: currentUser.safeID, friends: friendsVM.friends)
+                            HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
                         } label: {
                             HabitCell(habit: habit, updateCompletion: {
                                 Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
-                            }, selectedDate: selectedDate, buddy: buddy(habit), currentUserId: currentUser.safeID)
+                            }, selectedDate: selectedDate, buddy: buddy(habit))
                         }
                     }
                 }
@@ -98,14 +112,14 @@ extension HomeView {
     }
 }
 
-#Preview {
-    let user = User(name: "Natanael", email: "")
-    HomeView(currentUser: user)
-        .environmentObject(AuthViewModel())
-        .environmentObject(HabitViewModel(service: MockHabitService(), currentUser: user))
-        .environmentObject(FriendsViewModel(authService: MockAuthService(), friendsService: MockFriendsService(), currentUser: user))
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    let user = User(name: "Natanael", email: "")
+//    HomeView(currentUser: user)
+//        .environmentObject(AuthViewModel())
+//        .environmentObject(HabitViewModel(service: MockHabitService(), currentUser: user))
+//        .environmentObject(FriendsViewModel(authService: MockAuthService(), friendsService: MockFriendsService(), currentUser: user))
+//        .preferredColorScheme(.dark)
+//}
 
 
 enum HabitType: Int, CaseIterable, Codable {

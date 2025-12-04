@@ -10,12 +10,12 @@ import SwiftUI
 @MainActor
 class HabitViewModel: ObservableObject {
     @Published var habits: [Habit] = [
-//        Habit(id: "1", title: "Test", icon: "🔥", ownerId: "", frequency: Frequency.daily(), type: .Alone),
-        Habit(id: "2", title: "Test 2", icon: "🌈", ownerId: "", frequency: Frequency.daily(), type: .coop),
-        Habit(id: "4", title: "Test 4", icon: "🔁", ownerId: "", frequency: Frequency.daily(), type: .coop),
-        Habit(id: "5", title: "Test 5", icon: "📊", ownerId: "", frequency: Frequency.daily(), type: .coop),
-        Habit(id: "3", title: "Test 3", icon: "🏋️‍♀️", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
-        Habit(id: "6", title: "Test 6", icon: "🥺", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
+////        Habit(id: "1", title: "Test", icon: "🔥", ownerId: "", frequency: Frequency.daily(), type: .Alone),
+//        Habit(id: "2", title: "Test 2", icon: "🌈", ownerId: "", frequency: Frequency.daily(), type: .coop),
+//        Habit(id: "4", title: "Test 4", icon: "🔁", ownerId: "", frequency: Frequency.daily(), type: .coop),
+//        Habit(id: "5", title: "Test 5", icon: "📊", ownerId: "", frequency: Frequency.daily(), type: .coop),
+//        Habit(id: "3", title: "Test 3", icon: "🏋️‍♀️", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
+//        Habit(id: "6", title: "Test 6", icon: "🥺", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
     ]
     private let service: HabitServiceProtocol
     private var listenerToken: ListenerToken?
@@ -36,6 +36,12 @@ class HabitViewModel: ObservableObject {
             return
         }
         await loadUserHabits()
+    }
+    
+    static func configured(service: HabitServiceProtocol,
+                           loading: LoadingManager? = nil,
+                           currentUser: User) -> HabitViewModel {
+        return HabitViewModel(service: service, loading: loading, currentUser: currentUser)
     }
 
     private func loadUserHabits() async {

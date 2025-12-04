@@ -17,12 +17,4 @@ protocol AuthServiceProtocol {
     func signInWithGoogle() async throws -> ValueOrError<User>
     func signOut() async throws
     func authStateStream() -> AsyncStream<User?>
-    
-    func getUserById(_ uid: String) async throws -> User?
-    func getUserByEmail(_ email: String) async throws -> User?
-    func getUsersByIds(_ uids: [String]) async throws -> [User]
-    func updateUser(_ user: User) async throws
-    
-    func addToFriendsList(friendId: String, for userId: String) async throws
-    func removeFromFriendsList(friendId: String, for userId: String) async throws
 }

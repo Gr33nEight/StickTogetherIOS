@@ -12,6 +12,7 @@ struct HomeView: View {
     @EnvironmentObject var friendsVM: FriendsViewModel
     @EnvironmentObject var habitVM: HabitViewModel
     @EnvironmentObject var authVM: AuthViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     
     @Environment(\.confirm) var confirm
     
@@ -20,13 +21,8 @@ struct HomeView: View {
     @State var baseWeekAnchor: Date = Date()
     @State var pickedHabitType: HabitType = .coop
     
-    @State var isEmojiPickerPresented = false
-    @State var selectedEmoji: Emoji? = nil
-    
     @Namespace var dayAnimation
     @Namespace var habitTypeAnimation
-
-    let currentUser: User
 
     var visible: [Habit] {
         habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
@@ -41,6 +37,5 @@ struct HomeView: View {
         .background(Color.custom.background)
         .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
-        .emojiPicker(isPresented: $isEmojiPickerPresented, selectedEmoji: $selectedEmoji)
     }
 }

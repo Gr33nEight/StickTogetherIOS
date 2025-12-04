@@ -17,20 +17,35 @@ extension Habit {
         return fmt.string(from: d)
     }
 
-    func completionState(on date: Date, currentUserId: String, buddyId: String?) -> CompletionState {
+    func completionState(
+        on date: Date,
+        currentUserId: String,
+        ownerId: String,
+        buddyId: String?
+    ) -> CompletionState {
+
         let key = Habit.dayKey(for: date)
         let users = completion[key] ?? []
 
-        let meDid = users.contains(currentUserId)
+        guard let buddyId else {
+            return users.contains(currentUserId) ? .both : .neither
+        }
         
-        guard let buddyId else { return meDid ? .both : .neither }
-        let buddyDid = users.contains(buddyId)
+        let otherUserId: String
+        if currentUserId == ownerId {
+            otherUserId = buddyId
+        } else {
+            otherUserId = ownerId
+        }
 
-        switch (meDid, buddyDid) {
+        let meDid = users.contains(currentUserId)
+        let otherDid = users.contains(otherUserId)
+
+        switch (meDid, otherDid) {
         case (true, true): return .both
         case (true, false): return .me
         case (false, true): return .buddy
-        default: return .neither
+        case (false, false): return .neither
         }
     }
 

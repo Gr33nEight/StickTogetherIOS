@@ -10,8 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.confirm) var confirm
     @EnvironmentObject var authVM: AuthViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     // The current user - if you want live updates pass Binding<User> instead
-    let currentUser: User
 
     // local preference state (these could be backed by AppStorage or your user model)
     @State private var language: String = "English"
@@ -22,9 +22,9 @@ struct SettingsView: View {
     // Build array of items (heterogeneous)
     private var preferences: [SettingsPreferenceItem] {
         [
-            .picker(icon: "globe", text: "Language", options: ["English", "Polish"], selection: $language),
+            .picker(icon: "globe", text: "Language", options: Language.allCases.map({$0.rawValue}), selection: $language),
             .toggle(icon: "bell", text: "Notifications", value: $notificationsEnabled),
-            .picker(icon: "paintpalette", text: "Theme", options: ["Default", "Light", "Dark"], selection: $theme),
+            .picker(icon: "paintpalette", text: "Theme", options: Theme.allCases.map({$0.rawValue.capitalized}), selection: $theme),
             .picker(icon: "checklist", text: "Main Habit Type", options: HabitType.allCases.map({ $0.text }), selection: $mainHabitType)
         ]
     }
@@ -46,7 +46,7 @@ struct SettingsView: View {
                 VStack(spacing: 15) {
                     VStack(spacing: 8){
                         ZStack {
-                            Text(currentUser.icon)
+                            Text(profileVM.safeUser.icon)
                                 .font(.system(size: 35))
                                 .shadow(color: .black.opacity(0.5), radius: 5)
                         }.padding(10)
@@ -54,10 +54,10 @@ struct SettingsView: View {
                                 Circle()
                                     .fill(Color.custom.text)
                             )
-                        Text(currentUser.name)
+                        Text(profileVM.safeUser.name)
                             .foregroundStyle(Color.custom.text)
                             .font(.mySubtitle)
-                        Text(currentUser.email)
+                        Text(profileVM.safeUser.email)
                             .foregroundStyle(Color(.systemGray))
                             .font(.customAppFont(size: 15))
                     }
@@ -156,8 +156,8 @@ struct SettingsCellView: View {
     }
 }
 
-#Preview {
-    SettingsView(currentUser: User(name: "Natanael", email: "natanael.jop@gmail.com"))
-        .environmentObject(AuthViewModel())
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    SettingsView(currentUser: User(name: "Natanael", email: "natanael.jop@gmail.com"))
+//        .environmentObject(AuthViewModel())
+//        .preferredColorScheme(.dark)
+//}

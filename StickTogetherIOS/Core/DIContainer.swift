@@ -11,14 +11,17 @@ final class DIContainer: ObservableObject {
     let authService: AuthServiceProtocol
     let habitService: HabitServiceProtocol
     let friendsService: FriendsServiceProtocol
+    let profileService: ProfileServiceProtocol
     
     init(
         authService: AuthServiceProtocol = FirebaseAuthService(),
         habitService: HabitServiceProtocol = FirebaseHabitService(),
-        friendsService: FriendsServiceProtocol = FirebaseFriendsService()
+        friendsService: FriendsServiceProtocol = FirebaseFriendsService(),
+        profileService: ProfileServiceProtocol = FirebaseProfileService()
     ) {
         self.authService = authService
         self.habitService = habitService
         self.friendsService = friendsService
+        self.profileService = profileService
     }
 }

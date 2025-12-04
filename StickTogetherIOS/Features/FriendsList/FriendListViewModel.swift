@@ -15,7 +15,7 @@ class FriendsViewModel: ObservableObject {
     @Published private(set) var invitationSent = [Invitation]()
     @Published private(set) var invitationReceived = [Invitation]()
     
-    private let authService: any AuthServiceProtocol
+    private let profileService: any ProfileServiceProtocol
     private let friendsService: FriendsServiceProtocol
     private var loadingManager: LoadingManager?
 
@@ -31,15 +31,25 @@ class FriendsViewModel: ObservableObject {
     private var userDocListener: ListenerRegistration?
     private var currentUser: User
     
-    init(authService: any AuthServiceProtocol,
+    init(profileService: any ProfileServiceProtocol,
          friendsService: FriendsServiceProtocol,
          loading: LoadingManager? = nil,
          currentUser: User) {
         self.friendsService = friendsService
-        self.authService = authService
+        self.profileService = profileService
         self.loadingManager = loading
         self.currentUser = currentUser
     }
+    
+    static func configured(profileService: ProfileServiceProtocol,
+                              friendsService: FriendsServiceProtocol,
+                              loading: LoadingManager? = nil,
+                              currentUser: User) -> FriendsViewModel {
+           return FriendsViewModel(profileService: profileService,
+                                   friendsService: friendsService,
+                                   loading: loading,
+                                   currentUser: currentUser)
+       }
     
     deinit {
         DispatchQueue.main.async { [weak self] in
@@ -90,9 +100,9 @@ class FriendsViewModel: ObservableObject {
     func fetchFriendById(_ id: String) async -> User? {
         do {
             if let loader = loadingManager {
-                return try await loader.run { try await self.authService.getUserById(id) }
+                return try await loader.run { try await self.profileService.getUserById(id) }
             } else {
-                return try await authService.getUserById(id)
+                return try await profileService.getUserById(id)
             }
         } catch {
             print("Failed to load friend: \(error)")
@@ -125,6 +135,7 @@ class FriendsViewModel: ObservableObject {
                 if let data = snapshot.data(), let raw = data["friendsIds"] as? [String] {
                     Task { @MainActor in
                         await self.loadFriendsFromIds(raw, preferLoader: false)
+                        print("Friends: \(self.friends.map{ $0.name})")
                     }
                 } else {
                     // no friends yet
@@ -155,12 +166,12 @@ class FriendsViewModel: ObservableObject {
 
         await withTaskGroup(of: [User].self) { group in
             for chunk in chunks {
-                group.addTask { [authService, loadingManager] in
+                group.addTask { [profileService, loadingManager] in
                     do {
                         if let loader = loadingManager, preferLoader {
-                            return try await loader.run { try await authService.getUsersByIds(chunk) }
+                            return try await loader.run { try await profileService.getUsersByIds(chunk) }
                         } else {
-                            return try await authService.getUsersByIds(chunk)
+                            return try await profileService.getUsersByIds(chunk)
                         }
                     } catch {
                         print("Failed fetching friend chunk: \(error)")
@@ -182,7 +193,7 @@ class FriendsViewModel: ObservableObject {
     
     private func fetchFriendByEmail(_ email: String) async -> User? {
         do {
-            return try await authService.getUserByEmail(email.lowercased())
+            return try await profileService.getUserByEmail(email.lowercased())
         } catch {
             print("Failed to load friend: \(error)")
             return nil
@@ -243,9 +254,9 @@ class FriendsViewModel: ObservableObject {
 
                 await withTaskGroup(of: (String, User?).self) { group in
                     for (invId, userId) in pairs {
-                        group.addTask { [authService] in
+                        group.addTask { [profileService] in
                             do {
-                                let user = try await authService.getUserById(userId)
+                                let user = try await profileService.getUserById(userId)
                                 return (invId, user)
                             } catch {
                                 return (invId, nil)
@@ -320,8 +331,8 @@ class FriendsViewModel: ObservableObject {
             return .error("Couldn't get invitation id")
         }
         do {
-            try await self.authService.addToFriendsList(friendId: invitation.senderId, for: currentUser.safeID)
-            try await self.authService.addToFriendsList(friendId: currentUser.safeID, for: invitation.senderId)
+            try await self.friendsService.addToFriendsList(friendId: invitation.senderId, for: currentUser.safeID)
+            try await self.friendsService.addToFriendsList(friendId: currentUser.safeID, for: invitation.senderId)
             try await self.friendsService.deleteInvitation(byId: invitationId)
             return .success
         } catch {
@@ -349,8 +360,8 @@ class FriendsViewModel: ObservableObject {
     
     func removeFromFriendsList(userId: String) async -> SuccessOrError {
         do {
-            try await self.authService.removeFromFriendsList(friendId: userId, for: currentUser.safeID)
-            try await self.authService.removeFromFriendsList(friendId: currentUser.safeID, for: userId)
+            try await self.friendsService.removeFromFriendsList(friendId: userId, for: currentUser.safeID)
+            try await self.friendsService.removeFromFriendsList(friendId: currentUser.safeID, for: userId)
             return .success
         } catch {
             return .error("Couldn't remove from friends list: \(error)")

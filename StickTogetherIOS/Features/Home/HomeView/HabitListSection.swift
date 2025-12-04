@@ -37,7 +37,8 @@ struct HabitListSection: View {
             let computedState = habit.completionState(
                 on: selectedDate,
                 currentUserId: currentUserId,
-                buddyId: currentUserId == habit.ownerId ? habit.buddyId : habit.ownerId
+                ownerId: habit.ownerId,
+                buddyId: habit.buddyId
             )
             return computedState == state
         }
@@ -52,9 +53,9 @@ struct HabitListSection: View {
             }
             ForEach(filteredHabits) { habit in
                 NavigationLink {
-                    HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, currentUserId: currentUserId, friends: friends)
+                    HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, friends: friends)
                 } label: {
-                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, buddy: buddy(habit), currentUserId: currentUserId)
+                    HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, buddy: buddy(habit))
                 }
             }
             if !filteredHabits.isEmpty {

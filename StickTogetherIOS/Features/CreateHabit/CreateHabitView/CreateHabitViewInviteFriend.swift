@@ -72,8 +72,8 @@ extension CreateHabitView {
     }
 }
 
-#Preview {
-    CreateHabitView(friendsVM: FriendsViewModel(authService: MockAuthService(), friendsService: MockFriendsService(), currentUser: User(name: "Natan", email: "natan")), currentUser: User(name: "Natan", email: "natan"), createHabit: { _ in
-        
-    }).preferredColorScheme(.dark)
-}
+//#Preview {
+//    CreateHabitView(friendsVM: FriendsViewModel(authService: MockAuthService(), friendsService: MockFriendsService(), currentUser: User(name: "Natan", email: "natan")), currentUser: User(name: "Natan", email: "natan"), createHabit: { _ in
+//        
+//    }).preferredColorScheme(.dark)
+//}

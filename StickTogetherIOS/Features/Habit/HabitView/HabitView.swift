@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HabitView: View {
+    @EnvironmentObject var profileVM: ProfileViewModel
     @ObservedObject var habitVM: HabitViewModel
     
     let habit: Habit
@@ -19,11 +20,10 @@ struct HabitView: View {
     @Environment(\.showToastMessage) var toastMessage
     @Namespace var frequencyAnimation
     
-    let currentUserId: String
     let friends: [User]
     
     var iAmOwner: Bool {
-        currentUserId == habit.ownerId
+        profileVM.safeUser.safeID == habit.ownerId
     }
     
     func buddy() -> User? {
@@ -48,7 +48,7 @@ struct HabitView: View {
                         VStack(alignment: .leading, spacing: 0){
                             Text(habit.title)
                                 .font(.mySubtitle)
-                            Text("Everyday")
+                            Text(habit.frequency.readableDescription)
                                 .font(.myCaption)
                         }
                         Spacer()
@@ -62,8 +62,9 @@ struct HabitView: View {
                             HabitViewCell(title: "Buddy 👋", value: buddy.name.capitalized)
                             HabitViewCell(title: "Current state 🎯", value: habit.completionState(
                                 on: selectedDate,
-                                currentUserId: currentUserId,
-                                buddyId: currentUserId == habit.ownerId ? habit.buddyId : habit.ownerId
+                                currentUserId: profileVM.safeUser.safeID,
+                                ownerId: habit.ownerId,
+                                buddyId: habit.buddyId
                             ).text, font: .myBody)
                         }
                     }
@@ -75,7 +76,7 @@ struct HabitView: View {
         } buttons: {
             if Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
                 VStack(spacing: 20) {
-                    if habit.isMarkedAsDone(by: currentUserId, on: selectedDate) {
+                    if habit.isMarkedAsDone(by: profileVM.safeUser.safeID, on: selectedDate) {
                         Button(action: {
                             Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
                         }, label: {

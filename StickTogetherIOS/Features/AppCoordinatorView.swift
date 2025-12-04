@@ -8,27 +8,33 @@
 import SwiftUI
 
 struct AppCoordinatorView: View {
-    @EnvironmentObject var di: DIContainer
+    @ObservedObject var di: DIContainer
+    @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var loading: LoadingManager
+    @EnvironmentObject var profileVM: ProfileViewModel
+    
     @Environment(\.showToastMessage) private var showToastMessage
-
-    @StateObject private var authVM = AuthViewModel()
+    
     @State private var selectedView: NavigationDestinations = .home
     
     var body: some View {
         NavigationView{
             Group {
                 if authVM.isAuthenticated {
-                    if let currentUser = authVM.currentUser,
-                       let _ = currentUser.id {
+                    if let user = profileVM.currentUser, user.id != nil {
                         NavigationContainer(
-                            currentUser: currentUser,
                             selected: $selectedView,
                             habitService: di.habitService,
                             friendsService: di.friendsService,
-                            authService: di.authService,
-                            authVM: authVM
+                            profileService: di.profileService,
+                            currentUser: user
                         )
+                            .environmentObject(authVM)
+                            .environmentObject(profileVM)
+                            .environmentObject(loading)
+                            .onAppear {
+                                selectedView = .home
+                            }
                     }else{
                         ProgressView()
                             .tint(.accent)
@@ -38,11 +44,6 @@ struct AppCoordinatorView: View {
                         .navigationBarBackButtonHidden(true)
                 }
             }
-        }.environmentObject(authVM)
-        .onAppear {
-            authVM.setup(authService: di.authService,
-                         loading: loading,
-                         toast: showToastMessage)
         }
     }
 }

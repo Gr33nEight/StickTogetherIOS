@@ -11,6 +11,8 @@ import Firebase
 
 actor FirebaseFriendsService: @preconcurrency FriendsServiceProtocol {
     private let collection = "invitations"
+    private let usersCollection = "users"
+    
     private let firestore = Firestore.firestore()
     
     init() { }
@@ -36,5 +38,26 @@ actor FirebaseFriendsService: @preconcurrency FriendsServiceProtocol {
             .whereField(field, isEqualTo: userId)
             .getDocuments()
         return snapshot.documents.compactMap { try? $0.data(as: Invitation.self) }
+    }
+    
+    func addToFriendsList(friendId: String, for userId: String) async throws {
+        try await firestore.collection(usersCollection)
+            .document(userId)
+            .updateData([
+                "friendsIds": FieldValue.arrayUnion([friendId])
+            ])
+    }
+    
+    func removeFromFriendsList(friendId: String, for userId: String) async throws {
+        try await firestore.collection(usersCollection)
+            .document(userId)
+            .updateData([
+                "friendsIds": FieldValue.arrayRemove([friendId])
+            ])
+    }
+    
+    func getFriendById(_ uid: String) async throws -> User? {
+        let snapshot = try await firestore.collection(usersCollection).document(uid).getDocument()
+        return try snapshot.data(as: User.self)
     }
 }

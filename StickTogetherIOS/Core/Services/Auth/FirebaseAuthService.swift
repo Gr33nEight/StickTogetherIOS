@@ -93,46 +93,6 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
         }
     }
     
-    func getUserById(_ uid: String) async throws -> User? {
-        let snapshot = try await firestore.collection("users").document(uid).getDocument()
-        return try snapshot.data(as: User.self)
-    }
-    func getUserByEmail(_ email: String) async throws -> User? {
-        let snapshot = try await firestore.collection("users")
-            .whereField("email", isEqualTo: email)
-            .getDocuments()
-        return snapshot.documents.compactMap { try? $0.data(as: User.self) }.first
-    }
-    
-    func getUsersByIds(_ uids: [String]) async throws -> [User] {
-        if uids.isEmpty { return [] }
-        let snapshot = try await firestore.collection("users")
-            .whereField(FieldPath.documentID(), in: uids)
-            .getDocuments()
-        return snapshot.documents.compactMap { try? $0.data(as: User.self) }
-    }
-    
-    func updateUser(_ user: User) async throws {
-        guard let id = user.id else { throw AuthError.missingUserId }
-        try firestore.collection("users").document(id).setData(from: user, merge: true)
-    }
-    
-    func addToFriendsList(friendId: String, for userId: String) async throws {
-        try await firestore.collection("users")
-            .document(userId)
-            .updateData([
-                "friendsIds": FieldValue.arrayUnion([friendId])
-            ])
-    }
-    
-    func removeFromFriendsList(friendId: String, for userId: String) async throws {
-        try await firestore.collection("users")
-            .document(userId)
-            .updateData([
-                "friendsIds": FieldValue.arrayRemove([friendId])
-            ])
-    }
-    
     func signInWithApple(_ result: Result<ASAuthorization, Error>, nonce: String) async throws -> ValueOrError<User> {
         switch result {
         case .success(let authorization):

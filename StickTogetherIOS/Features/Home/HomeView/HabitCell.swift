@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct HabitCell: View {
+    @EnvironmentObject var profileVM: ProfileViewModel
     let habit: Habit
     let updateCompletion: () -> Void
     let selectedDate: Date
     let buddy: User?
-    let currentUserId: String?
     
     var state: CompletionState {
-        guard let currentUserId = currentUserId else {
-            return .neither
-        }
-        return habit.completionState(on: selectedDate, currentUserId: currentUserId, buddyId: habit.buddyId)
+        return habit.completionState(on: selectedDate, currentUserId: profileVM.safeUser.safeID, ownerId: habit.ownerId, buddyId: habit.buddyId)
     }
     
     var isDone: Bool { state == .both || state == .me }
@@ -91,13 +88,13 @@ struct HabitCell: View {
     }
 }
 
-#Preview {
-    ZStack {
-        Color.custom.background
-        HabitCell(habit: Habit(title: "Eat Healthy Food", icon: "🔥", ownerId: "", frequency: Frequency(type: .monthly)), updateCompletion: {
-            
-        }, selectedDate: Date(), buddy: User(name: "Natanael", email: ""), currentUserId: "")
-        .padding()
-    }
-    .preferredColorScheme(.dark)
-}
+//#Preview {
+//    ZStack {
+//        Color.custom.background
+//        HabitCell(habit: Habit(title: "Eat Healthy Food", icon: "🔥", ownerId: "", frequency: Frequency(type: .monthly)), updateCompletion: {
+//            
+//        }, selectedDate: Date(), buddy: User(name: "Natanael", email: ""), currentUserId: "")
+//        .padding()
+//    }
+//    .preferredColorScheme(.dark)
+//}

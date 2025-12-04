@@ -89,7 +89,7 @@ struct CustomTextField: View {
                     }.onTapGesture {
                         isFocused = true
                     }
-                    .padding(.horizontal, 14)
+                    .padding(.horizontal, 18)
                 }
             }
             .accentColor(.custom.primary)

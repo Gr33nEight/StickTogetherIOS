@@ -8,33 +8,35 @@
 import SwiftUI
 
 struct NavigationContainer: View {
-    @StateObject var habitVM: HabitViewModel
-    @StateObject var friendsVM: FriendsViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var loading: LoadingManager
     
     @Binding var selected: NavigationDestinations
-    let currentUser: User
-
-    init(currentUser: User,
-         selected: Binding<NavigationDestinations>,
+    
+    @StateObject private var habitVM: HabitViewModel
+    @StateObject private var friendsVM: FriendsViewModel
+    
+    init(selected: Binding<NavigationDestinations>,
          habitService: HabitServiceProtocol,
          friendsService: FriendsServiceProtocol,
-         authService: AuthServiceProtocol,
-         authVM: AuthViewModel,
+         profileService: ProfileServiceProtocol,
+         currentUser: User,
          loading: LoadingManager? = nil) {
-
-        let habitVM = HabitViewModel(service: habitService,
-                                     loading: loading,
-                                     currentUser: currentUser)
-        _habitVM = StateObject(wrappedValue: habitVM)
         
-        let friendsVM = FriendsViewModel(authService: authService, friendsService: friendsService,
-                                         loading: loading, currentUser: currentUser)
+        let habitVM = HabitViewModel.configured(service: habitService,
+                                                loading: loading,
+                                                currentUser: currentUser)
+        let friendsVM = FriendsViewModel.configured(profileService: profileService,
+                                                    friendsService: friendsService,
+                                                    loading: loading,
+                                                    currentUser: currentUser)
+        
+        _habitVM = StateObject(wrappedValue: habitVM)
         _friendsVM = StateObject(wrappedValue: friendsVM)
-    
-    
-        self.currentUser = currentUser
+        
         self._selected = selected
     }
+    
     
     var body: some View {
         ZStack {
@@ -42,9 +44,9 @@ struct NavigationContainer: View {
             VStack {
                 Spacer()
                 NavigationBarView(selected: $selected) {
-                    CreateHabitView(friendsVM: friendsVM, currentUser: currentUser) { habit in
+                    CreateHabitView() { habit in
                         Task { await habitVM.createHabit(habit) }
-                    }
+                    }.environmentObject(friendsVM)
                 }
                 .padding(.horizontal)
             }
@@ -52,32 +54,29 @@ struct NavigationContainer: View {
             await habitVM.startListening()
             await friendsVM.startFriendsListener()
         }
-        .environmentObject(habitVM)
-        .environmentObject(friendsVM)
     }
-
+    
     @ViewBuilder
     private var content: some View {
         switch selected {
         case .home:
-            HomeView(currentUser: currentUser)
-        case .stats:
-            StatsView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.custom.background)
-
-        case .chats:
-            ChatsView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.custom.background)
+            HomeView()
+                .environmentObject(habitVM)
+                .environmentObject(friendsVM)
+//        case .stats:
+//            StatsView()
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .background(Color.custom.background)
+//            
+//        case .chats:
+//            ChatsView()
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .background(Color.custom.background)
         case .friends:
-            FriendsListView(fullList: true, friendsVM: friendsVM, currentUser: currentUser)
-                .padding(.bottom, 100)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.custom.background)
-
+            FriendsListView(fullList: true)
+                .environmentObject(friendsVM)
         case .settings:
-            SettingsView(currentUser: currentUser)
+            SettingsView()
         }
     }
 }
