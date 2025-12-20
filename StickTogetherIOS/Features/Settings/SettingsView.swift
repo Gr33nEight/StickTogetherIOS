@@ -25,7 +25,7 @@ struct SettingsView: View {
             .picker(icon: "globe", text: "Language", options: Language.allCases.map({$0.rawValue}), selection: $language),
             .toggle(icon: "bell", text: "Notifications", value: $notificationsEnabled),
             .picker(icon: "paintpalette", text: "Theme", options: Theme.allCases.map({$0.rawValue.capitalized}), selection: $theme),
-            .picker(icon: "checklist", text: "Main Habit Type", options: HabitType.allCases.map({ $0.text }), selection: $mainHabitType)
+            //.picker(icon: "checklist", text: "Main Habit Type", options: HabitType.allCases.map({ $0.text }), selection: $mainHabitType)
         ]
     }
 

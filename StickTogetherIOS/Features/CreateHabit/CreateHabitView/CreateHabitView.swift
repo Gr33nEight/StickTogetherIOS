@@ -12,6 +12,7 @@ struct CreateHabitView: View {
     @EnvironmentObject var friendsVM: FriendsViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
+    @EnvironmentObject var habitVM: HabitViewModel
     
     @State var id: String? = nil
     @State var title = ""
@@ -34,8 +35,6 @@ struct CreateHabitView: View {
     @State var isEmojiPickerPresented = false
     @State var selectedEmoji: Emoji? = nil
     @State var autoEmoji = "➕"
-    
-    let createHabit: (Habit) -> Void
 
     var body: some View {
         GeometryReader { _ in
@@ -47,11 +46,11 @@ struct CreateHabitView: View {
                         inviteFriend
                         reminder
                         addToCalendarView
-                    }
+                    }.padding(.vertical)
                     .font(.myBody)
                     .foregroundStyle(Color.custom.text)
                 }
-                .padding()
+                .padding(.horizontal)
             } buttons: {
                 HStack(spacing: 20) {
                     Button {
@@ -110,7 +109,6 @@ struct CreateHabitView: View {
             title: title,
             icon: icon,
             ownerId: userId,
-            buddyId: buddy?.id,
             frequency: habitFrequency,
             startDate: startDate,
             endDate: endDate,
@@ -127,7 +125,7 @@ struct CreateHabitView: View {
             }
         }
         
-        createHabit(habit)
+        Task { await habitVM.createHabit(habit) }
         
         if finalType != .alone {
             guard
@@ -139,7 +137,7 @@ struct CreateHabitView: View {
             let appNotification = AppNotification(
                 senderId: userId,
                 receiverId: buddyId,
-                content: "\(currentUser.name) invited you to join his/her habit: \(title) \(icon)",
+                content: "\(currentUser.name) invited you to join his habit: \(title) \(icon)",
                 date: Date(),
                 type: .habitInvite,
                 payload: ["habitId" : habitId])

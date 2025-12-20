@@ -9,26 +9,22 @@ import SwiftUI
 import ElegantEmojiPicker
 
 extension HomeView {
+    var numberOfUnReadNotifications: Int {
+        appNotificationsVM.appNotifications.filter({!$0.isRead}).count
+    }
     var header: some View {
         HStack {
             Text("\(Date().timeOfDayGreeting),\n\(profileVM.safeUser.name.capitalized) 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
-            NavigationLink {
-                NotificationView()
+            Button {
+                navigate(.push(.notifications))
             } label: {
                 Image(.bell)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 24)
-            }.overlay {
-                Image(systemName: "\(appNotificationsVM.appNotifications.count)")
-                    .foregroundColor(Color.custom.red)
-                    .symbolVariant(.fill)
-                    .symbolVariant(.circle)
-                    .allowsHitTesting(false)
-                    .offset(x: 10, y: -10)
-            }
+            }.customBadge(number: numberOfUnReadNotifications)
 
         }.foregroundStyle(Color.custom.text)
             .padding([.top, .horizontal], 20)

@@ -20,7 +20,7 @@ extension LogInView {
                     .foregroundStyle(Color.custom.secondary)
             }
         }.font(.myCaption)
-            .padding(.bottom, 5)
+            .padding(.bottom, 10)
     }
 }
 

@@ -118,7 +118,7 @@ struct FriendsListView: View {
                     .tint(removingStarted ? Color.custom.red : Color.custom.primary)
             }
             
-        }.padding(.bottom, fullList ? 100 : 0)
+        }.padding(.bottom, fullList ? 60 : 0)
             .background(Color.custom.background)
         .animation(.easeInOut, value: removingStarted)
             .task {

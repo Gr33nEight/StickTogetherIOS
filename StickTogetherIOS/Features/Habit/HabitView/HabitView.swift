@@ -9,13 +9,14 @@ import SwiftUI
 
 struct HabitView: View {
     @EnvironmentObject var profileVM: ProfileViewModel
-    @ObservedObject var habitVM: HabitViewModel
+    @EnvironmentObject var habitVM: HabitViewModel
     
     let habit: Habit
     let selectedDate: Date
     @State var pickedFrequency: Frequency = .daily()
     @State private var showEditHabitView = false
     
+    @Environment(\.navigate) var navigate
     @Environment(\.confirm) var confirm
     @Environment(\.showToastMessage) var toastMessage
     @Namespace var frequencyAnimation
@@ -27,11 +28,11 @@ struct HabitView: View {
     }
     
     func buddy() -> User? {
-        guard let buddyId = habit.buddyId else { return nil }
-        
+        guard !habit.buddyId.isEmpty else { return nil }
+
         return friends.first(where: {
             if let id = $0.id {
-                return iAmOwner ? id == buddyId : id == habit.ownerId
+                return iAmOwner ? id == habit.buddyId : id == habit.ownerId
             }else{
                 return false
             }
@@ -117,7 +118,12 @@ struct HabitView: View {
                     confirm(question: "Are you sure you want to delete this habit?") {
                         Task {
                             let result = await habitVM.deleteHabit(habit.id)
-                            if let error = result.errorMessage {
+                            
+                            switch result {
+                            case .success:
+                                navigate(.unwind(.home))
+                                return
+                            case .error(let error):
                                 toastMessage(.failed(error))
                             }
                         }

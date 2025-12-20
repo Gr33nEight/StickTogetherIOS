@@ -21,13 +21,13 @@ extension Habit {
         on date: Date,
         currentUserId: String,
         ownerId: String,
-        buddyId: String?
+        buddyId: String
     ) -> CompletionState {
 
         let key = Habit.dayKey(for: date)
         let users = completion[key] ?? []
 
-        guard let buddyId else {
+        guard !buddyId.isEmpty else {
             return users.contains(currentUserId) ? .both : .neither
         }
         
@@ -111,5 +111,15 @@ extension Habit {
     
     func userDidComplete(_ userId: String, forDayKey key: String) -> Bool {
         completion[key]?.contains(userId) ?? false
+    }
+    
+    func sortPriority(date: Date, currentUserId: String) -> Int {
+        let solo = buddyId == nil
+        switch completionState(on: date, currentUserId: currentUserId, ownerId: ownerId, buddyId: buddyId) {
+        case .both: return solo ? 0 : 1
+        case .me: return 2
+        case .buddy: return 3
+        case .neither: return 4
+        }
     }
 }

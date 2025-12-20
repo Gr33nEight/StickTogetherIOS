@@ -20,4 +20,8 @@ extension View {
     func customCellViewModifier() -> some View {
         modifier(CustomCellViewModifier())
     }
+    
+    func customBadge(number: Int) -> some View {
+        modifier(CustomBadgeViewModifier(number: number))
+    }
 }

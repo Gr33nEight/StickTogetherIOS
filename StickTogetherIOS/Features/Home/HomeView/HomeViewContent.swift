@@ -8,9 +8,23 @@
 import SwiftUI
 
 extension HomeView {
-    var filteredHabits: [Habit] {
-        visible.filter { habit in
-            return habit.type == pickedHabitType
+    var sortedHabits: [Habit] {
+        return visible.sorted { a, b in
+            let aPriority = a.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
+            let bPriority = b.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
+            
+            if aPriority != bPriority {
+                return aPriority > bPriority
+            }
+            
+            let aDate = habitVM.lastInteraction[a.id ?? ""] ?? .distantPast
+            let bDate = habitVM.lastInteraction[b.id ?? ""] ?? .distantPast
+
+            if aDate != bDate {
+                return aDate < bDate
+            }
+            
+            return a.title > b.title
         }
     }
     
@@ -19,11 +33,11 @@ extension HomeView {
     }
     
     func buddy(_ habit: Habit) -> User? {
-        guard let buddyId = habit.buddyId else { return nil }
+        guard !habit.buddyId.isEmpty else { return nil }
         
         return friendsVM.friends.first(where: {
             if let id = $0.id {
-                return iAmOwner(habit.ownerId) ? id == buddyId : id == habit.ownerId
+                return iAmOwner(habit.ownerId) ? id == habit.buddyId : id == habit.ownerId
             }else{
                 return false
             }
@@ -33,9 +47,9 @@ extension HomeView {
     @ViewBuilder
     var content: some View {
         VStack(spacing: 0) {
-            picker
+            //            picker
             ScrollView(showsIndicators: false) {
-                if filteredHabits.isEmpty {
+                if visible.isEmpty {
                     Spacer()
                     VStack {
                         Text("There are no \(pickedHabitType.text.lowercased()) habits scheduled for this day")
@@ -43,10 +57,8 @@ extension HomeView {
                             .font(.mySubtitle)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
-                        NavigationLink(destination: {
-                            CreateHabitView() { habit in
-                                Task { await habitVM.createHabit(habit) }
-                            }.environmentObject(friendsVM)
+                        Button(action: {
+                            navigate(.push(.createHabit))
                         }, label: {
                             HStack {
                                 Image(systemName: "plus")
@@ -59,18 +71,21 @@ extension HomeView {
                     }.padding(.top, UIScreen.main.bounds.height/5.5)
                     Spacer()
                 } else {
-                    ForEach(filteredHabits) { habit in
-                        
-                        NavigationLink {
-                            HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
-                        } label: {
-                            HabitCell(habit: habit, updateCompletion: {
-                                Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
-                            }, selectedDate: selectedDate, buddy: buddy(habit))
+                    VStack {
+                        ForEach(sortedHabits) { habit in
+                            Button {
+                                let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
+                                navigate(.push(.habit(container)))
+                            } label: {
+                                HabitCell(habit: habit, updateCompletion: {
+                                    Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
+                                }, selectedDate: selectedDate, buddy: buddy(habit))
+                            }
                         }
-                    }
+                    }.padding(.bottom, Calendar.current.isDate(selectedDate, inSameDayAs: Date()) ? 130 : 0)
                 }
-            }.padding([.horizontal, .top], 20)
+            }.padding(.horizontal, 20)
+            
             if !Calendar.current.isDate(selectedDate, inSameDayAs: Date()) {
                 Button {
                     selectedDate = Date()
@@ -81,10 +96,9 @@ extension HomeView {
                 }.customButtonStyle(.primary)
                     .padding(.horizontal, 5)
                     .padding(15)
+                    .padding(.bottom, 110)
             }
-            
-            
-        }.padding(.bottom, 100)
+        }
     }
     
     var picker: some View {
@@ -106,7 +120,7 @@ extension HomeView {
                     }
                 }
             }
-        }.animation(.bouncy, value: pickedHabitType)
+        }
             .frame(height: 30)
             .padding(.horizontal)
     }
@@ -123,7 +137,7 @@ extension HomeView {
 
 
 enum HabitType: Int, CaseIterable, Codable {
-    case alone, coop, preview
+    case alone, coop//, preview
     
     var text: String {
         switch self {
@@ -131,8 +145,8 @@ enum HabitType: Int, CaseIterable, Codable {
             return "Alone"
         case .coop:
             return "Co-op"
-        case .preview:
-            return "Preview"
+//        case .preview:
+//            return "Preview"
         }
     }
 }

@@ -13,30 +13,6 @@ extension HomeView {
 
     var calendar: some View {
         VStack(spacing: 8) {
-//            HStack {
-//                Button {
-//                    withAnimation { pageIndex = max(pagesRange.lowerBound, pageIndex - 1) }
-//                } label: {
-//                    Image(systemName: "chevron.left")
-//                        .padding(8)
-//                }
-//
-//                Spacer()
-//
-//                Text(weekLabel(for: selectedDate))
-//                    .font(.customAppFont(size: 14, weight: .semibold))
-//                    .foregroundStyle(Color.custom.text)
-//
-//                Spacer()
-//
-//                Button {
-//                    withAnimation { pageIndex = min(pagesRange.upperBound, pageIndex + 1) }
-//                } label: {
-//                    Image(systemName: "chevron.right")
-//                        .padding(8)
-//                }
-//            }
-//            .padding(.horizontal, 15)
             TabView(selection: $pageIndex) {
                 ForEach(pagesRange, id: \.self) { idx in
                     let weekOffset = idx - centerPage
@@ -47,7 +23,7 @@ extension HomeView {
                         ForEach(weekDates(around: anchor), id: \.self) { date in
                             let isSelected = Calendar.current.isDate(date, inSameDayAs: selectedDate)
                             
-                            DayCell(date: date, isSelected: isSelected, state: habitVM.habitState(on: date))
+                            DayCell(date: date, isSelected: isSelected, done: habitVM.habitStats(on: date).done, skipped: habitVM.habitStats(on: date).skipped)
                                 .onTapGesture {
                                     withAnimation(.bouncy) {
                                         selectedDate = date
@@ -58,7 +34,7 @@ extension HomeView {
                     .padding(.vertical)
                     .tag(idx)
                 }.padding(.horizontal)
-            }.frame(height: 68)
+            }.frame(height: 64)
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .onChange(of: pageIndex) { _, new in
                 let weekOffset = new - centerPage

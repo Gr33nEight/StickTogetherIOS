@@ -14,21 +14,7 @@ struct LoadingOverlay: View {
     var body: some View {
         ZStack {
             if loading.isLoading {
-                Color.black.opacity(0.36)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-                    .zIndex(0)
-
-                VStack {
-                    ProgressView()
-                        .tint(.accent)
-                        .padding(20)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(.systemBackground).opacity(0.08))
-                        )
-                }
-                .padding(6)
+                LoadingView()
                 .transition(.scale.combined(with: .opacity))
                 .zIndex(1)
             }
@@ -39,23 +25,20 @@ struct LoadingOverlay: View {
     }
 }
 
-struct CustomProgressView: View {
-    @State private var animate = false
+struct LoadingView: View {
     var body: some View {
         ZStack {
-            ForEach(0..<12) { i in
-                Circle()
-                    .fill(Color.custom.primary)
-                    .frame(width: 5, height: 5)
-                    .offset(y: animate ? 20 : 0)
-                    .rotationEffect(.degrees(Double(i) * 30))
-                    .animation(Animation.linear(duration: 1).repeatForever().delay(Double(i) * 0.1), value: animate)
-            }
-        }
-        .onAppear { animate.toggle() }
+            Blur(style: .prominent)
+            ProgressView().tint(.accent)
+        }.ignoresSafeArea()
     }
 }
 
-#Preview {
-    CustomProgressView()
-}
+//#Preview {
+//    FriendsListView()
+//        .environmentObject(FriendsViewModel(profileService: MockProfileService(), friendsService: MockFriendsService(), currentUser: User(name: "", email: "")))
+//        .overlay {
+//            LoadingOverlay().environmentObject(LoadingManager())
+//        }
+//        .preferredColorScheme(.dark)
+//}

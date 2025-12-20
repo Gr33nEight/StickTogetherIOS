@@ -45,7 +45,9 @@ actor FirebaseAppNotificationService: @preconcurrency AppNotificationsServicePro
             .addSnapshotListener { snapshot, error in
                 guard let snapshot else { return }
                 let notifs = snapshot.documents.compactMap { try? $0.data(as: AppNotification.self) }
-                update(notifs)
+                Task { @MainActor in
+                    update(notifs)
+                }
             }
 
         let token = FirestoreListenerToken(listener: listener)

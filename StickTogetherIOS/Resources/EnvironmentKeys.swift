@@ -39,3 +39,14 @@ extension EnvironmentValues {
         set { self[ModalEnvironmentKey.self] = newValue }
     }
 }
+
+struct NavigateEnvironmentKey: EnvironmentKey {
+    static var defaultValue: (NavigationType) -> Void = { _ in }
+}
+
+extension EnvironmentValues {
+    var navigate: (NavigationType) -> Void {
+        get { self[NavigateEnvironmentKey.self] }
+        set { self[NavigateEnvironmentKey.self] = newValue}
+    }
+}

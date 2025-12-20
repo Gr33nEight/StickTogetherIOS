@@ -28,7 +28,7 @@ struct StickTogetherApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppCoordinatorView(di: di)
+            AppEntry(di: di)
                 .confirmation()
                 .modal()
                 .customToastMessage()

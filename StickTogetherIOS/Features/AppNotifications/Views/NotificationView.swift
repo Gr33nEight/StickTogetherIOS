@@ -12,26 +12,36 @@ struct NotificationView: View {
     @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     var body: some View {
         CustomView(title: "Notifications") {
-            ScrollView {
-                VStack {
-                    ForEach(appNotificationsVM.appNotifications, id:\.id) { notification in
-                        NotificationCell(notification: notification)
-                            .onTapGesture {
-                                Task {
-                                    await appNotificationsVM.markAsRead(notification.id)
-                                }
+            ZStack {
+                if appNotificationsVM.appNotifications.isEmpty {
+                    Text("You don't have any notifications.")
+                        .foregroundStyle(Color.custom.lightGrey)
+                        .font(.mySubtitle)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }else{
+                    ScrollView {
+                        VStack {
+                            ForEach(appNotificationsVM.appNotifications, id:\.id) { notification in
+                                NotificationCell(notification: notification)
+                                    .onTapGesture {
+                                        Task {
+                                            await appNotificationsVM.markAsRead(notification.id)
+                                        }
+                                    }
                             }
-                    }
-                }.padding()
-            }
-        } buttons: {
-            Button("Mark all as read"){
-                Task {
-                    for notif in appNotificationsVM.appNotifications {
-                        await appNotificationsVM.markAsRead(notif.id)
+                        }.padding()
                     }
                 }
-            }.customButtonStyle(.primary)
+            }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        } buttons: {
+            if !appNotificationsVM.appNotifications.isEmpty {
+                Button("Mark all as read"){
+                    Task {
+                        await appNotificationsVM.markAllAsRead()
+                    }
+                }.customButtonStyle(.primary)
+            }
         } icons: {
             Button {
                 removingStarted.toggle()
@@ -87,7 +97,7 @@ struct SystemMessageCell: View {
             if !notification.isRead {
                 HStack(alignment: .center) {
                     Circle()
-                        .fill(Color.custom.primary)
+                        .fill(Color.custom.red)
                         .frame(width: 8)
                 }.frame(maxHeight: .infinity)
             }
@@ -122,7 +132,7 @@ struct FriendMessageCell: View {
             if !notification.isRead {
                 HStack(alignment: .center) {
                     Circle()
-                        .fill(Color.custom.primary)
+                        .fill(Color.custom.red)
                         .frame(width: 8)
                 }.frame(maxHeight: .infinity)
             }
@@ -173,7 +183,7 @@ struct HabitInviteCell: View {
                         if !notification.isRead {
                             HStack(alignment: .center) {
                                 Circle()
-                                    .fill(Color.custom.primary)
+                                    .fill(Color.custom.red)
                                     .frame(width: 8)
                             }.frame(maxHeight: .infinity)
                         }
@@ -211,7 +221,15 @@ struct HabitInviteCell: View {
             }
         }.task {
             guard let habitId = notification.payload["habitId"] else { return }
-            habit = await habitVM.getHabitById(habitId)
+            let result = await habitVM.getHabitById(habitId)
+            
+            switch result {
+            case .value(let h):
+                habit = h
+                return
+            case .error(_):
+                await appNotificationsVM.deleteAppNotification(notification.id)
+            }
         }
     }
 }

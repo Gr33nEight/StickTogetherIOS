@@ -10,7 +10,8 @@ import SwiftUI
 struct DayCell: View {
     let date: Date
     let isSelected: Bool
-    let state: HabitState
+    let done: Int
+    let skipped: Int
 
     private var dayName: String {
         let df = DateFormatter()
@@ -24,23 +25,44 @@ struct DayCell: View {
         return df.string(from: date)
     }
 
-    private var isToday: Bool {
-        Calendar.current.isDate(date, inSameDayAs: Date())
+    private var total: CGFloat { max(CGFloat(done + skipped), 1) }
+    private var doneFraction: CGFloat { CGFloat(done) / total }
+    private var skippedFraction: CGFloat { CGFloat(skipped) / total }
+    private var isToday: Bool { Calendar.current.isDate(date, inSameDayAs: Date()) }
+    private var fullyDone: Bool { done == 0 || skipped == 0}
+    private var fullStateColor: Color {
+        if done == 0 && skipped == 0 {
+            return Color.custom.grey
+        }else if done > 0 {
+            return Color.custom.primary
+        }else if skipped > 0 {
+            return Color.custom.red
+        }else{
+            return Color.clear
+        }
     }
     
     var body: some View {
         ZStack(alignment: .top) {
             ZStack {
-                RoundedRectangle(cornerRadius: 25)
-                    .fill(state.color)
-                ZStack {
+                if fullyDone {
                     if isToday {
                         RoundedRectangle(cornerRadius: 25)
-                            .stroke(lineWidth: 1.5)
-                            .fill(Color.white)
+                            .stroke(Color.custom.text, lineWidth: 3)
+                    }else{
                         RoundedRectangle(cornerRadius: 25)
-                            .stroke(lineWidth: 1.5)
-                            .fill(state.color.opacity(0.4))
+                            .fill(fullStateColor)
+                    }
+                }else {
+                    if isToday {
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(Color.custom.text, lineWidth: 3)
+                    }else{
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(Color.red, lineWidth: 3)
+                        RoundedRectangle(cornerRadius: 25)
+                            .trim(from: 0, to: doneFraction)
+                            .stroke(Color.green, lineWidth: 3)
                     }
                 }
             }.frame(width: 35, height: isSelected ? 60 : 35)
@@ -52,7 +74,7 @@ struct DayCell: View {
                     .font(.customAppFont(size: 11, weight: .medium))
                     .fixedSize()
                     .padding(.top, 5)
-            }.foregroundColor(state.textColor)
+            }.foregroundColor(skipped == 0 && done == 0 ? Color(.systemGray) : Color.custom.text)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -65,7 +87,8 @@ struct DayCell: View {
                 DayCell(
                     date: Date().addingTimeInterval(24 * 60 * 60 * Double(date - 23)),
                     isSelected: date == 23,
-                    state: (date < 24 ? (date % 2 == 1 ? .done : .skipped) : .none)
+                    done: 1,
+                    skipped: 0
                 )
             }
         }.padding()

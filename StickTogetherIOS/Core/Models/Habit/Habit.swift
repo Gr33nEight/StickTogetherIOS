@@ -8,12 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
-struct Habit: Identifiable, Codable {
+struct Habit: Identifiable, Codable, Equatable {
     @DocumentID var id: String? = nil
     var title: String
     var icon: String
     var ownerId: String
-    var buddyId: String? = nil
+    var buddyId: String = ""
     var frequency: Frequency
     var startDate: Date
     var endDate: Date
@@ -26,7 +26,7 @@ struct Habit: Identifiable, Codable {
          title: String,
          icon: String,
          ownerId: String,
-         buddyId: String? = nil,
+         buddyId: String = "",
          frequency: Frequency,
          startDate: Date = Date(),
          endDate: Date = Date(),

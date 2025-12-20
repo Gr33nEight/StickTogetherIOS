@@ -128,6 +128,10 @@
 		3CFF853A2EE20F2800171172 /* FirebaseAppNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */; };
 		3CFF853C2EE2150A00171172 /* AppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF853B2EE2150A00171172 /* AppNotification.swift */; };
 		3CFF853E2EE2153E00171172 /* AppNotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF853D2EE2153E00171172 /* AppNotificationType.swift */; };
+		3CFF85412EE33CE600171172 /* NavigationStackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85402EE33CE600171172 /* NavigationStackContentView.swift */; };
+		3CFF85432EE33CFB00171172 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85422EE33CFB00171172 /* Route.swift */; };
+		3CFF85452EE3422900171172 /* HabitViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85442EE3422900171172 /* HabitViewContainer.swift */; };
+		3CFF85472EE3605C00171172 /* CustomBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85462EE3605C00171172 /* CustomBadgeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -275,6 +279,10 @@
 		3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAppNotificationService.swift; sourceTree = "<group>"; };
 		3CFF853B2EE2150A00171172 /* AppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotification.swift; sourceTree = "<group>"; };
 		3CFF853D2EE2153E00171172 /* AppNotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationType.swift; sourceTree = "<group>"; };
+		3CFF85402EE33CE600171172 /* NavigationStackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStackContentView.swift; sourceTree = "<group>"; };
+		3CFF85422EE33CFB00171172 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		3CFF85442EE3422900171172 /* HabitViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewContainer.swift; sourceTree = "<group>"; };
+		3CFF85462EE3605C00171172 /* CustomBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBadgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -483,6 +491,7 @@
 		3C42E7152EB38C1E00D0D58C /* Habit */ = {
 			isa = PBXGroup;
 			children = (
+				3CFF85442EE3422900171172 /* HabitViewContainer.swift */,
 				3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */,
 				3C42E7162EB38C2700D0D58C /* HabitView */,
 			);
@@ -685,6 +694,7 @@
 		3CB504182EB23156004AF0A9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3CFF85482EE3606400171172 /* CustomBadge */,
 				3C5C138C2EC3ABDC00693ED0 /* IconPicker */,
 				3C27EB532EBB634D00BB39F7 /* ErrorHelpers */,
 				3C70E0912EB3A48E00C325D9 /* ViewModifiers */,
@@ -703,6 +713,7 @@
 		3CB504192EB2315F004AF0A9 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				3CFF853F2EE33CC700171172 /* NavigationStack */,
 				3CA910952EE0B81E0031100F /* AppNotifications */,
 				3C41F8B92ECE50C60020E9EE /* Stats */,
 				3C41F8B82ECE50B40020E9EE /* Chats */,
@@ -824,6 +835,23 @@
 				3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */,
 			);
 			path = AppNotifications;
+			sourceTree = "<group>";
+		};
+		3CFF853F2EE33CC700171172 /* NavigationStack */ = {
+			isa = PBXGroup;
+			children = (
+				3CFF85402EE33CE600171172 /* NavigationStackContentView.swift */,
+				3CFF85422EE33CFB00171172 /* Route.swift */,
+			);
+			path = NavigationStack;
+			sourceTree = "<group>";
+		};
+		3CFF85482EE3606400171172 /* CustomBadge */ = {
+			isa = PBXGroup;
+			children = (
+				3CFF85462EE3605C00171172 /* CustomBadgeView.swift */,
+			);
+			path = CustomBadge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -984,6 +1012,7 @@
 				3C27EB3C2EB9234100BB39F7 /* ModalViewModifier.swift in Sources */,
 				3CD2DA692ED1A8A7003C3552 /* FirebaseProfileService.swift in Sources */,
 				3C27EB3D2EB9234100BB39F7 /* ModalService.swift in Sources */,
+				3CFF85432EE33CFB00171172 /* Route.swift in Sources */,
 				3C70E0A42EB3E2AE00C325D9 /* CustomView.swift in Sources */,
 				3CFF85352EE2090400171172 /* AppNotificationsViewModel.swift in Sources */,
 				3CB504212EB231F4004AF0A9 /* AppEntry.swift in Sources */,
@@ -1012,6 +1041,7 @@
 				3C27EB4E2EBA527E00BB39F7 /* FirebaseFriendsService.swift in Sources */,
 				3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */,
 				3C27EB422EB923A100BB39F7 /* Blur.swift in Sources */,
+				3CFF85472EE3605C00171172 /* CustomBadgeView.swift in Sources */,
 				3C41F8C12ECE55CC0020E9EE /* MockListenerToken.swift in Sources */,
 				3CD2DA6D2ED1A8C2003C3552 /* MockProfileService.swift in Sources */,
 				3C41F8C32ECE55D40020E9EE /* MockFriendsService.swift in Sources */,
@@ -1064,6 +1094,7 @@
 				3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */,
 				3C6688022EB4F5D800DE45E8 /* AuthForm.swift in Sources */,
 				3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */,
+				3CFF85412EE33CE600171172 /* NavigationStackContentView.swift in Sources */,
 				3C70E09E2EB3E1F600C325D9 /* CompletionState.swift in Sources */,
 				3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */,
 				3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */,
@@ -1076,6 +1107,7 @@
 				3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */,
 				3C70E0A62EB3E2C200C325D9 /* HabitViewCell.swift in Sources */,
 				3C70E09A2EB3DE7B00C325D9 /* DateExtension.swift in Sources */,
+				3CFF85452EE3422900171172 /* HabitViewContainer.swift in Sources */,
 				3C70E0AE2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift in Sources */,
 				3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */,
 				3C5C13852EC3698E00693ED0 /* CalendarManager.swift in Sources */,
@@ -1251,8 +1283,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1283,8 +1314,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -21,5 +21,6 @@ extension CreateAccountView {
                     .foregroundStyle(Color.custom.secondary)
             }
         }.font(.myCaption)
+            .padding(.bottom, 10)
     }
 }

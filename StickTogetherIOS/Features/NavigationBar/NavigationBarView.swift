@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct NavigationBarView<Content: View>: View {
+struct NavigationBarView: View {
+    @EnvironmentObject var friendsVM: FriendsViewModel
+    @Environment(\.navigate) var navigate
     @Binding var selected: NavigationDestinations
     @State private var selectedWithAnim = NavigationDestinations.home
     
-    @ViewBuilder var content: Content
     @Namespace private var navNamespace
     
     var body: some View {
@@ -20,18 +21,14 @@ struct NavigationBarView<Content: View>: View {
                 let isPicked = self.selectedWithAnim == dest
                 let isHomeAndPicked = self.selectedWithAnim == .home && dest == .home
                 
-                if isHomeAndPicked {
-                    NavigationLink {
-                        content
-                    } label: {
-                        navigationElement(dest: dest, isPicked: isPicked, isHomeAndPicked: isHomeAndPicked)
-                    }
-                }else{
-                    Button {
+                Button {
+                    if isHomeAndPicked {
+                        navigate(.push(.createHabit))
+                    }else{
                         selected = dest
-                    } label: {
-                        navigationElement(dest: dest, isPicked: isPicked, isHomeAndPicked: isHomeAndPicked)
                     }
+                } label: {
+                    navigationElement(dest: dest, isPicked: isPicked, isHomeAndPicked: isHomeAndPicked)
                 }
             }
         }.frame(maxWidth: .infinity)
@@ -57,6 +54,8 @@ struct NavigationBarView<Content: View>: View {
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
+                    //TODO: Later
+//                        .customBadge(number: (dest == .friends && !isPicked) ? friendsVM.invitationReceived.count : 0 )
                 }
             }.matchedGeometryEffect(id: "icon_\(dest.rawValue)", in: navNamespace)
                 .frame(height: 24)

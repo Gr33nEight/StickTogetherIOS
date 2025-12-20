@@ -17,7 +17,6 @@ class FriendsViewModel: ObservableObject {
     
     private let profileService: any ProfileServiceProtocol
     private let friendsService: FriendsServiceProtocol
-    private var loadingManager: LoadingManager?
 
     // Firestore listener registrations
     private var sentListener: ListenerRegistration?
@@ -37,17 +36,14 @@ class FriendsViewModel: ObservableObject {
          currentUser: User) {
         self.friendsService = friendsService
         self.profileService = profileService
-        self.loadingManager = loading
         self.currentUser = currentUser
     }
     
     static func configured(profileService: ProfileServiceProtocol,
                               friendsService: FriendsServiceProtocol,
-                              loading: LoadingManager? = nil,
                               currentUser: User) -> FriendsViewModel {
            return FriendsViewModel(profileService: profileService,
                                    friendsService: friendsService,
-                                   loading: loading,
                                    currentUser: currentUser)
        }
     
@@ -99,11 +95,7 @@ class FriendsViewModel: ObservableObject {
     
     func fetchFriendById(_ id: String) async -> User? {
         do {
-            if let loader = loadingManager {
-                return try await loader.run { try await self.profileService.getUserById(id) }
-            } else {
-                return try await profileService.getUserById(id)
-            }
+            return try await profileService.getUserById(id)
         } catch {
             print("Failed to load friend: \(error)")
             return nil
@@ -166,13 +158,9 @@ class FriendsViewModel: ObservableObject {
 
         await withTaskGroup(of: [User].self) { group in
             for chunk in chunks {
-                group.addTask { [profileService, loadingManager] in
+                group.addTask { [profileService] in
                     do {
-                        if let loader = loadingManager, preferLoader {
-                            return try await loader.run { try await profileService.getUsersByIds(chunk) }
-                        } else {
-                            return try await profileService.getUsersByIds(chunk)
-                        }
+                        return try await profileService.getUsersByIds(chunk)
                     } catch {
                         print("Failed fetching friend chunk: \(error)")
                         return []
@@ -283,13 +271,7 @@ class FriendsViewModel: ObservableObject {
         }
 
         do {
-            let loaded: [FriendsListType: [String: User]]
-            if preferLoader, let loader = loadingManager {
-                loaded = try await loader.run { try await load() }
-            } else {
-                loaded = try await load()
-            }
-            friendsFromInvitation = loaded
+            friendsFromInvitation = try await load()
             return .success
         } catch {
             print("Failed to load friendsFromInvitation: \(error)")
@@ -299,13 +281,8 @@ class FriendsViewModel: ObservableObject {
     
     private func fetchReceivedInvitation(useLoader: Bool = false) async -> SuccessOrError {
         do {
-            if useLoader, let loader = loadingManager {
-                invitationReceived = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: self.currentUser.safeID, sent: false) }
-                return .success
-            } else {
-                invitationReceived = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: false)
-                return .success
-            }
+            invitationReceived = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: false)
+            return .success
         } catch {
             return .error("Couldn't fetch received invitations: \(error)")
         }
@@ -313,13 +290,8 @@ class FriendsViewModel: ObservableObject {
     
     private func fetchSentInvitation(useLoader: Bool = false) async -> SuccessOrError {
         do {
-            if useLoader, let loader = loadingManager {
-                invitationSent = try await loader.run { try await self.friendsService.fetchAllUsersInvitation(for: self.currentUser.safeID, sent: true) }
-                return .success
-            } else {
-                invitationSent = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: true)
-                return .success
-            }
+            invitationSent = try await self.friendsService.fetchAllUsersInvitation(for: currentUser.safeID, sent: true)
+            return .success
         } catch {
             return .error("Couldn't fetch sent invitations: \(error)")
         }

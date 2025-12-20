@@ -16,6 +16,7 @@ struct HomeView: View {
     @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     
     @Environment(\.confirm) var confirm
+    @Environment(\.navigate) var navigate
     
     @State var selectedDate: Date = Date()
     @State var pageIndex: Int = 0
@@ -24,7 +25,7 @@ struct HomeView: View {
     
     @Namespace var dayAnimation
     @Namespace var habitTypeAnimation
-
+    
     var visible: [Habit] {
         habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
     }

@@ -1,12 +1,9 @@
-//
-//  AppNotificationViewModel.swift
-//  StickTogetherIOS
-//
-//  Created by Natanael Jop on 04/12/2025.
-//
+// AppNotificationsViewModel.swift
+// StickTogetherIOS
 
 import SwiftUI
 
+@MainActor
 class AppNotificationsViewModel: ObservableObject {
     @Published var appNotifications: [AppNotification] = []
     
@@ -23,11 +20,14 @@ class AppNotificationsViewModel: ObservableObject {
         self.currentUser = currentUser
     }
     
+    deinit {
+        listenerToken?.remove()
+        listenerToken = nil
+    }
+    
     @MainActor
     func startListening() async {
-        if listenerToken != nil {
-            return
-        }
+        if listenerToken != nil { return }
         await loadUserAppNotifications()
     }
     
@@ -43,15 +43,16 @@ class AppNotificationsViewModel: ObservableObject {
         do {
             if let loader = loadingManager {
                 let loaded: [AppNotification] = try await loader.run {
-                    try await self.service.fetchAllAppNotifications(for: self.currentUser.safeID)
+                    return try await self.service.fetchAllAppNotifications(for: self.currentUser.safeID)
                 }
                 appNotifications = loaded
-            }else{
+            } else {
                 appNotifications = try await service.fetchAllAppNotifications(for: currentUser.safeID)
             }
-            
             listenerToken = service.listenToAppNotifications(for: currentUser.safeID, update: { [weak self] newAppNotifications in
-                self?.appNotifications = newAppNotifications
+                Task { @MainActor in
+                    self?.appNotifications = newAppNotifications
+                }
             })
             
         } catch {
@@ -62,13 +63,7 @@ class AppNotificationsViewModel: ObservableObject {
 
     func sendAppNotification(_ notification: AppNotification) async {
         do {
-            if let loader = loadingManager {
-                try await loader.run { [self] in
-                    try await service.createAppNotification(notification)
-                }
-            }else{
-                 try await service.createAppNotification(notification)
-            }
+            try await service.createAppNotification(notification)
         } catch {
             print("Failed to send app notification: \(error)")
         }
@@ -76,15 +71,8 @@ class AppNotificationsViewModel: ObservableObject {
     
     func deleteAppNotification(_ id: String?) async {
         guard let id else { return }
-        
         do {
-            if let loader = loadingManager {
-                try await loader.run { [self] in
-                    try await service.deleteAppNotification(id)
-                }
-            }else{
-                 try await service.deleteAppNotification(id)
-            }
+            try await service.deleteAppNotification(id)
         } catch {
             print("Failed to delete app notification: \(error)")
         }
@@ -92,17 +80,17 @@ class AppNotificationsViewModel: ObservableObject {
     
     func markAsRead(_ id: String?) async {
         guard let id else { return }
-        
         do {
-            if let loader = loadingManager {
-                try await loader.run { [self] in
-                    try await service.changeIsReadValue(id, value: true)
-                }
-            }else{
-                try await service.changeIsReadValue(id, value: true)
-            }
+            try await service.changeIsReadValue(id, value: true)
         } catch {
-            print("Failed to delete app notification: \(error)")
+            print("Failed to mark notification read: \(error)")
+        }
+    }
+    
+    func markAllAsRead() async {
+        let ids = appNotifications.compactMap { $0.id }
+        for id in ids {
+            await markAsRead(id)
         }
     }
 }

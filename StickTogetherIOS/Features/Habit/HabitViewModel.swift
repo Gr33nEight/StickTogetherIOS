@@ -9,14 +9,10 @@ import SwiftUI
 
 @MainActor
 class HabitViewModel: ObservableObject {
-    @Published var habits: [Habit] = [
-////        Habit(id: "1", title: "Test", icon: "🔥", ownerId: "", frequency: Frequency.daily(), type: .Alone),
-//        Habit(id: "2", title: "Test 2", icon: "🌈", ownerId: "", frequency: Frequency.daily(), type: .coop),
-//        Habit(id: "4", title: "Test 4", icon: "🔁", ownerId: "", frequency: Frequency.daily(), type: .coop),
-//        Habit(id: "5", title: "Test 5", icon: "📊", ownerId: "", frequency: Frequency.daily(), type: .coop),
-//        Habit(id: "3", title: "Test 3", icon: "🏋️‍♀️", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
-//        Habit(id: "6", title: "Test 6", icon: "🥺", ownerId: "321", buddyId: "123", frequency: Frequency.daily(), type: .preview),
-    ]
+    @Published var habits: [Habit] = []
+
+    var lastInteraction: [String:Date] = [:]
+    
     private let service: HabitServiceProtocol
     private var listenerToken: ListenerToken?
     private var loadingManager: LoadingManager?
@@ -59,7 +55,9 @@ class HabitViewModel: ObservableObject {
 
             listenerToken = service.listenToHabits(for: currentUser.safeID) { [weak self] newHabits in
                 Task { @MainActor in
-                    self?.habits = newHabits
+                    withAnimation {
+                        self?.habits = newHabits
+                    }
                     await NotificationManager.shared.rescheduleAll(habits: newHabits)
                 }
             }
@@ -69,34 +67,18 @@ class HabitViewModel: ObservableObject {
         }
     }
     
-    func getHabitById(_ id: String) async -> Habit? {
+    func getHabitById(_ id: String) async -> ValueOrError<Habit?> {
         do {
-            let habit: Habit?
-            if let loader = loadingManager {
-                habit = try await loader.run { try await self.service.fetchHabit(byId: id) }
-            } else {
-                habit = try await service.fetchHabit(byId: id)
-            }
-            return habit
+            let habit = try await service.fetchHabit(byId: id)
+            return .value(habit)
         } catch {
-            print("Failed to load habit with id \(id): \(error)")
-            return nil
+            return .error("Failed to load habit with id \(id): \(error)")
         }
     }
     
     func createHabit(_ habit: Habit) async {
         do {
-            var savedHabit: Habit? = nil
-            if let loader = loadingManager {
-                savedHabit = try await loader.run { [self] in
-                    try await service.createHabit(habit)
-                }
-            } else {
-                savedHabit = try await service.createHabit(habit)
-            }
-            
-            guard let savedHabit else { return }
-            
+            var savedHabit = try await service.createHabit(habit)
             habits.append(savedHabit)
             await NotificationManager.shared.scheduleNotifications(for: savedHabit)
             
@@ -107,13 +89,7 @@ class HabitViewModel: ObservableObject {
     
     func updateHabit(_ habit: Habit) async {
         do {
-            if let loader = loadingManager {
-                try await loader.run { [self] in
-                    try await service.updateHabit(habit)
-                }
-            } else {
-                try await service.updateHabit(habit)
-            }
+            try await service.updateHabit(habit)
             if let index = habits.firstIndex(where: { $0.id == habit.id }) {
                 habits[index] = habit
             }
@@ -131,21 +107,12 @@ class HabitViewModel: ObservableObject {
             return .error("Couldn't find habit to delete")
         }
         do {
-            if let loader = loadingManager {
-                await NotificationManager.shared.cancelNotifications(for: habitId)
-                if let habit = habits.first(where: { $0.id == habitId }) {
-                    CalendarManager.shared.removeHabit(habit)
-                }
-                try await loader.run { try await self.service.deleteHabit(habitId) }
-                return .success
-            } else {
-                await NotificationManager.shared.cancelNotifications(for: habitId)
-                if let habit = habits.first(where: { $0.id == habitId }) {
-                    CalendarManager.shared.removeHabit(habit)
-                }
-                try await service.deleteHabit(habitId)
-                return .success
+            await NotificationManager.shared.cancelNotifications(for: habitId)
+            if let habit = habits.first(where: { $0.id == habitId }) {
+                CalendarManager.shared.removeHabit(habit)
             }
+            try await service.deleteHabit(habitId)
+            return .success
         } catch {
             return .error("Failed to delete habit: \(error)")
         }
@@ -153,7 +120,9 @@ class HabitViewModel: ObservableObject {
     
     func markHabitAsCompleted(_ habit: Habit, date: Date) async {
         guard let habitId = habit.id else { return }
-
+        
+        lastInteraction[habitId] = Date()
+        
         let key = Habit.dayKey(for: date)
         let users = habit.completion[key] ?? []
         let isMarked = users.contains(currentUser.safeID)
@@ -184,25 +153,30 @@ class HabitViewModel: ObservableObject {
         return habit.completionCount(forDayKey: key) >= habit.numberOfParticipants() ? .done : .skipped
     }
     
-    func habitState(on date: Date) -> HabitState {
+    func habitStats(on date: Date) -> (skipped: Int, done: Int) {
         let key = Habit.dayKey(for: date)
-        let isPast = date <= Calendar.current.startOfDay(for: Date())
+        let isPastOrToday = date <= Calendar.current.startOfDay(for: Date())
 
-        guard isPast else { return .none }
-        
-        let isToday = Calendar.current.isDateInToday(date)
-        let hasNoCompletionsYet = habits.allSatisfy { $0.completion[key]?.isEmpty ?? true }
+        guard isPastOrToday else { return (skipped: 0, done: 0) }
 
-        if isToday && hasNoCompletionsYet {
-            return .none
+        let relevantHabits = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
+        guard !relevantHabits.isEmpty else { return (skipped: 0, done: 0) }
+
+        var skipped = 0
+        var done = 0
+
+        for habit in relevantHabits {
+            let completions = habit.completion[key] ?? []
+            let participants = habit.numberOfParticipants()
+            
+            if completions.count >= participants {
+                done += 1
+            } else {
+                skipped += 1
+            }
         }
-        
-        let relevant = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
-        if relevant.isEmpty { return .none }
-        
-        let anyIncomplete = relevant.contains { $0.completionCount(forDayKey: key) < $0.numberOfParticipants() }
-        
-        return anyIncomplete ? .skipped : .done
+
+        return (skipped: skipped, done: done)
     }
     
     deinit {

@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct HabitListSection: View {
-    @ObservedObject var habitVM: HabitViewModel
+    @Environment(\.navigate) var navigate
     let visible: [Habit]
     let state: CompletionState
     let selectedDate: Date
@@ -21,11 +21,11 @@ struct HabitListSection: View {
     }
     
     func buddy(_ habit: Habit) -> User? {
-        guard let buddyId = habit.buddyId else { return nil }
-        
+        guard !habit.buddyId.isEmpty else { return nil }
+
         return friends.first(where: {
             if let id = $0.id {
-                return iAmOwner(habit.ownerId) ? id == buddyId : id == habit.ownerId
+                return iAmOwner(habit.ownerId) ? id == habit.buddyId : id == habit.ownerId
             }else{
                 return false
             }
@@ -52,8 +52,9 @@ struct HabitListSection: View {
                     .foregroundStyle(Color.custom.secondary)
             }
             ForEach(filteredHabits) { habit in
-                NavigationLink {
-                    HabitView(habitVM: habitVM, habit: habit, selectedDate: selectedDate, friends: friends)
+                Button {
+                    let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friends)
+                    navigate(.push(.habit(container)))
                 } label: {
                     HabitCell(habit: habit, updateCompletion: {updateCompletion(habit)}, selectedDate: selectedDate, buddy: buddy(habit))
                 }

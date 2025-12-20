@@ -35,8 +35,11 @@ struct CustomView<Content: View, Buttons: View, Icons: View>: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.darkGrey)
                 )
-            buttons.padding([.horizontal, .top])
-        }.background(Color.custom.background.ignoresSafeArea())
+            buttons
+                .padding()
+                .padding(.bottom)
+        }.background(Color.custom.background)
             .navigationBarBackButtonHidden()
+            .edgesIgnoringSafeArea(.bottom)
     }
 }

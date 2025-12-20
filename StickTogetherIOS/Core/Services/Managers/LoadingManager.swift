@@ -9,7 +9,7 @@ import SwiftUI
 
 @MainActor
 final class LoadingManager: ObservableObject {
-    @Published private(set) var isLoading: Bool = false
+    @Published private(set) var isLoading: Bool = true
 
     private var counter: Int = 0
     private var hideTask: Task<Void, Never>?
