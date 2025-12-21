@@ -27,7 +27,7 @@ extension Habit {
         let key = Habit.dayKey(for: date)
         let users = completion[key] ?? []
 
-        guard !buddyId.isEmpty else {
+        if buddyId.isEmpty || type != .coop {
             return users.contains(currentUserId) ? .both : .neither
         }
         

@@ -10,11 +10,13 @@ import SwiftUI
 @MainActor
 class HabitViewModel: ObservableObject {
     @Published var habits: [Habit] = []
+    @Published var friendsHabits: [Habit] = []
 
     var lastInteraction: [String:Date] = [:]
     
     private let service: HabitServiceProtocol
-    private var listenerToken: ListenerToken?
+    private var myHabitslistenerToken: ListenerToken?
+    private var friendsHabitslistenerToken: ListenerToken?
     private var loadingManager: LoadingManager?
     private var currentUser: User
     
@@ -28,10 +30,11 @@ class HabitViewModel: ObservableObject {
     
     @MainActor
     func startListening() async {
-        if listenerToken != nil {
+        if myHabitslistenerToken != nil {
             return
         }
         await loadUserHabits()
+        await loadBuddiesHabits()
     }
     
     static func configured(service: HabitServiceProtocol,
@@ -41,7 +44,7 @@ class HabitViewModel: ObservableObject {
     }
 
     private func loadUserHabits() async {
-        guard listenerToken == nil else { return }
+        guard myHabitslistenerToken == nil else { return }
 
         do {
             if let loader = loadingManager {
@@ -53,7 +56,7 @@ class HabitViewModel: ObservableObject {
                 habits = try await service.fetchAllHabits(for: currentUser.safeID)
             }
 
-            listenerToken = service.listenToHabits(for: currentUser.safeID) { [weak self] newHabits in
+            myHabitslistenerToken = service.listenToMyHabits(for: currentUser.safeID) { [weak self] newHabits in
                 Task { @MainActor in
                     withAnimation {
                         self?.habits = newHabits
@@ -64,6 +67,33 @@ class HabitViewModel: ObservableObject {
         } catch {
             print("Failed to load habits: \(error)")
             habits = []
+        }
+    }
+    
+    private func loadBuddiesHabits() async {
+        guard friendsHabitslistenerToken == nil else { return }
+
+        do {
+            if let loader = loadingManager {
+                let loaded: [Habit] = try await loader.run {
+                    try await self.service.fetchFriendsHabits(for: self.currentUser.safeID)
+                }
+                friendsHabits = loaded
+            } else {
+                friendsHabits = try await service.fetchFriendsHabits(for: currentUser.safeID)
+            }
+
+            friendsHabitslistenerToken = service.listenToFriendsHabits(for: currentUser.safeID) { [weak self] newHabits in
+                Task { @MainActor in
+                    withAnimation {
+                        self?.friendsHabits = newHabits
+                    }
+                    await NotificationManager.shared.rescheduleAll(habits: newHabits)
+                }
+            }
+        } catch {
+            print("Failed to load habits: \(error)")
+            friendsHabits = []
         }
     }
     
@@ -180,6 +210,6 @@ class HabitViewModel: ObservableObject {
     }
     
     deinit {
-        listenerToken?.remove()
+        myHabitslistenerToken?.remove()
     }
 }

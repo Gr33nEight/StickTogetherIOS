@@ -15,7 +15,6 @@ struct HabitCell: View {
     let selectedDate: Date
     let buddy: User?
 
-
     private var completionState: CompletionState {
         habit.completionState(
             on: selectedDate,
@@ -50,13 +49,20 @@ struct HabitCell: View {
     private var isPastAndNotDone: Bool {
         selectedDate < Calendar.current.startOfDay(for: Date()) && !done
     }
+    
+    private var isPreview: Bool { habit.type == .preview }
+    private var iAmBuddy: Bool { habit.buddyId == profileVM.safeUser.safeID }
 
     var body: some View {
         HStack(spacing: 15) {
             iconView
             contentView
             Spacer()
-            if isToday {
+            
+            let isPreview = habit.type == .preview
+            let iAmBuddy = habit.buddyId == profileVM.safeUser.safeID
+
+            if isToday && (!isPreview || !iAmBuddy) {
                 completionButton
             }
         }
@@ -88,7 +94,7 @@ private extension HabitCell {
                 .strikethrough(iDid || done)
                 .foregroundStyle(Color.custom.text)
 
-            if habit.type != .alone {
+            if habit.type == .coop || (habit.type == .preview && habit.buddyId == profileVM.safeUser.safeID) {
                 buddyStatusView
             }
         }
@@ -104,15 +110,16 @@ private extension HabitCell {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 15)
-                .foregroundStyle(buddyColor)
+                .foregroundStyle(buddy == nil ? Color.custom.text : (!isPreview || !iAmBuddy) ? buddyColor : Color.custom.text)
 
             if let buddyName = buddy?.name {
                 Text(buddyName)
-                    .foregroundStyle(buddyColor)
+                    .foregroundStyle((!isPreview || !iAmBuddy) ? buddyColor : Color.custom.text)
 
-                statusBadge
+                if (!isPreview || !iAmBuddy) { statusBadge }
             } else {
                 Text("Waiting for response")
+                    .foregroundStyle(Color.custom.text)
             }
         }
         .font(.customAppFont(size: 12, weight: .medium))
@@ -171,6 +178,10 @@ private extension HabitCell {
     var cardBackgroundColor: Color {
         if done {
             return Color.custom.primary
+        }
+        
+        if habit.type == .preview {
+            return buddyDid ? Color.custom.primary : Color.custom.red
         }
         
         if isPastAndNotDone {

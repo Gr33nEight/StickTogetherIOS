@@ -13,7 +13,9 @@ protocol HabitServiceProtocol {
     func deleteHabit(_ habitId: String) async throws
     func fetchHabit(byId id: String) async throws -> Habit?
     func fetchAllHabits(for userId: String) async throws -> [Habit]
-    func listenToHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken
+    func fetchFriendsHabits(for userId: String) async throws -> [Habit]
+    func listenToMyHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken
+    func listenToFriendsHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken
     func updatedCompletionState(for habitId: String, date: Date, userId: String, markCompleted: Bool) async throws
 }
 

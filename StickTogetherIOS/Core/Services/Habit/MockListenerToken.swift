@@ -66,7 +66,11 @@ actor MockHabitService: @preconcurrency HabitServiceProtocol {
         return store.values.filter { $0.ownerId == userId || $0.buddyId == userId }
     }
 
-    func listenToHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
+    func fetchFriendsHabits(for userId: String) async throws -> [Habit] {
+        return store.values.filter { $0.buddyId == userId }
+    }
+    
+    func listenToMyHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
         // create token id
         let tokenId = UUID().uuidString
         // wrap update so that it filters by userId (mirror fetchAllHabits semantics)
@@ -79,6 +83,30 @@ actor MockHabitService: @preconcurrency HabitServiceProtocol {
         // immediately send current snapshot filtered
         Task { @MainActor in
             let snapshot = await store.values.filter { $0.ownerId == userId || $0.buddyId == userId }
+            update(snapshot)
+        }
+
+        return MockListenerToken { [weak self] in
+            Task {
+                // hop to the service actor context to mutate actor-isolated state
+                await self?.removeListener(for: tokenId)
+            }
+        }
+    }
+    
+    func listenToFriendsHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
+        // create token id
+        let tokenId = UUID().uuidString
+        // wrap update so that it filters by userId (mirror fetchAllHabits semantics)
+        let cb: ([Habit]) -> Void = { all in
+            let filtered = all.filter { $0.buddyId == userId }
+            update(filtered)
+        }
+        listeners[tokenId] = cb
+
+        // immediately send current snapshot filtered
+        Task { @MainActor in
+            let snapshot = await store.values.filter { $0.buddyId == userId }
             update(snapshot)
         }
 

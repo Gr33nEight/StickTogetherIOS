@@ -50,6 +50,7 @@ actor FirebaseHabitService: @preconcurrency HabitServiceProtocol {
             .getDocuments()
         async let buddySnap = db.collection(collection)
             .whereField("buddyId", isEqualTo: userId)
+            .whereField("type", isEqualTo: 1)
             .getDocuments()
 
         let (owned, buddy) = try await (ownedSnap, buddySnap)
@@ -69,8 +70,16 @@ actor FirebaseHabitService: @preconcurrency HabitServiceProtocol {
 
         return result
     }
+    
+    func fetchFriendsHabits(for userId: String) async throws -> [Habit] {
+        let snapshot = try await db.collection(collection)
+            .whereField("buddyId", isEqualTo: userId)
+            .whereField("type", isEqualTo: 2)
+            .getDocuments()
+        return snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
+    }
 
-    func listenToHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
+    func listenToMyHabits(for userId: String, update: @escaping ([Habit]) -> Void) -> ListenerToken {
         var latestOwned: [Habit] = []
         var latestBuddy: [Habit] = []
 
@@ -91,6 +100,7 @@ actor FirebaseHabitService: @preconcurrency HabitServiceProtocol {
 
         let buddyListener = db.collection(collection)
             .whereField("buddyId", isEqualTo: userId)
+            .whereField("type", isEqualTo: 1)
             .addSnapshotListener { snapshot, _ in
                 guard let snapshot = snapshot else { return }
                 latestBuddy = snapshot.documents.compactMap { try? $0.data(as: Habit.self) }
@@ -98,6 +108,29 @@ actor FirebaseHabitService: @preconcurrency HabitServiceProtocol {
             }
 
         let token = CombinedListenerToken(listeners: [ownedListener, buddyListener])
+        listeners.append(token)
+        return token
+    }
+    
+    func listenToFriendsHabits(
+        for userId: String,
+        update: @escaping ([Habit]) -> Void
+    ) -> ListenerToken {
+
+        let listener = db.collection(collection)
+            .whereField("buddyId", isEqualTo: userId)
+            .whereField("type", isEqualTo: 2)
+            .addSnapshotListener { snapshot, error in
+                guard let snapshot else { return }
+
+                let habits = snapshot.documents.compactMap {
+                    try? $0.data(as: Habit.self)
+                }
+
+                update(habits)
+            }
+
+        let token = FirestoreListenerToken(listener: listener)
         listeners.append(token)
         return token
     }

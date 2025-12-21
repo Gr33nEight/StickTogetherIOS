@@ -8,8 +8,15 @@
 import SwiftUI
 
 extension HomeView {
+    var pickedListHabits: [Habit] {
+        switch pickedHabitListType {
+        case .myHabits: myHabitsOnDate
+        case .friendsHabits: buddiesHabitsOnDate
+        }
+    }
+    
     var sortedHabits: [Habit] {
-        return visible.sorted { a, b in
+        return pickedListHabits.sorted { a, b in
             let aPriority = a.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
             let bPriority = b.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
             
@@ -47,27 +54,29 @@ extension HomeView {
     @ViewBuilder
     var content: some View {
         VStack(spacing: 0) {
-            //            picker
+            picker.padding(.bottom).padding([.top, .horizontal], 5)
             ScrollView(showsIndicators: false) {
-                if visible.isEmpty {
+                if sortedHabits.isEmpty {
                     Spacer()
                     VStack {
-                        Text("There are no \(pickedHabitType.text.lowercased()) habits scheduled for this day")
+                        Text(pickedHabitListType.noHabitsText)
                             .foregroundStyle(Color.custom.lightGrey)
                             .font(.mySubtitle)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
-                        Button(action: {
-                            navigate(.push(.createHabit))
-                        }, label: {
-                            HStack {
-                                Image(systemName: "plus")
-                                    .frame(height: 24)
-                                Text("Add new")
-                                    .font(.customAppFont(size: 15, weight: .semibold))
-                            }
-                        })
-                        .foregroundStyle(Color.custom.tertiary)
+                        if pickedHabitListType == .myHabits {
+                            Button(action: {
+                                navigate(.push(.createHabit))
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "plus")
+                                        .frame(height: 24)
+                                    Text("Add new")
+                                        .font(.customAppFont(size: 15, weight: .semibold))
+                                }
+                            })
+                            .foregroundStyle(Color.custom.tertiary)
+                        }
                     }.padding(.top, UIScreen.main.bounds.height/5.5)
                     Spacer()
                 } else {
@@ -103,25 +112,25 @@ extension HomeView {
     
     var picker: some View {
         HStack(spacing: 0) {
-            ForEach(HabitType.allCases, id: \.self) { type in
+            ForEach(HabitListType.allCases, id: \.self) { type in
                 Button {
-                    pickedHabitType = type
+                    pickedHabitListType = type
                 } label: {
                     ZStack {
-                        if pickedHabitType == type {
+                        if pickedHabitListType == type {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.custom.primary)
                                 .matchedGeometryEffect(id: "habitsList-bg", in: habitTypeAnimation)
                         }
                         Text(type.text)
                             .font(.customAppFont(size: 13, weight: .bold))
-                            .foregroundColor(pickedHabitType == type ? Color.custom.text : Color(.systemGray))
-                            .frame(width: (UIScreen.main.bounds.size.width-60)/3, height: 40)
+                            .foregroundColor(pickedHabitListType == type ? Color.custom.text : Color(.systemGray))
+                            .frame(width: (UIScreen.main.bounds.size.width-60)/2, height: 40)
                     }
                 }
             }
         }
-            .frame(height: 30)
+            .frame(height: 40)
             .padding(.horizontal)
     }
 }
@@ -137,7 +146,7 @@ extension HomeView {
 
 
 enum HabitType: Int, CaseIterable, Codable {
-    case alone, coop//, preview
+    case alone, coop, preview
     
     var text: String {
         switch self {
@@ -145,8 +154,8 @@ enum HabitType: Int, CaseIterable, Codable {
             return "Alone"
         case .coop:
             return "Co-op"
-//        case .preview:
-//            return "Preview"
+        case .preview:
+            return "Preview"
         }
     }
 }
