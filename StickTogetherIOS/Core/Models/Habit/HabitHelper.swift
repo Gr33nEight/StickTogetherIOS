@@ -19,24 +19,58 @@ extension Habit {
 
     func completionState(
         on date: Date,
-        currentUserId: String,
-        ownerId: String,
-        buddyId: String
+        currentUserId: String
     ) -> CompletionState {
 
         let key = Habit.dayKey(for: date)
         let users = completion[key] ?? []
 
-        if buddyId.isEmpty || type != .coop {
+        switch type {
+        case .alone:
+            return aloneState(users: users, currentUserId: currentUserId)
+
+        case .coop:
+            return coopState(
+                users: users,
+                currentUserId: currentUserId,
+                ownerId: ownerId,
+                buddyId: buddyId
+            )
+
+        case .preview:
+            // preview = alone for owner, coop for buddy
+            if currentUserId == ownerId {
+                return aloneState(users: users, currentUserId: currentUserId)
+            } else {
+                return coopState(
+                    users: users,
+                    currentUserId: currentUserId,
+                    ownerId: ownerId,
+                    buddyId: buddyId
+                )
+            }
+        }
+    }
+    
+    private func aloneState(
+        users: [String],
+        currentUserId: String
+    ) -> CompletionState {
+        users.contains(currentUserId) ? .both : .neither
+    }
+    
+    private func coopState(
+        users: [String],
+        currentUserId: String,
+        ownerId: String,
+        buddyId: String
+    ) -> CompletionState {
+
+        guard !buddyId.isEmpty else {
             return users.contains(currentUserId) ? .both : .neither
         }
-        
-        let otherUserId: String
-        if currentUserId == ownerId {
-            otherUserId = buddyId
-        } else {
-            otherUserId = ownerId
-        }
+
+        let otherUserId = (currentUserId == ownerId) ? buddyId : ownerId
 
         let meDid = users.contains(currentUserId)
         let otherDid = users.contains(otherUserId)
@@ -102,7 +136,7 @@ extension Habit {
     
     //TODO: Temporary
     func numberOfParticipants() -> Int {
-        return type == .alone ? 1 : (buddyId == nil ? 1 : 2)
+        return type == .coop ? (buddyId.isEmpty ? 1 : 2) : 1
     }
     
     func completionCount(forDayKey key: String) -> Int {
@@ -114,8 +148,8 @@ extension Habit {
     }
     
     func sortPriority(date: Date, currentUserId: String) -> Int {
-        let solo = buddyId == nil
-        switch completionState(on: date, currentUserId: currentUserId, ownerId: ownerId, buddyId: buddyId) {
+        let solo = buddyId.isEmpty
+        switch completionState(on: date, currentUserId: currentUserId) {
         case .both: return solo ? 0 : 1
         case .me: return 2
         case .buddy: return 3

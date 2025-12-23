@@ -86,9 +86,9 @@ extension HomeView {
                                 let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
                                 navigate(.push(.habit(container)))
                             } label: {
-                                HabitCell(habit: habit, updateCompletion: {
+                                HabitCell(habit: habit, selectedDate: selectedDate, buddy: buddy(habit)) {
                                     Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
-                                }, selectedDate: selectedDate, buddy: buddy(habit))
+                                }
                             }
                         }
                     }.padding(.bottom, Calendar.current.isDate(selectedDate, inSameDayAs: Date()) ? 130 : 0)

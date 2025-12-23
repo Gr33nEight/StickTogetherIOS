@@ -72,6 +72,8 @@
 		3C6159122EB79EEF00F9B65A /* ConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6159102EB79EEF00F9B65A /* ConfirmView.swift */; };
 		3C6159132EB79EEF00F9B65A /* ConfirmationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */; };
 		3C6159142EB79EEF00F9B65A /* ConfirmationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */; };
+		3C63FA492EFAF3B800369E1F /* HabitCellTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C63FA482EFAF3B800369E1F /* HabitCellTemplate.swift */; };
+		3C63FA4B2EFAF3C400369E1F /* HabitCellBuddyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C63FA4A2EFAF3C400369E1F /* HabitCellBuddyInfo.swift */; };
 		3C6687E62EB4D61D00DE45E8 /* LoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */; };
 		3C6687E82EB4D6F000DE45E8 /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E72EB4D6F000DE45E8 /* LoadingOverlay.swift */; };
 		3C6687EA2EB4DAA900DE45E8 /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6687E92EB4DAA900DE45E8 /* UIApplicationExtension.swift */; };
@@ -90,7 +92,6 @@
 		3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */; };
 		3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */; };
 		3C6688322EB7499F00DE45E8 /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */; };
-		3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */; };
 		3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */; };
 		3C70E0962EB3DE4E00C325D9 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */; };
 		3C70E09A2EB3DE7B00C325D9 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0992EB3DE7B00C325D9 /* DateExtension.swift */; };
@@ -119,6 +120,9 @@
 		3CB5042D2EB23427004AF0A9 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042C2EB23427004AF0A9 /* AuthViewModel.swift */; };
 		3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504392EB24ACC004AF0A9 /* CustomFont.swift */; };
 		3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */; };
+		3CD0D4162EF858680092BDE2 /* AloneHabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0D4152EF858680092BDE2 /* AloneHabitCell.swift */; };
+		3CD0D4182EF858780092BDE2 /* PreviewHabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0D4172EF858780092BDE2 /* PreviewHabitCell.swift */; };
+		3CD0D41A2EF858800092BDE2 /* CoopHabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0D4192EF858800092BDE2 /* CoopHabitCell.swift */; };
 		3CD2DA692ED1A8A7003C3552 /* FirebaseProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD2DA682ED1A8A7003C3552 /* FirebaseProfileService.swift */; };
 		3CD2DA6B2ED1A8B6003C3552 /* ProfileServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD2DA6A2ED1A8AE003C3552 /* ProfileServiceProtocol.swift */; };
 		3CD2DA6D2ED1A8C2003C3552 /* MockProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD2DA6C2ED1A8BA003C3552 /* MockProfileService.swift */; };
@@ -219,6 +223,8 @@
 		3C61590E2EB79EEF00F9B65A /* ConfirmationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationService.swift; sourceTree = "<group>"; };
 		3C61590F2EB79EEF00F9B65A /* ConfirmationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModifier.swift; sourceTree = "<group>"; };
 		3C6159102EB79EEF00F9B65A /* ConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmView.swift; sourceTree = "<group>"; };
+		3C63FA482EFAF3B800369E1F /* HabitCellTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCellTemplate.swift; sourceTree = "<group>"; };
+		3C63FA4A2EFAF3C400369E1F /* HabitCellBuddyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCellBuddyInfo.swift; sourceTree = "<group>"; };
 		3C6687E52EB4D61D00DE45E8 /* LoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingManager.swift; sourceTree = "<group>"; };
 		3C6687E72EB4D6F000DE45E8 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		3C6687E92EB4DAA900DE45E8 /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
@@ -237,7 +243,6 @@
 		3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitServiceProtocol.swift; sourceTree = "<group>"; };
 		3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
 		3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitHelper.swift; sourceTree = "<group>"; };
-		3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitListSection.swift; sourceTree = "<group>"; };
 		3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellViewModifier.swift; sourceTree = "<group>"; };
 		3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		3C70E0992EB3DE7B00C325D9 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -270,6 +275,9 @@
 		3CB504392EB24ACC004AF0A9 /* CustomFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
 		3CB5043B2EB24E7C004AF0A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		3CD0D4152EF858680092BDE2 /* AloneHabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AloneHabitCell.swift; sourceTree = "<group>"; };
+		3CD0D4172EF858780092BDE2 /* PreviewHabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHabitCell.swift; sourceTree = "<group>"; };
+		3CD0D4192EF858800092BDE2 /* CoopHabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoopHabitCell.swift; sourceTree = "<group>"; };
 		3CD2DA682ED1A8A7003C3552 /* FirebaseProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseProfileService.swift; sourceTree = "<group>"; };
 		3CD2DA6A2ED1A8AE003C3552 /* ProfileServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceProtocol.swift; sourceTree = "<group>"; };
 		3CD2DA6C2ED1A8BA003C3552 /* MockProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProfileService.swift; sourceTree = "<group>"; };
@@ -440,9 +448,8 @@
 		3C42E7012EB3671600D0D58C /* HomeView */ = {
 			isa = PBXGroup;
 			children = (
-				3C6688332EB75D0A00DE45E8 /* HabitListSection.swift */,
+				3CD0D4142EF8581A0092BDE2 /* HabitCell */,
 				3C42E6F92EB3562400D0D58C /* HomeView.swift */,
-				3C42E7042EB3677200D0D58C /* HabitCell.swift */,
 				3C42E7062EB3678200D0D58C /* DayCell.swift */,
 				3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */,
 				3C42E70A2EB367E000D0D58C /* HomeViewHeader.swift */,
@@ -818,6 +825,19 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		3CD0D4142EF8581A0092BDE2 /* HabitCell */ = {
+			isa = PBXGroup;
+			children = (
+				3C63FA4A2EFAF3C400369E1F /* HabitCellBuddyInfo.swift */,
+				3C63FA482EFAF3B800369E1F /* HabitCellTemplate.swift */,
+				3C42E7042EB3677200D0D58C /* HabitCell.swift */,
+				3CD0D4152EF858680092BDE2 /* AloneHabitCell.swift */,
+				3CD0D4172EF858780092BDE2 /* PreviewHabitCell.swift */,
+				3CD0D4192EF858800092BDE2 /* CoopHabitCell.swift */,
+			);
+			path = HabitCell;
+			sourceTree = "<group>";
+		};
 		3CD2DA672ED1A890003C3552 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,11 +1023,13 @@
 				3C42E6E92EB28AB300D0D58C /* CustomTextField.swift in Sources */,
 				3C42E6F42EB2986D00D0D58C /* LoginViewHeader.swift in Sources */,
 				3C27EB442EBA4E1A00BB39F7 /* InviteFriendModal.swift in Sources */,
+				3C63FA492EFAF3B800369E1F /* HabitCellTemplate.swift in Sources */,
 				3C42E6F62EB2987A00D0D58C /* LoginViewContent.swift in Sources */,
 				3C41F8B42ECE443B0020E9EE /* NavigationDestinations.swift in Sources */,
 				3C5C13B62EC3DB0F00693ED0 /* GoogleButton.swift in Sources */,
 				3CA910982EE0BD110031100F /* NotificationView.swift in Sources */,
 				3C42E6F82EB2988200D0D58C /* LoginViewFooter.swift in Sources */,
+				3CD0D41A2EF858800092BDE2 /* CoopHabitCell.swift in Sources */,
 				3C27EB402EB9237E00BB39F7 /* ScreenOverlay.swift in Sources */,
 				3C27EB3C2EB9234100BB39F7 /* ModalViewModifier.swift in Sources */,
 				3CD2DA692ED1A8A7003C3552 /* FirebaseProfileService.swift in Sources */,
@@ -1030,6 +1052,7 @@
 				3C6687F52EB4EA6900DE45E8 /* ToastMessageView.swift in Sources */,
 				3C6687F62EB4EA6900DE45E8 /* ToastMessageViewModifier.swift in Sources */,
 				3C6687F72EB4EA6900DE45E8 /* ToastMessageTimerModel.swift in Sources */,
+				3CD0D4182EF858780092BDE2 /* PreviewHabitCell.swift in Sources */,
 				3CB504252EB23283004AF0A9 /* AuthServiceProtocol.swift in Sources */,
 				3C41F8C52ECF6BAF0020E9EE /* SettingsViewModel.swift in Sources */,
 				3C6687EA2EB4DAA900DE45E8 /* UIApplicationExtension.swift in Sources */,
@@ -1044,6 +1067,7 @@
 				3CFF85472EE3605C00171172 /* CustomBadgeView.swift in Sources */,
 				3C41F8C12ECE55CC0020E9EE /* MockListenerToken.swift in Sources */,
 				3CD2DA6D2ED1A8C2003C3552 /* MockProfileService.swift in Sources */,
+				3CD0D4162EF858680092BDE2 /* AloneHabitCell.swift in Sources */,
 				3C41F8C32ECE55D40020E9EE /* MockFriendsService.swift in Sources */,
 				3C70E0AC2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift in Sources */,
 				3C70E0A22EB3E22600C325D9 /* ButtonStyles.swift in Sources */,
@@ -1070,6 +1094,7 @@
 				3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */,
 				3C42E71A2EB39EE400D0D58C /* Constants.swift in Sources */,
 				3C584DA12EC89D99006D2E59 /* HabitState.swift in Sources */,
+				3C63FA4B2EFAF3C400369E1F /* HabitCellBuddyInfo.swift in Sources */,
 				3C6687E62EB4D61D00DE45E8 /* LoadingManager.swift in Sources */,
 				3CFF853E2EE2153E00171172 /* AppNotificationType.swift in Sources */,
 				3C42E6F12EB2981200D0D58C /* CreateAccountView.swift in Sources */,
@@ -1081,7 +1106,6 @@
 				3C42E7112EB36CEB00D0D58C /* CreateHabitView.swift in Sources */,
 				3C27EB382EB8B80700BB39F7 /* FriendsListView.swift in Sources */,
 				3C27EB492EBA515A00BB39F7 /* FriendsServiceProtocol.swift in Sources */,
-				3C6688342EB75D0A00DE45E8 /* HabitListSection.swift in Sources */,
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
 				3C42E6FE2EB365FB00D0D58C /* CreateAccountContent.swift in Sources */,
 				3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */,

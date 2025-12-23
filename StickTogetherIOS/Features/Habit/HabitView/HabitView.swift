@@ -63,9 +63,7 @@ struct HabitView: View {
                             HabitViewCell(title: "Buddy 👋", value: buddy.name.capitalized)
                             HabitViewCell(title: "Current state 🎯", value: habit.completionState(
                                 on: selectedDate,
-                                currentUserId: profileVM.safeUser.safeID,
-                                ownerId: habit.ownerId,
-                                buddyId: habit.buddyId
+                                currentUserId: profileVM.safeUser.safeID
                             ).text, font: .myBody)
                         }
                     }
