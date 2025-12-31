@@ -17,4 +17,5 @@ protocol AuthServiceProtocol {
     func signInWithGoogle() async throws -> ValueOrError<User>
     func signOut() async throws
     func authStateStream() -> AsyncStream<User?>
+    func updateUsersToken(userId: String, token: String, remove: Bool) async throws
 }

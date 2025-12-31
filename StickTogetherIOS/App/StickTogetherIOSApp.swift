@@ -13,6 +13,8 @@ import GoogleSignIn
 
 @main
 struct StickTogetherApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegateAdaptor.self) var appDelegate
+    
     @StateObject private var di: DIContainer = DIContainer()
     @StateObject private var loading = LoadingManager()
     @StateObject private var authVM = AuthViewModel()
@@ -21,6 +23,7 @@ struct StickTogetherApp: App {
     init() {
         FirebaseApp.configure()
         NotificationManager.shared.configure()
+        PushManager.shared.configure()
         
         let profileService = FirebaseProfileService()
         _profileVM = StateObject(wrappedValue: ProfileViewModel(profileService: profileService))

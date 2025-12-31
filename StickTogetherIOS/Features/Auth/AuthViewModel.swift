@@ -97,6 +97,7 @@ class AuthViewModel: ObservableObject {
             let user = try await s.signIn(email: email, password: password)
             // set currentUser immediately (stream will also emit)
             self.currentUser = user
+            await self.onUserLoggedIn()
         }, setAuthStateOnSuccess: true,
            successMessage: "Signed in successfully")
     }
@@ -107,17 +108,23 @@ class AuthViewModel: ObservableObject {
             let user = try await s.signUp(email: email, password: password, name: name)
             // set currentUser immediately
             self.currentUser = user
+            await self.onUserLoggedIn()
         }, setAuthStateOnSuccess: true,
            successMessage: "Account created successfully")
     }
 
     func signOut() async {
         await execute({
-            guard let s = self.authService else { return }
+            guard
+                let s = self.authService,
+                let token = UserDefaults.standard.string(forKey: "fcm_token"),
+                let userId = self.currentUser?.id
+            else { return print("token, service albo userId") }
             try await s.signOut()
+            try? await s.updateUsersToken(userId: userId, token: token, remove: true)
             // ensure UI reflects sign out immediately
             self.currentUser = nil
-            self.isAuthenticated = false
+            await self.onUserLoggedIn()
         }, setAuthStateOnSuccess: false,
            successMessage: "Signed out successfully")
     }
@@ -131,6 +138,7 @@ class AuthViewModel: ObservableObject {
             switch result {
             case .value(let user):
                 self.currentUser = user
+                await self.onUserLoggedIn()
             case .error(let string):
                 print(string)
             }
@@ -145,11 +153,23 @@ class AuthViewModel: ObservableObject {
             case .value(let user):
                 self.currentUser = user
                 self.isAuthenticated = true
+                await self.onUserLoggedIn()
             case .error(let string):
                 print(string)
             }
         }, setAuthStateOnSuccess: true, successMessage: "Signed in successfully with Google")
     }
+    
+    func onUserLoggedIn() async {
+        guard
+            let token = UserDefaults.standard.string(forKey: "fcm_token"),
+            let userId = currentUser?.id
+        else {
+            return
+        }
+        try? await authService?.updateUsersToken(userId: userId, token: token, remove: false)
+    }
+    
     
     deinit {
         authStateTask?.cancel()

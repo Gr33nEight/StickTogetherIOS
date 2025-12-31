@@ -16,7 +16,11 @@ struct AppEntry: View {
         }.task {
             await CalendarManager.shared.requestAccess()
             NotificationManager.shared.requestAuthorization { granted in
-                print("Notification allowed:", granted)
+                if granted {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                }
             }
         }
     }

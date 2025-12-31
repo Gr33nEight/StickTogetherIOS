@@ -173,4 +173,9 @@ actor FirebaseAuthService: @preconcurrency AuthServiceProtocol {
         
         return .value(user)
     }
+    
+    func updateUsersToken(userId: String, token: String, remove: Bool) async throws {
+        try await firestore.collection("users").document(userId)
+            .updateData(["fcmTokens" : remove ? FieldValue.arrayRemove([token]) : FieldValue.arrayUnion([token])])
+    }
 }

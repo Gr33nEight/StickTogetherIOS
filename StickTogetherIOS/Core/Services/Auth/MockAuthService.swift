@@ -10,6 +10,11 @@ import Foundation
 import AuthenticationServices
 
 actor MockAuthService: @preconcurrency AuthServiceProtocol {
+    
+    func updateUsersToken(userId: String, token: String, remove: Bool) async throws {
+        print("TODO")
+    }
+    
     // MARK: - In-memory store
     private var authStateContinuation: AsyncStream<User?>.Continuation?
     private var storedUser: User? {
