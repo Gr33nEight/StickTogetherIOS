@@ -106,14 +106,14 @@ class HabitViewModel: ObservableObject {
         }
     }
     
-    func createHabit(_ habit: Habit) async {
+    func createHabit(_ habit: Habit) async -> SuccessOrError {
         do {
             var savedHabit = try await service.createHabit(habit)
             habits.append(savedHabit)
             await NotificationManager.shared.scheduleNotifications(for: savedHabit)
-            
+            return .success
         } catch {
-            print("Failed to create habit: \(error)")
+            return .error("Failed to create habit: \(error)")
         }
     }
     

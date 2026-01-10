@@ -11,7 +11,7 @@ extension CreateHabitView {
     var titleTextField: some View {
         HStack(spacing: 15) {
             Button(action: { isEmojiPickerPresented.toggle() }, label: {
-                Text(selectedEmoji == nil ? autoEmoji : selectedEmoji!.emoji)
+                Text(selectedEmoji == nil ? autoEmoji == nil ? "➕" : autoEmoji! : selectedEmoji!.emoji)
                     .font(.customAppFont(size: 50))
                     .shadow(color: Color.custom.lightGrey, radius: 10)
                     .padding(10)

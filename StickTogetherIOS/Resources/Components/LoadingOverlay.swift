@@ -15,7 +15,7 @@ struct LoadingOverlay: View {
         ZStack {
             if loading.isLoading {
                 LoadingView()
-                .transition(.scale.combined(with: .opacity))
+                .transition(.opacity)
                 .zIndex(1)
             }
         }

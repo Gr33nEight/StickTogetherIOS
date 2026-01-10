@@ -34,7 +34,7 @@ struct CreateHabitView: View {
 
     @State var isEmojiPickerPresented = false
     @State var selectedEmoji: Emoji? = nil
-    @State var autoEmoji = "➕"
+    @State var autoEmoji: String? = nil
 
     var body: some View {
         GeometryReader { _ in
@@ -60,7 +60,13 @@ struct CreateHabitView: View {
                     }.customButtonStyle(.secondary)
 
                     Button {
-                        create()
+                        let results = create()
+                        switch results {
+                        case .success:
+                            dismiss()
+                        case .error(let string):
+                            showToastMessage(.failed(string))
+                        }
                     } label: {
                         Text("Create")
                     }.customButtonStyle(.primary)
@@ -79,31 +85,37 @@ struct CreateHabitView: View {
             })
     }
 
-    private func create() {
-        guard let userId = profileVM.safeUser.id
-        else {
-            showToastMessage(.warning("You didn't choose icon."))
-            return
+    private func create() -> SuccessOrError {
+        
+        guard let userId = profileVM.safeUser.id else {
+            return .error("Something went wrong")
         }
-        var icon = ""
+        
+        guard !title.isEmpty else {
+            return .error("You have to give this habit a title!")
+        }
+        
+        let icon: String
         if let emoji = selectedEmoji?.emoji {
             icon = emoji
-        }else{
+        } else if let autoEmoji {
             icon = autoEmoji
+        } else {
+            return .error("You have to choose the icon first!")
         }
         
         let habitFrequency: Frequency
         switch pickedFrequency {
         case .daily:
-            habitFrequency = Frequency.daily(everyDays: interval)
+            habitFrequency = .daily(everyDays: interval)
         case .weekly:
-            habitFrequency = Frequency.weekly(everyWeeks: interval, daysOfWeek: pickedDays)
+            habitFrequency = .weekly(everyWeeks: interval, daysOfWeek: pickedDays)
         case .monthly:
-            habitFrequency = Frequency.monthly(everyMonths: interval)
+            habitFrequency = .monthly(everyMonths: interval)
         }
         
         let initialKey = Habit.dayKey(for: startDate)
-        let finalType = buddy == nil ? .alone : type
+        
         let habit = Habit(
             id: id,
             title: title,
@@ -114,39 +126,40 @@ struct CreateHabitView: View {
             endDate: endDate,
             reminderTime: setReminder ? reminderTime : nil,
             completion: [initialKey: []],
-            type: finalType
+            type: type
         )
         
-        if addToCalendar {
-            do {
-                try CalendarManager.shared.addHabitToCalendar(habit: habit)
-            } catch {
-                // TODO: Handle it properly
+        let appNotification: AppNotification?
+        if type != .alone {
+            guard let buddy else {
+                return .error("You have to choose a buddy to share this habit with!")
             }
-        }
-        
-        Task { await habitVM.createHabit(habit) }
-        
-        if finalType != .alone {
-            guard
-                let buddyId = buddy?.id,
-                let currentUser = profileVM.currentUser,
-                let habitId = habit.id
-            else { return }
             
-            let appNotification = AppNotification(
+            appNotification = AppNotification(
                 senderId: userId,
-                receiverId: buddyId,
-                content: "\(currentUser.name) invited you to join his habit: \(title) \(icon)",
+                receiverId: buddy.safeID,
+                content: "\(profileVM.safeUser.name) invited you to join his habit: \(title) \(icon)",
                 date: Date(),
                 type: .habitInvite,
-                payload: ["habitId" : habitId])
+                payload: ["habitId": habit.id ?? ""]
+            )
+        } else {
+            appNotification = nil
+        }
+        
+        Task {
+            let result = await habitVM.createHabit(habit)
+            guard result.isSuccess else { return }
             
-            Task {
+            if addToCalendar {
+                try? CalendarManager.shared.addHabitToCalendar(habit: habit)
+            }
+            
+            if let appNotification {
                 await appNotificationsVM.sendAppNotification(appNotification)
             }
         }
-                
-        dismiss()
+        
+        return .success
     }
 }

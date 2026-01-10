@@ -159,7 +159,7 @@ struct IconPicker {
         "bible": "📖",
     ]
 
-    static func iconUsingNLP(for title: String) -> String {
+    static func iconUsingNLP(for title: String) -> String? {
         let tagger = NLTagger(tagSchemes: [.lexicalClass, .nameType])
         tagger.string = title
         var bestTokens: [String] = []
@@ -184,7 +184,7 @@ struct IconPicker {
         return icon(for: title)
     }
     
-    private static func icon(for title: String) -> String {
+    private static func icon(for title: String) -> String? {
         let words = title
             .lowercased()
             .components(separatedBy: CharacterSet.alphanumerics.inverted)
@@ -200,7 +200,7 @@ struct IconPicker {
             }
         }
 
-        return "➕"
+        return nil
     }
 }
 
