@@ -10,6 +10,7 @@ import SwiftUI
 struct HabitView: View {
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var habitVM: HabitViewModel
+    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     
     let habit: Habit
     let selectedDate: Date
@@ -93,7 +94,7 @@ struct HabitView: View {
                     if habit.type != .alone {
                         Button(action: {
                             Task {
-                                await habitVM.encourageYourBuddy()
+                                await encourageYourBuddy()
                             }
                         }, label: {
                             Text("Encourage your buddy")
@@ -138,5 +139,15 @@ struct HabitView: View {
         .fullScreenCover(isPresented: $showEditHabitView) {
             
         }
+    }
+    
+    func encourageYourBuddy() async {
+        let appNotification = AppNotification.encouragement(
+            senderId: profileVM.safeUser.safeID,
+            receiverId: habit.buddyId,
+            senderName: profileVM.safeUser.name,
+            habitId: habit.id ?? ""
+        )
+        await appNotificationsVM.sendAppNotification(appNotification)
     }
 }

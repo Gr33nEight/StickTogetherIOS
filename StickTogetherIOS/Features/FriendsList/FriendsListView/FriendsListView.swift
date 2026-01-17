@@ -23,6 +23,7 @@ enum FriendsListType: CaseIterable {
 struct FriendsListView: View {
     var fullList: Bool = false
     
+    @EnvironmentObject var appNotifications: AppNotificationsViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var friendsVM: FriendsViewModel
     
@@ -57,6 +58,7 @@ struct FriendsListView: View {
                                     Text(type.text)
                                         .font(.customAppFont(size: 13, weight: .bold))
                                         .foregroundColor(pickedFriendsListType == type ? Color.custom.text : Color(.systemGray))
+                                        .customBadge(number: type == .invitationReceived ? appNotifications.friendsRequestNotReadNotificationsNum : 0, offset: CGPoint(x: 6, y: -2))
                                         .frame(width: (UIScreen.main.bounds.size.width-60)/3, height: 45)
                                 }
                             }
@@ -98,6 +100,7 @@ struct FriendsListView: View {
                                     toastMessage(.failed(errorMessage))
                                 }else{
                                     showModal(.closeModal)
+                                    await sendAppNotification(toUserWith: email)
                                 }
                             }
                         }
@@ -132,6 +135,18 @@ struct FriendsListView: View {
             .onDisappear {
                 friendsVM.stopFriendsListener()
             }
+    }
+    
+    func sendAppNotification(toUserWith email: String) async {
+        let receiver = await friendsVM.fetchFriendByEmail(email)
+        guard let receiverId = receiver?.id else { return }
+        
+        let appNotification = AppNotification.friendRequestReceived(
+            senderId: profileVM.safeUser.safeID,
+            receiverId: receiverId,
+            senderName: profileVM.safeUser.name
+        )
+        await appNotifications.sendAppNotification(appNotification)
     }
 }
 
@@ -209,6 +224,8 @@ extension FriendsListView {
                                                     let result = await friendsVM.acceptInvitation(invitation: invitation)
                                                     if let errorMessage = result.errorMessage {
                                                         toastMessage(.failed(errorMessage))
+                                                    }else{
+                                                       await removeNotification(invitation)
                                                     }
                                                 }
                                             }, decline: {
@@ -216,6 +233,8 @@ extension FriendsListView {
                                                     let result = await friendsVM.declineInvitation(with: invitationId)
                                                     if let errorMessage = result.errorMessage {
                                                         toastMessage(.failed(errorMessage))
+                                                    }else{
+                                                        await removeNotification(invitation)
                                                     }
                                                 }
                                             }, friend: friend)
@@ -225,6 +244,8 @@ extension FriendsListView {
                                                     let result = await friendsVM.cancelInvitation(with: invitationId)
                                                     if let errorMessage = result.errorMessage {
                                                         toastMessage(.failed(errorMessage))
+                                                    }else{
+                                                        await removeNotification(invitation)
                                                     }
                                                 }
                                             }, friend: friend)
@@ -232,7 +253,14 @@ extension FriendsListView {
                                     }.offset(x: removingStarted ? -65 : 0)
                                     Button {
                                         removingStarted.toggle()
-                                        Task { await friendsVM.cancelInvitation(with: invitationId) }
+                                        Task {
+                                            let results = await friendsVM.cancelInvitation(with: invitationId)
+                                            if let errorMessage = results.errorMessage {
+                                                toastMessage(.failed(errorMessage))
+                                            }else{
+                                                await removeNotification(invitation)
+                                            }
+                                        }
                                     } label: {
                                         Image(.trash)
                                             .resizable()
@@ -253,6 +281,14 @@ extension FriendsListView {
                 }
             }
         }
+    }
+    func removeNotification(_ invitation: Invitation) async {
+        guard let id = await appNotifications.appNotificationId(by: invitation) else {
+            print("Coś nie tak z appNotificationIdBy(invitation: invitation)")
+            return
+        }
+        print(id)
+        await appNotifications.deleteAppNotification(id)
     }
 }
 

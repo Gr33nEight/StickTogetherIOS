@@ -12,4 +12,5 @@ enum AppNotificationType: String, Hashable, Codable {
     case systemMessage
     case friendMessage
     case habitInvite
+    case friendRequest
 }

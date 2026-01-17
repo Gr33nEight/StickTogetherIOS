@@ -9,14 +9,33 @@
 import Foundation
 
 actor MockFriendsService: @preconcurrency FriendsServiceProtocol {
+
+    // MARK: - Internal storage
+    private var addedFriends: [(friendId: String, userId: String)] = []
+    private var removedFriends: [(friendId: String, userId: String)] = []
+
+    // MARK: - Public async accessors (FOR TESTS)
+
+    func getAddedFriends() async -> [(friendId: String, userId: String)] {
+        addedFriends
+    }
+
+    func getRemovedFriends() async -> [(friendId: String, userId: String)] {
+        removedFriends
+    }
+
+    // MARK: - Friends API
+
     func addToFriendsList(friendId: String, for userId: String) async throws {
-        
+        addedFriends.append((friendId, userId))
     }
-    
+
     func removeFromFriendsList(friendId: String, for userId: String) async throws {
-        
+        removedFriends.append((friendId, userId))
     }
-    
+
+    // MARK: - Invitations
+
     private var store: [String: Invitation] = [:]
     private var nextId = 1
 
@@ -28,7 +47,7 @@ actor MockFriendsService: @preconcurrency FriendsServiceProtocol {
 
     func sendInvitation(_ invitation: Invitation) async throws {
         var copy = invitation
-        if copy.id == nil || copy.id?.isEmpty == true {
+        if copy.id == nil {
             copy.id = makeId()
         }
         store[copy.id!] = copy
@@ -39,10 +58,8 @@ actor MockFriendsService: @preconcurrency FriendsServiceProtocol {
     }
 
     func fetchAllUsersInvitation(for userId: String, sent: Bool = false) async throws -> [Invitation] {
-        if sent {
-            return store.values.filter { $0.senderId == userId }
-        } else {
-            return store.values.filter { $0.receiverId == userId }
-        }
+        sent
+            ? store.values.filter { $0.senderId == userId }
+            : store.values.filter { $0.receiverId == userId }
     }
 }

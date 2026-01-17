@@ -21,7 +21,7 @@ extension View {
         modifier(CustomCellViewModifier())
     }
     
-    func customBadge(number: Int) -> some View {
-        modifier(CustomBadgeViewModifier(number: number))
+    func customBadge(number: Int, offset: CGPoint = .zero) -> some View {
+        modifier(CustomBadgeViewModifier(number: number, offset: offset))
     }
 }

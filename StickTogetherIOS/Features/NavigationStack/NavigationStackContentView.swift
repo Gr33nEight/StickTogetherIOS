@@ -29,7 +29,7 @@ struct NavigationStackContentView: View {
                                                 currentUser: currentUser)
         let friendsVM = FriendsViewModel.configured(profileService: profileService,
                                                     friendsService: friendsService,
-                                                    currentUser: currentUser)
+                                                    currentUserId: currentUser.safeID)
         let appNotificationsVM = AppNotificationsViewModel.configured(service: appNotificationsService, loading: loading, currentUser: currentUser)
         
         _habitVM = StateObject(wrappedValue: habitVM)

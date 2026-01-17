@@ -21,7 +21,7 @@ struct InviteFriendModal: View {
             Button {
                 invite(email.lowercased())
             } label: {
-                Text("Sent invite")
+                Text("Send invite")
             }.customButtonStyle(.primary)
 
         }

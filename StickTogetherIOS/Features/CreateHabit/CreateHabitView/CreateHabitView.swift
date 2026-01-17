@@ -135,14 +135,15 @@ struct CreateHabitView: View {
                 return .error("You have to choose a buddy to share this habit with!")
             }
             
-            appNotification = AppNotification(
+            appNotification = AppNotification.habitInvite(
                 senderId: userId,
                 receiverId: buddy.safeID,
-                content: "\(profileVM.safeUser.name) invited you to join his habit: \(title) \(icon)",
-                date: Date(),
-                type: .habitInvite,
-                payload: ["habitId": habit.id ?? ""]
+                senderName: profileVM.safeUser.name,
+                habitId: habit.id ?? "",
+                habitTitle: title,
+                habitIcon: icon
             )
+            
         } else {
             appNotification = nil
         }

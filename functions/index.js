@@ -3,6 +3,38 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
+/**
+ * Maps AppNotificationType -> push notification text
+ * Keep this in sync with iOS UI intent
+ */
+function buildPushContent(notification) {
+  switch (notification.type) {
+    case "habitInvite":
+      return {
+        title: "Habit invitation 👋",
+        body: notification.content,
+      };
+
+    case "friendMessage":
+      return {
+        title: "New message 💬",
+        body: notification.content,
+      };
+
+    case "systemMessage":
+      return {
+        title: "Update",
+        body: notification.content,
+      };
+
+    default:
+      return {
+        title: "Notification",
+        body: notification.content ?? "",
+      };
+  }
+}
+
 exports.sendUserNotification = onDocumentCreated(
   {
     document: "appNotifications/{id}",
@@ -10,41 +42,70 @@ exports.sendUserNotification = onDocumentCreated(
   },
   async (event) => {
     const snap = event.data;
-    if (!snap) return;
+    if (!snap) {
+      console.log("⚠️ No snapshot data");
+      return;
+    }
 
-    const data = snap.data();
-    const receiverId = data.receiverId;
-    if (!receiverId) return console.log("❌ No receiverId in notification");
+    const notification = snap.data();
+    const receiverId = notification.receiverId;
+
+    if (!receiverId) {
+      console.log("❌ Missing receiverId in appNotification");
+      return;
+    }
+
+    console.log("📩 New appNotification:", {
+      id: snap.id,
+      type: notification.type,
+      receiverId,
+    });
 
     try {
-      // Pobierz usera
-      const userDoc = await admin.firestore().collection("users").doc(receiverId).get();
-      if (!userDoc.exists) return console.log(`❌ User not found: ${receiverId}`);
+      // 1️⃣ Load receiver
+      const userDoc = await admin
+        .firestore()
+        .collection("users")
+        .doc(receiverId)
+        .get();
 
-      const tokens = userDoc.data().fcmTokens || [];
-      if (tokens.length === 0) return console.log(`⚠️ No FCM tokens for ${receiverId}`);
+      if (!userDoc.exists) {
+        console.log(`❌ User not found: ${receiverId}`);
+        return;
+      }
 
+      const tokens = userDoc.data().fcmTokens ?? [];
+      if (tokens.length === 0) {
+        console.log(`⚠️ No FCM tokens for user ${receiverId}`);
+        return;
+      }
+
+      // 2️⃣ Build push content
+      const push = buildPushContent(notification);
+
+      // 3️⃣ Send to each token (safe + debuggable)
       for (const token of tokens) {
         const message = {
-          token: token,
+          token,
           notification: {
-            title: data.content,
-            body: data.type,
+            title: push.title,
+            body: push.body,
           },
           data: {
             notificationId: snap.id,
+            type: notification.type,
           },
         };
 
         try {
           await admin.messaging().send(message);
-          console.log(`✅ Sent notification to token: ${token}`);
+          console.log("✅ Push sent to token:", token);
         } catch (err) {
-          console.error(`❌ Failed to send to token: ${token}`, err);
+          console.error("❌ Failed to send push to token:", token, err);
         }
       }
     } catch (err) {
-      console.error("❌ Error fetching user or sending notification:", err);
+      console.error("❌ Fatal error while sending push:", err);
     }
   }
 );

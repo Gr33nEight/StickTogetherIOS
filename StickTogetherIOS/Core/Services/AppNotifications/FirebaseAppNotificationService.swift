@@ -67,4 +67,12 @@ actor FirebaseAppNotificationService: @preconcurrency AppNotificationsServicePro
             .document(appNotificationId)
             .setData(["isRead" : value], merge: true)
     }
+    
+    func getNotificationIdBy(receiverId: String, senderId: String) async throws -> String? {
+        let snapshot = try await db.collection(collection)
+            .whereField("receiverId", isEqualTo: receiverId)
+            .whereField("senderId", isEqualTo: senderId)
+            .getDocuments()
+        return snapshot.documents.first?.documentID
+    }
 }

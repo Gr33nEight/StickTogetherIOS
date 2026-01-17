@@ -70,6 +70,9 @@ struct NotificationCell: View {
             
         case .habitInvite:
             HabitInviteCell(notification: notification)
+        
+        case .friendRequest:
+            EmptyView()
         }
     }
 }
@@ -194,8 +197,8 @@ struct HabitInviteCell: View {
                                 await appNotificationsVM.deleteAppNotification(notification.id)
                                 habit!.buddyId = profileVM.safeUser.safeID
                                 await habitVM.updateHabit(habit!)
+                                await informAboutAcceptance()
                             }
-//                            accept()
                         } label: {
                             Text("Accept")
                                 .padding(-8)
@@ -206,6 +209,7 @@ struct HabitInviteCell: View {
                                 habit!.type = .alone
                                 habit!.buddyId = ""
                                 await habitVM.updateHabit(habit!)
+                                await informAboutDecline()
                             }
                         } label: {
                             Text("Decline")
@@ -220,7 +224,7 @@ struct HabitInviteCell: View {
 
             }
         }.task {
-            guard let habitId = notification.payload["habitId"] else { return }
+            guard let habitId = notification.habitId else { return }
             let result = await habitVM.getHabitById(habitId)
             
             switch result {
@@ -231,6 +235,30 @@ struct HabitInviteCell: View {
                 await appNotificationsVM.deleteAppNotification(notification.id)
             }
         }
+    }
+    
+    func informAboutAcceptance() async {
+        guard let habit = habit else { return }
+        let appNotification = AppNotification.habitInviteAccepted(
+            senderId: profileVM.safeUser.safeID,
+            receiverId: notification.senderId,
+            senderName: profileVM.safeUser.name,
+            habitId: habit.id ?? "",
+            habitTitle: habit.title
+        )
+        await appNotificationsVM.sendAppNotification(appNotification)
+    }
+    
+    func informAboutDecline() async {
+        guard let habit = habit else { return }
+        let appNotification = AppNotification.habitInviteDeclined(
+            senderId: profileVM.safeUser.safeID,
+            receiverId: notification.senderId,
+            senderName: profileVM.safeUser.name,
+            habitId: habit.id ?? "",
+            habitTitle: habit.title
+        )
+        await appNotificationsVM.sendAppNotification(appNotification)
     }
 }
 

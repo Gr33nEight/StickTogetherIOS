@@ -25,10 +25,12 @@ struct CustomBadgeView: View {
 
 struct CustomBadgeViewModifier: ViewModifier {
     let number: Int
+    let offset: CGPoint
     func body(content: Content) -> some View {
         content
             .overlay(alignment: .topTrailing) {
                 CustomBadgeView(number: number)
+                    .offset(x: offset.x, y: offset.y)
             }
     }
 }

@@ -13,4 +13,5 @@ protocol AppNotificationsServiceProtocol {
     func fetchAllAppNotifications(for userId: String) async throws -> [AppNotification]
     func listenToAppNotifications(for userId: String, update: @escaping ([AppNotification]) -> Void) -> ListenerToken
     func changeIsReadValue(_ appNotificationId: String, value: Bool) async throws
+    func getNotificationIdBy(receiverId: String, senderId: String) async throws -> String?
 }

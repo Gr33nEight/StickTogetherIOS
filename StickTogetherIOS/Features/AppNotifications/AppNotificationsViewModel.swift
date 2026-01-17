@@ -12,6 +12,14 @@ class AppNotificationsViewModel: ObservableObject {
     private var loadingManager: LoadingManager?
     private var currentUser: User
     
+    var friendsRequestNotifications: [AppNotification] {
+        return appNotifications.filter { $0.type == .friendRequest }
+    }
+    
+    var friendsRequestNotReadNotificationsNum: Int {
+        appNotifications.filter({ !$0.isRead && $0.type == .friendRequest }).count
+    }
+    
     init(service: AppNotificationsServiceProtocol,
          loading: LoadingManager? = nil,
          currentUser: User) {
@@ -92,5 +100,21 @@ class AppNotificationsViewModel: ObservableObject {
         for id in ids {
             await markAsRead(id)
         }
+    }
+    
+    func appNotificationId(by invitation: Invitation) async -> String? {
+        if let id = appNotifications.first(
+            where: {
+                $0.senderId == invitation.senderId &&
+                $0.receiverId == invitation.receiverId
+            }
+        )?.id {
+            return id
+        }
+
+        return try? await service.getNotificationIdBy(
+            receiverId: invitation.receiverId,
+            senderId: invitation.senderId
+        )
     }
 }

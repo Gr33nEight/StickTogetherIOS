@@ -15,7 +15,7 @@ struct AppNotification: Identifiable, Codable {
     var date: Date
     var isRead: Bool = false
     var type: AppNotificationType
-    var payload: [String: String]
+    var habitId: String?
 }
 
 extension AppNotification {
@@ -23,5 +23,142 @@ extension AppNotification {
         let df = RelativeDateTimeFormatter()
         df.unitsStyle = .short
         return df.localizedString(for: date, relativeTo: Date())
+    }
+}
+
+extension AppNotification {
+
+    // MARK: - Habit invite (receiver side)
+
+    static func habitInvite(
+        senderId: String,
+        receiverId: String,
+        senderName: String,
+        habitId: String?,
+        habitTitle: String,
+        habitIcon: String
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) invited you to join a habit: \(habitTitle) \(habitIcon)",
+            date: Date(),
+            isRead: false,
+            type: .habitInvite,
+            habitId: habitId
+        )
+    }
+
+    // MARK: - Buddy accepted invitation (system message)
+
+    static func habitInviteAccepted(
+        senderId: String,
+        receiverId: String,
+        senderName: String,
+        habitId: String?,
+        habitTitle: String
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) accepted your invitation to \"\(habitTitle)\"",
+            date: Date(),
+            isRead: false,
+            type: .systemMessage,
+            habitId: habitId
+        )
+    }
+
+    // MARK: - Habit removed (system message)
+
+    static func habitRemoved(
+        senderId: String,
+        receiverId: String,
+        senderName: String,
+        habitId: String?,
+        habitTitle: String
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) removed the habit \"\(habitTitle)\"",
+            date: Date(),
+            isRead: false,
+            type: .systemMessage,
+            habitId: habitId
+        )
+    }
+
+    // MARK: - Encouragement (friend message)
+
+    static func encouragement(
+        senderId: String,
+        receiverId: String,
+        senderName: String,
+        habitId: String?,
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) encouraged you 💪 Keep going!",
+            date: Date(),
+            isRead: false,
+            type: .friendMessage,
+            habitId: habitId
+        )
+    }
+
+    // MARK: - Buddy completed habit (friend message)
+
+    static func buddyCompletedHabit(
+        senderId: String,
+        receiverId: String,
+        senderName: String,
+        habitId: String?,
+        habitTitle: String
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) completed \"\(habitTitle)\" today 🎉",
+            date: Date(),
+            isRead: false,
+            type: .friendMessage,
+            habitId: habitId
+        )
+    }
+    
+    static func habitInviteDeclined(
+            senderId: String,
+            receiverId: String,
+            senderName: String,
+            habitId: String?,
+            habitTitle: String
+        ) -> AppNotification {
+            AppNotification(
+                senderId: senderId,
+                receiverId: receiverId,
+                content: "\(senderName) declined your invitation to \"\(habitTitle)\"",
+                date: Date(),
+                isRead: false,
+                type: .systemMessage,
+                habitId: habitId
+            )
+        }
+    
+    static func friendRequestReceived(
+        senderId: String,
+        receiverId: String,
+        senderName: String
+    ) -> AppNotification {
+        AppNotification(
+            senderId: senderId,
+            receiverId: receiverId,
+            content: "\(senderName) sent you a friend request",
+            date: Date(),
+            isRead: false,
+            type: .friendRequest,
+            habitId: nil
+        )
     }
 }

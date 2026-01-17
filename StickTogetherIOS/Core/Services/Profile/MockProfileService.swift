@@ -7,59 +7,51 @@
 import SwiftUI
 
 actor MockProfileService: @preconcurrency ProfileServiceProtocol {
-    // simple in-memory user store + stream continuation
+
     private var storedUser: User? {
         didSet {
             authStateContinuation?.yield(storedUser)
         }
     }
+
     private var users: [String: User] = [:]
     private var authStateContinuation: AsyncStream<User?>.Continuation?
 
     // MARK: - Stream
+
     func authStateStream() -> AsyncStream<User?> {
-        AsyncStream<User?> { continuation in
-            // finish previous continuation if any
-            self.authStateContinuation?.finish()
-            self.authStateContinuation = continuation
+        AsyncStream { continuation in
+            authStateContinuation?.finish()
+            authStateContinuation = continuation
+            continuation.yield(storedUser)
 
-            // initial value
-            continuation.yield(self.storedUser)
-
-            continuation.onTermination = { @Sendable _ in
+            continuation.onTermination = { _ in
                 Task { [weak self] in
-                    await self?.setContinuationNil()
+                    await self?.clearContinuation()
                 }
             }
         }
     }
 
-    private func setContinuationNil() {
+    private func clearContinuation() {
         authStateContinuation = nil
     }
 
     // MARK: - Lookups
 
     func getUserById(_ uid: String) async throws -> User? {
-        return users[uid] ?? (storedUser?.id == uid ? storedUser : nil)
+        users[uid] ?? (storedUser?.id == uid ? storedUser : nil)
     }
 
     func getUserByEmail(_ email: String) async throws -> User? {
-        // check storedUser first, then map
         if let s = storedUser, s.email == email { return s }
         return users.values.first { $0.email == email }
     }
 
     func getUsersByIds(_ uids: [String]) async throws -> [User] {
-        var out: [User] = []
-        for id in uids {
-            if let u = users[id] {
-                out.append(u)
-            } else if let s = storedUser, s.id == id {
-                out.append(s)
-            }
+        uids.compactMap {
+            users[$0] ?? (storedUser?.id == $0 ? storedUser : nil)
         }
-        return out
     }
 
     // MARK: - Updates
@@ -74,30 +66,25 @@ actor MockProfileService: @preconcurrency ProfileServiceProtocol {
 
     func updateUserProfileIcon(_ icon: String, forUserId uid: String?) async throws {
         guard let uid = uid ?? storedUser?.id else { return }
-        if var user = users[uid] {
-            user.icon = icon
-            users[uid] = user
-            if storedUser?.id == uid { storedUser = user }
-        } else if var s = storedUser, s.id == uid {
-            s.icon = icon
-            storedUser = s
-            users[uid] = s
-        } else {
-            // create a minimal user entry in mock if not present
-            let new = User(id: uid, name: "User \(uid.prefix(6))", email: "\(uid)@example.local")
-            var created = new
-            created.icon = icon
-            users[uid] = created
-        }
+
+        var user = users[uid] ?? storedUser ?? User(
+            id: uid,
+            name: "User \(uid.prefix(6))",
+            email: "\(uid)@example.local"
+        )
+
+        user.icon = icon
+        users[uid] = user
+        if storedUser?.id == uid { storedUser = user }
     }
 
-    // MARK: - Helpers for tests (optional)
-    // Use these in tests to pre-populate the mock
-    func setStoredUser(_ user: User?) {
+    // MARK: - Test helpers (MUST be async)
+
+    func setStoredUser(_ user: User?) async {
         storedUser = user
     }
 
-    func setUsers(_ map: [String: User]) {
+    func setUsers(_ map: [String: User]) async {
         users = map
     }
 }

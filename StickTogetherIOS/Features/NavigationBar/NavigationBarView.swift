@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationBarView: View {
+    @EnvironmentObject var appNotifications: AppNotificationsViewModel
     @EnvironmentObject var friendsVM: FriendsViewModel
     @Environment(\.navigate) var navigate
     @Binding var selected: NavigationDestinations
@@ -54,8 +55,7 @@ struct NavigationBarView: View {
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
-                    //TODO: Later
-//                        .customBadge(number: (dest == .friends && !isPicked) ? friendsVM.invitationReceived.count : 0 )
+                        .customBadge(number: dest == .friends ? appNotifications.friendsRequestNotReadNotificationsNum : 0)
                 }
             }.matchedGeometryEffect(id: "icon_\(dest.rawValue)", in: navNamespace)
                 .frame(height: 24)

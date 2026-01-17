@@ -164,10 +164,6 @@ class HabitViewModel: ObservableObject {
         }
     }
     
-    func encourageYourBuddy() async {
-        print("Encouraging buddy...")
-    }
-    
     func currentUserDidComplete(_ habit: Habit, on date: Date) -> Bool {
         let key = Habit.dayKey(for: date)
         return habit.userDidComplete(currentUser.safeID, forDayKey: key)
