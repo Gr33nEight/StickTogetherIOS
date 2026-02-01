@@ -11,6 +11,7 @@ struct AppNotification: Identifiable, Codable {
     @DocumentID var id: String? = nil
     var senderId: String
     var receiverId: String
+    var title: String
     var content: String
     var date: Date
     var isRead: Bool = false
@@ -41,7 +42,8 @@ extension AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
-            content: "\(senderName) invited you to join a habit: \(habitTitle) \(habitIcon)",
+            title: "\(senderName.capitalized)",
+            content: "Invited you to join a habit: \(habitTitle) \(habitIcon)",
             date: Date(),
             isRead: false,
             type: .habitInvite,
@@ -61,7 +63,8 @@ extension AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
-            content: "\(senderName) accepted your invitation to \"\(habitTitle)\"",
+            title: senderName.capitalized,
+            content: "Accepted your invitation to \"\(habitTitle)\"",
             date: Date(),
             isRead: false,
             type: .systemMessage,
@@ -81,6 +84,7 @@ extension AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
+            title: "TODO!",
             content: "\(senderName) removed the habit \"\(habitTitle)\"",
             date: Date(),
             isRead: false,
@@ -96,11 +100,13 @@ extension AppNotification {
         receiverId: String,
         senderName: String,
         habitId: String?,
+        content: String
     ) -> AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
-            content: "\(senderName) encouraged you 💪 Keep going!",
+            title: senderName.capitalized,
+            content: content.capitalized,
             date: Date(),
             isRead: false,
             type: .friendMessage,
@@ -120,7 +126,8 @@ extension AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
-            content: "\(senderName) completed \"\(habitTitle)\" today 🎉",
+            title: senderName.capitalized,
+            content: "Completed \"\(habitTitle)\" today",
             date: Date(),
             isRead: false,
             type: .friendMessage,
@@ -138,7 +145,8 @@ extension AppNotification {
             AppNotification(
                 senderId: senderId,
                 receiverId: receiverId,
-                content: "\(senderName) declined your invitation to \"\(habitTitle)\"",
+                title: senderName.capitalized,
+                content: "Declined your invitation to \"\(habitTitle)\"",
                 date: Date(),
                 isRead: false,
                 type: .systemMessage,
@@ -154,7 +162,8 @@ extension AppNotification {
         AppNotification(
             senderId: senderId,
             receiverId: receiverId,
-            content: "\(senderName) sent you a friend request",
+            title: senderName.capitalized,
+            content: "Sent you a friend request",
             date: Date(),
             isRead: false,
             type: .friendRequest,

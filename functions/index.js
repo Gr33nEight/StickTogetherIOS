@@ -3,38 +3,6 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-/**
- * Maps AppNotificationType -> push notification text
- * Keep this in sync with iOS UI intent
- */
-function buildPushContent(notification) {
-  switch (notification.type) {
-    case "habitInvite":
-      return {
-        title: "Habit invitation 👋",
-        body: notification.content,
-      };
-
-    case "friendMessage":
-      return {
-        title: "New message 💬",
-        body: notification.content,
-      };
-
-    case "systemMessage":
-      return {
-        title: "Update",
-        body: notification.content,
-      };
-
-    default:
-      return {
-        title: "Notification",
-        body: notification.content ?? "",
-      };
-  }
-}
-
 exports.sendUserNotification = onDocumentCreated(
   {
     document: "appNotifications/{id}",
@@ -80,16 +48,13 @@ exports.sendUserNotification = onDocumentCreated(
         return;
       }
 
-      // 2️⃣ Build push content
-      const push = buildPushContent(notification);
-
       // 3️⃣ Send to each token (safe + debuggable)
       for (const token of tokens) {
         const message = {
           token,
           notification: {
-            title: push.title,
-            body: push.body,
+            title: notification.title,
+            body: notification.content,
           },
           data: {
             notificationId: snap.id,

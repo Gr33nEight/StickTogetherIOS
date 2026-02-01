@@ -12,7 +12,7 @@ struct HabitView: View {
     @EnvironmentObject var habitVM: HabitViewModel
     @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     
-    let habit: Habit
+    let habitId: String?
     let selectedDate: Date
     @State var pickedFrequency: Frequency = .daily()
     @State private var showEditHabitView = false
@@ -24,16 +24,18 @@ struct HabitView: View {
     
     let friends: [User]
     
-    var iAmOwner: Bool {
-        profileVM.safeUser.safeID == habit.ownerId
+    var habit: Habit? {
+        habitVM.habits.first(where: {$0.id == habitId}) ??
+        habitVM.friendsHabits.first(where: {$0.id == habitId})
     }
     
-    func buddy() -> User? {
+    func buddy(habit: Habit) -> User? {
         guard !habit.buddyId.isEmpty else { return nil }
 
         return friends.first(where: {
             if let id = $0.id {
-                return iAmOwner ? id == habit.buddyId : id == habit.ownerId
+                return profileVM.safeUser.safeID == habit.ownerId
+                ? id == habit.buddyId : id == habit.ownerId
             }else{
                 return false
             }
@@ -41,6 +43,16 @@ struct HabitView: View {
     }
     
     var body: some View {
+        Group {
+            if let habit {
+                content(habit: habit)
+            } else {
+                LoadingView()
+            }
+        }
+    }
+    
+    private func content(habit: Habit) -> some View {
         CustomView(title: "Habit") {
             ScrollView(showsIndicators: false){
                 VStack {
@@ -59,7 +71,7 @@ struct HabitView: View {
                         HabitViewCell(title: "Current streak 🔥", value: "\(habit.streak()) days")
                         HabitViewCell(title: "Habits completed ✅", value: "\(habit.totalCompleted())")
                     }
-                    if let buddy = buddy(), habit.type != .alone {
+                    if let buddy = buddy(habit: habit), habit.type != .alone {
                         HStack {
                             HabitViewCell(title: "Buddy 👋", value: buddy.name.capitalized)
                             HabitViewCell(title: "Current state 🎯", value: habit.completionState(
@@ -68,7 +80,7 @@ struct HabitView: View {
                             ).text, font: .myBody)
                         }
                     }
-                    CalendarView(state: {habitVM.habitState(habit, on: $0)}, startDate: habit.startDate)
+                    CalendarView(habit: habit, state: {habitVM.habitState(habit, on: $0)}, startDate: habit.startDate)
                 }.padding()
                     .foregroundStyle(Color.custom.text)
                     .font(.myBody)
@@ -94,7 +106,7 @@ struct HabitView: View {
                     if habit.type != .alone {
                         Button(action: {
                             Task {
-                                await encourageYourBuddy()
+                                await encourageYourBuddy(habit: habit)
                             }
                         }, label: {
                             Text("Encourage your buddy")
@@ -141,12 +153,12 @@ struct HabitView: View {
         }
     }
     
-    func encourageYourBuddy() async {
+    func encourageYourBuddy(habit: Habit) async {
         let appNotification = AppNotification.encouragement(
             senderId: profileVM.safeUser.safeID,
             receiverId: habit.buddyId,
             senderName: profileVM.safeUser.name,
-            habitId: habit.id ?? ""
+            habitId: habit.id ?? "", content: "Rusz w końcu tą dupę!",
         )
         await appNotificationsVM.sendAppNotification(appNotification)
     }

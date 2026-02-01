@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
+    let habit: Habit
     let state: (Date) -> HabitState
     let startDate: Date
     
@@ -35,7 +36,7 @@ struct CalendarView: View {
                 } label: {
                     Image(systemName: "chevron.right")
                         .foregroundStyle(Color.custom.primary)
-                        
+                    
                 }
             }.font(.myHeadline)
             
@@ -60,7 +61,7 @@ struct CalendarView: View {
                                 if Calendar.current.startOfDay(for: Date()) == day {
                                     Circle()
                                         .stroke(lineWidth: 2)
-                                        .fill(Color.custom.primary)
+                                        .fill(state(day).color)
                                 }else{
                                     Circle()
                                         .fill(state(day).color)
@@ -80,27 +81,23 @@ struct CalendarView: View {
     private func updateDays() {
         days = currentMonth.calendarDisplayDays
     }
-    
+ 
     private func foregroundStyle(for day: Date) -> Color {
-        let isToday = Calendar.current.isDateInToday(day)
+        let calendar = Calendar.current
+
+        let todayStart = calendar.startOfDay(for: Date())
+        let isInHabitRange =
+            day >= calendar.startOfDay(for: startDate) &&
+            day <= todayStart
+
         let isDifferentMonth = day.monthInt != currentMonth.monthInt
-        let isPast = day < Date.now.startOfDay
-        let isOlderThanHabit = day < startDate
 
-        if isToday || state(day) == .skipped {
+        if isInHabitRange {
             return Color.custom.text
         }
 
-        if state(day) == .done {
-            return Color.custom.grey
-        }
-
-        if isDifferentMonth || isOlderThanHabit {
-            return Color(.systemGray)
-        }
-
-        if isPast {
-            return Color.custom.text
+        if isDifferentMonth {
+            return Color.custom.background
         }
 
         return Color(.systemGray)

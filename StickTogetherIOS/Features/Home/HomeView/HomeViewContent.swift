@@ -83,7 +83,7 @@ extension HomeView {
                     VStack {
                         ForEach(sortedHabits) { habit in
                             Button {
-                                let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
+                                let container = HabitViewContainer(habitId: habit.id, selectedDate: selectedDate, friends: friendsVM.friends)
                                 navigate(.push(.habit(container)))
                             } label: {
                                 HabitCell(habit: habit, selectedDate: selectedDate, buddy: buddy(habit)) {

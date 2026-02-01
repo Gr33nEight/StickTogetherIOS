@@ -171,10 +171,10 @@ class HabitViewModel: ObservableObject {
     
     func habitState(_ habit: Habit, on date: Date) -> HabitState {
         let key = Habit.dayKey(for: date)
-        let isPast = date < Calendar.current.startOfDay(for: Date())
-        let isAfterStartDate = date >= habit.startDate
+        let isPast = date <= Calendar.current.startOfDay(for: Date())
+        let isAfterStartDate = date >= Calendar.current.startOfDay(for: habit.startDate)
         
-        guard isPast && isAfterStartDate else { return .none }
+        guard isPast && isAfterStartDate && habit.isScheduled(on: date) else { return .none }
         
         return habit.completionCount(forDayKey: key) >= habit.numberOfParticipants() ? .done : .skipped
     }

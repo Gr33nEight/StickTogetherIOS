@@ -104,24 +104,41 @@ extension Habit {
     }
 
     func totalCompleted() -> Int {
-        //TODO: $0.count == 2 zmieni się jak będzie można mieć więcej niż 1 buddiego!
-        completion.values.filter { $0.count == 2 }.count
+        completion.values.filter { $0.count == numberOfParticipants() }.count
     }
     
-    func streak(referenceDate: Date = Date(), calendar: Calendar = .current) -> Int {
+    func streak(
+        referenceDate: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Int {
         var streak = 0
+
+        // start at today (or reference)
         var cursor = calendar.startOfDay(for: referenceDate)
+
+        // if today is NOT an occurrence day → move to last occurrence
+        if !frequency.occurs(on: cursor, startDate: startDate) {
+            guard let prev = previousOccurrence(before: cursor, calendar: calendar) else {
+                return 0
+            }
+            cursor = prev
+        }
+
         while true {
             let key = Habit.dayKey(for: cursor, calendar: calendar)
-            //TODO: list.count == 2 zmieni się jak będzie można mieć więcej niż 1 buddiego!
-            if let list = completion[key], list.count == 2 {
-                streak += 1
-                guard let prev = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
-                cursor = prev
-            } else {
+            let completed = completion[key]?.count == numberOfParticipants()
+
+            guard completed else { break }
+
+            streak += 1
+
+            guard let prev = previousOccurrence(before: cursor, calendar: calendar) else {
                 break
             }
+
+            cursor = prev
         }
+
         return streak
     }
     
@@ -154,6 +171,52 @@ extension Habit {
         case .me: return 2
         case .buddy: return 3
         case .neither: return 4
+        }
+    }
+    
+    func datesWhenHabitOccurs() -> [Date] {
+        var result: [Date] = []
+
+        let calendar = Calendar.current
+
+        let start = Date.now.firstWeekDayBeforeStart
+        let end = calendar.date(
+            byAdding: .day,
+            value: Date.now.numberOfDaysInMonth,
+            to: Date.now.startOfMonth
+        )!
+
+        var day = start
+
+        while day < end {
+            if frequency.occurs(on: day, startDate: startDate) {
+                result.append(day)
+            }
+            day = calendar.date(byAdding: .day, value: 1, to: day)!
+        }
+
+        return result
+    }
+    
+    func previousOccurrence(
+        before date: Date,
+        calendar: Calendar = .current
+    ) -> Date? {
+        var cursor = calendar.startOfDay(for: date)
+
+        while true {
+            guard let prev = calendar.date(byAdding: .day, value: -1, to: cursor) else {
+                return nil
+            }
+            cursor = prev
+
+            if frequency.occurs(on: cursor, startDate: startDate) {
+                return cursor
+            }
+            
+            if cursor < startDate {
+                return nil
+            }
         }
     }
 }

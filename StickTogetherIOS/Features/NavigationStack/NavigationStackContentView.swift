@@ -43,7 +43,7 @@ struct NavigationStackContentView: View {
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .home: NavigationContainer(selected: $selectedView)
-                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
+                    case .habit(let container): HabitView(habitId: container.habitId, selectedDate: container.selectedDate, friends: container.friends)
                     case .createHabit: CreateHabitView()
                     case .notifications: NotificationView()
                     }

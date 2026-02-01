@@ -8,7 +8,7 @@
 import Foundation
 
 struct HabitViewContainer: Codable {
-    let habit: Habit
+    let habitId: String?
     let selectedDate: Date
     let friends: [User]
 }
