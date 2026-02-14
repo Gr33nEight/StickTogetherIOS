@@ -106,7 +106,7 @@ extension AppNotification {
             senderId: senderId,
             receiverId: receiverId,
             title: senderName.capitalized,
-            content: content.capitalized,
+            content: content ,
             date: Date(),
             isRead: false,
             type: .friendMessage,

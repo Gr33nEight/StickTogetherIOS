@@ -21,6 +21,7 @@
 		3C27EB502EBA5A2000BB39F7 /* FriendCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4F2EBA5A2000BB39F7 /* FriendCellView.swift */; };
 		3C27EB522EBB632400BB39F7 /* ValueOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB512EBB632400BB39F7 /* ValueOrError.swift */; };
 		3C27EB552EBB636100BB39F7 /* SuccessOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */; };
+		3C35DC852F2F3D3C00C5C8EC /* EncourageBuddyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C35DC842F2F3D3C00C5C8EC /* EncourageBuddyButton.swift */; };
 		3C41F8B42ECE443B0020E9EE /* NavigationDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C41F8B32ECE443A0020E9EE /* NavigationDestinations.swift */; };
 		3C41F8B62ECE452C0020E9EE /* NavigationContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C41F8B52ECE45230020E9EE /* NavigationContainer.swift */; };
 		3C41F8BB2ECE50D40020E9EE /* ChatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C41F8BA2ECE50D40020E9EE /* ChatsView.swift */; };
@@ -174,6 +175,7 @@
 		3C27EB4F2EBA5A2000BB39F7 /* FriendCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCellView.swift; sourceTree = "<group>"; };
 		3C27EB512EBB632400BB39F7 /* ValueOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueOrError.swift; sourceTree = "<group>"; };
 		3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessOrError.swift; sourceTree = "<group>"; };
+		3C35DC842F2F3D3C00C5C8EC /* EncourageBuddyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncourageBuddyButton.swift; sourceTree = "<group>"; };
 		3C41F8B32ECE443A0020E9EE /* NavigationDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDestinations.swift; sourceTree = "<group>"; };
 		3C41F8B52ECE45230020E9EE /* NavigationContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContainer.swift; sourceTree = "<group>"; };
 		3C41F8BA2ECE50D40020E9EE /* ChatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsView.swift; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 			children = (
 				3C42E7172EB38C2F00D0D58C /* HabitView.swift */,
 				3C70E0A52EB3E2C200C325D9 /* HabitViewCell.swift */,
+				3C35DC842F2F3D3C00C5C8EC /* EncourageBuddyButton.swift */,
 			);
 			path = HabitView;
 			sourceTree = "<group>";
@@ -1134,6 +1137,7 @@
 				3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */,
 				3CFF85412EE33CE600171172 /* NavigationStackContentView.swift in Sources */,
 				3C70E09E2EB3E1F600C325D9 /* CompletionState.swift in Sources */,
+				3C35DC852F2F3D3C00C5C8EC /* EncourageBuddyButton.swift in Sources */,
 				3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */,
 				3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */,
 				3C6687FC2EB4F5A600DE45E8 /* ValidationResult.swift in Sources */,

@@ -142,6 +142,10 @@ extension Habit {
         return streak
     }
     
+    func otherId(of userId: String) -> String? {
+        return (userId == ownerId) ? buddyId : ownerId
+    }
+    
     func isMarkedAsDone(by userId: String, on date: Date) -> Bool {
         let key = Habit.dayKey(for: date)
         return completion[key]?.contains(userId) == true

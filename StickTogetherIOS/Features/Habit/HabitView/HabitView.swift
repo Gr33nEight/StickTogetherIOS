@@ -103,15 +103,8 @@ struct HabitView: View {
                         })
                         .customButtonStyle(.primary)
                     }
-                    if habit.type != .alone {
-                        Button(action: {
-                            Task {
-                                await encourageYourBuddy(habit: habit)
-                            }
-                        }, label: {
-                            Text("Encourage your buddy")
-                        })
-                        .customButtonStyle(.secondary)
+                    if habit.type != .alone && !habit.buddyId.isEmpty {
+                        EncourageBuddyButton(habit: habit)
                     }
                 }
             }
@@ -151,15 +144,5 @@ struct HabitView: View {
         .fullScreenCover(isPresented: $showEditHabitView) {
             
         }
-    }
-    
-    func encourageYourBuddy(habit: Habit) async {
-        let appNotification = AppNotification.encouragement(
-            senderId: profileVM.safeUser.safeID,
-            receiverId: habit.buddyId,
-            senderName: profileVM.safeUser.name,
-            habitId: habit.id ?? "", content: "Rusz w końcu tą dupę!",
-        )
-        await appNotificationsVM.sendAppNotification(appNotification)
     }
 }

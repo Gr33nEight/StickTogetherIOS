@@ -10,7 +10,7 @@ import ElegantEmojiPicker
 
 extension HomeView {
     var numberOfUnReadNotifications: Int {
-        appNotificationsVM.appNotifications.filter({!$0.isRead && $0.type != .friendMessage}).count
+        appNotificationsVM.appNotifications.filter({!$0.isRead && $0.type != .friendRequest}).count
     }
     var header: some View {
         HStack {
