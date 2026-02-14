@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct AppEntryTemp: View {
+    @StateObject private var viewModel: SessionViewModel
     var body: some View {
         Group {
             // if auth
-            if true {
-                
+            if let user = {
+                NavigationStackContentView(container: AuthenticatedAppContainer(userId: <#T##String#>))
             } else {
 //                LogInView()
             }

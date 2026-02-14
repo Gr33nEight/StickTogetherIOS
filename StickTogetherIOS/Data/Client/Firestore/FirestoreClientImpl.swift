@@ -7,7 +7,7 @@
 import FirebaseFirestore
 import Foundation
 
-actor FirestoreClientImpl: FirestoreClient {
+final class FirestoreClientImpl: FirestoreClient {
     private let db = Firestore.firestore()
     
     func fetch<E>(
@@ -111,4 +111,26 @@ actor FirestoreClientImpl: FirestoreClient {
         }
     }
     
+    func listenDocument<E>(_ endpoint: E.Type, id: FirestoreDocumentID) -> AsyncThrowingStream<E.DTO, any Error> where E : FirestoreEndpoint {
+        return AsyncThrowingStream { continuation in
+            let listener = db.collection(endpoint.path).document(id.value).addSnapshotListener { snapshot, error in
+                if let error {
+                    continuation.finish(throwing: error)
+                    return
+                }
+                
+                guard let snapshot else { return }
+                
+                do {
+                    let data = try snapshot.data(as: E.DTO.self)
+                    continuation.yield(data)
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+            continuation.onTermination = { @Sendable _ in
+                listener.remove()
+            }
+        }
+    }
 }

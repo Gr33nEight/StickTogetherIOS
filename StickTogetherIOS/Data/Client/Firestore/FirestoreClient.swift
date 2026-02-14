@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-protocol FirestoreClient: Actor {
+protocol FirestoreClient {
     func fetch<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         query: FirestoreQuery
@@ -41,4 +41,9 @@ protocol FirestoreClient: Actor {
         _ endpoint: E.Type,
         query: FirestoreQuery
     ) -> AsyncThrowingStream<[E.DTO], Error>
+    
+    func listenDocument<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        id: FirestoreDocumentID
+    ) -> AsyncThrowingStream<E.DTO, Error>
 }
