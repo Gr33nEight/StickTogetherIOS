@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateAccountView: View {
-    @ObservedObject var vm: AuthViewModel
+    @StateObject var vm: AuthViewModelTemp
     
     @State var name: String = ""
     @State var email: String = ""

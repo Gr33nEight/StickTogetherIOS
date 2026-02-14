@@ -53,23 +53,23 @@ extension LogInView {
                 .font(.myCaption)
             VStack { Divider() }
         }
-        VStack {
-            SignInWithAppleButton(.signIn) { request in
-                let nonce = Constants.randomNonceString()
-                vm.currentNonce = nonce
-                request.requestedScopes = [.fullName, .email]
-                request.nonce = Constants.sha256(nonce)
-            } onCompletion: { result in
-                Task {
-                    await vm.handleAppleSignInResult(result)
-                }
-            }.signInWithAppleButtonStyle(.black)
-                .frame(height: 44)
-            GoogleSignInButton(style: .filled) {
-                Task {
-                    await vm.handleGoogleSignInResult()
-                }
-            }
-        }
+//        VStack {
+//            SignInWithAppleButton(.signIn) { request in
+//                let nonce = Constants.randomNonceString()
+//                vm.currentNonce = nonce
+//                request.requestedScopes = [.fullName, .email]
+//                request.nonce = Constants.sha256(nonce)
+//            } onCompletion: { result in
+//                Task {
+//                    await vm.handleAppleSignInResult(result)
+//                }
+//            }.signInWithAppleButtonStyle(.black)
+//                .frame(height: 44)
+//            GoogleSignInButton(style: .filled) {
+//                Task {
+//                    await vm.handleGoogleSignInResult()
+//                }
+//            }
+//        }
     }
 }

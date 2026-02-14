@@ -15,36 +15,40 @@ import GoogleSignIn
 struct StickTogetherApp: App {
     @UIApplicationDelegateAdaptor(AppDelegateAdaptor.self) var appDelegate
     
-    @StateObject private var di: DIContainer = DIContainer()
-    @StateObject private var loading = LoadingManager()
-    @StateObject private var authVM = AuthViewModel()
-    @StateObject private var profileVM: ProfileViewModel
+//    @StateObject private var di: DIContainer = DIContainer()
+//    @StateObject private var loading = LoadingManager()
+//    @StateObject private var authVM = AuthViewModel()
+//    @StateObject private var profileVM: ProfileViewModel
 
+    
+    let container = AppContainer()
+    
     init() {
         FirebaseApp.configure()
         NotificationManager.shared.configure()
         PushManager.shared.configure()
         
-        let profileService = FirebaseProfileService()
-        _profileVM = StateObject(wrappedValue: ProfileViewModel(profileService: profileService))
+//        let profileService = FirebaseProfileService()
+//        _profileVM = StateObject(wrappedValue: ProfileViewModel(profileService: profileService))
     }
 
     var body: some Scene {
         WindowGroup {
-            AppEntry(di: di)
-                .confirmation()
-                .modal()
-                .customToastMessage()
-                .preferredColorScheme(.dark)
-                .onOpenURL { url in
-                    GIDSignIn.sharedInstance.handle(url)
-                }
-                .environmentObject(loading)
-                .environmentObject(authVM)
-                .environmentObject(profileVM)
-                .onAppear {
-                    authVM.setup(authService: di.authService, loading: loading)
-                }
+            container.makeAppEntry()
+//            AppEntry(di: di)
+//                .confirmation()
+//                .modal()
+//                .customToastMessage()
+//                .preferredColorScheme(.dark)
+//                .onOpenURL { url in
+//                    GIDSignIn.sharedInstance.handle(url)
+//                }
+//                .environmentObject(loading)
+//                .environmentObject(authVM)
+//                .environmentObject(profileVM)
+//                .onAppear {
+//                    authVM.setup(authService: di.authService, loading: loading)
+//                }
         }
     }
 }

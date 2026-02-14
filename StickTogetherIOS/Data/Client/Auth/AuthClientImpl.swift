@@ -4,7 +4,7 @@
 //
 //  Created by Natanael Jop on 14/02/2026.
 //
-
+import FirebaseAuth
 
 final class AuthClientImpl: AuthClient {
     let auth: Auth
@@ -15,34 +15,26 @@ final class AuthClientImpl: AuthClient {
     
     func signIn(email: String, password: String) async throws -> AuthSession {
         let result = try await auth.signIn(withEmail: email, password: password)
-        return AuthSession(uid: result.user.uid, email: result.user.email)
+        return AuthSession(uid: result.user.uid)
     }
     
     func signUp(email: String, password: String) async throws -> AuthSession {
         let result = try await auth.createUser(withEmail: email, password: password)
-        return AuthSession(uid: result.user.uid, email: result.user.email)
+        return AuthSession(uid: result.user.uid)
     }
     
-    func logOut() throws {
+    func signOut() throws {
         try auth.signOut()
     }
     
-    func currectAuhSession() async throws -> AuthSession {
-        guard let result = auth.currentUser else {
-            throw FirestoreError.unknown
-        }
-        
-        return AuthSession(uid: result.uid, email: result.email)
-    }
-    
-    func listenToAuthState() async throws -> AsyncStream<AuthSession?> {
+    func listenToAuthState() -> AsyncStream<AuthSession?> {
         AsyncStream { continuation in
-            let handle = auth.addStateDidChangeListener { authResult, error in
-                if let user = authResult.currentUser {
+            let handle = auth.addStateDidChangeListener { _, user in
+                if let user {
                     continuation.yield(
-                        AuthSession(uid: user.uid, email: user.email)
+                        AuthSession(uid: user.uid)
                     )
-                }else{
+                } else {
                     continuation.yield(nil)
                 }
             }

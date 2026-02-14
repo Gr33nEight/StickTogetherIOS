@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct AppEntryTemp: View {
-    @StateObject private var viewModel: SessionViewModel
+    @StateObject var viewModel: SessionViewModel
     var body: some View {
-        Group {
-            // if auth
-            if let user = {
-                NavigationStackContentView(container: AuthenticatedAppContainer(userId: <#T##String#>))
-            } else {
-//                LogInView()
-            }
+        switch viewModel.state {
+        case .loading:
+            ProgressView()
+        case .authenticated(let authenticatedAppContainer):
+            AuthenticatedRootView(container: authenticatedAppContainer)
+        case .unauthenticated(let unauthenticatedAppContainer):
+            UnauthenticatedRootView(container: unauthenticatedAppContainer)
         }
     }
 }

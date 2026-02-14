@@ -7,5 +7,4 @@
 
 struct AuthSession {
     let uid: String
-    let email: String?
 }

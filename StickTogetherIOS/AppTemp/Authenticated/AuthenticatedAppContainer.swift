@@ -27,59 +27,59 @@ final class AuthenticatedAppContainer {
         return HomeViewModel(currentUserId: userId, listenToOwnedHabits: listenToOwnedHabits, listenToBuddyHabits: listenToBuddyHabits, listenToSharedHabits: listenToSharedHabits)
     }
     
-    @MainActor
-    private func makeFriendsViewModel() -> FriendsViewModel {
-        return FriendsViewModel()
-    }
-    
-    @MainActor
-    private func makeProfileViewModel() -> ProfileViewModel {
-        return ProfileViewModel()
-    }
-    
-    @MainActor
-    private func makeNotificationViewModel() -> NotificationViewModel {
-        return NotificationViewModel()
-    }
-    
-    @MainActor
-    private func makeCreateHabitViewModel() -> CreateHabitViewModel {
-        return CreateHabitViewModel()
-    }
-    
-    @MainActor
-    private func makeHabitViewModel() -> HabitViewModel {
-        return HabitViewModel()
-    }
-    
+//    @MainActor
+//    private func makeFriendsViewModel() -> FriendsViewModel {
+//        return FriendsViewModel()
+//    }
+//    
+//    @MainActor
+//    private func makeProfileViewModel() -> ProfileViewModel {
+//        return ProfileViewModel()
+//    }
+//    
+//    @MainActor
+//    private func makeNotificationViewModel() -> NotificationViewModel {
+//        return NotificationViewModel()
+//    }
+//    
+//    @MainActor
+//    private func makeCreateHabitViewModel() -> CreateHabitViewModel {
+//        return CreateHabitViewModel()
+//    }
+//    
+//    @MainActor
+//    private func makeHabitViewModel() -> HabitViewModel {
+//        return HabitViewModel()
+//    }
+//    
     @MainActor
     func makeHomeView() -> some View {
         HomeViewTemp(viewModel: self.makeHomeViewModel())
     }
-        
-    @MainActor
-    func makeFriendsView() -> some View {
-        FriendsView(viewModel: self.makeFriendsViewModel())
-    }
-    
-    @MainActor
-    func makeProfileView() -> some View {
-        return ProfileView(viewModel: self.makeProfileViewModel())
-    }
-    
-    @MainActor
-    func makeNotificationView() -> some View {
-        return NotificationView(viewModel: self.makeNotificationViewModel())
-    }
-    
-    @MainActor
-    func makeCreateHabitView() -> some View {
-        return CreateHabitView(viewModel: self.makeCreateHabitViewModel())
-    }
-    
-    @MainActor
-    func makeHabitView() -> some View {
-        return HabitView(viewModel: self.makeHabitViewModel())
-    }
+//        
+//    @MainActor
+//    func makeFriendsView() -> some View {
+//        FriendsView(viewModel: self.makeFriendsViewModel())
+//    }
+//    
+//    @MainActor
+//    func makeProfileView() -> some View {
+//        return ProfileView(viewModel: self.makeProfileViewModel())
+//    }
+//    
+//    @MainActor
+//    func makeNotificationView() -> some View {
+//        return NotificationView(viewModel: self.makeNotificationViewModel())
+//    }
+//    
+//    @MainActor
+//    func makeCreateHabitView() -> some View {
+//        return CreateHabitView(viewModel: self.makeCreateHabitViewModel())
+//    }
+//    
+//    @MainActor
+//    func makeHabitView() -> some View {
+//        return HabitView(viewModel: self.makeHabitViewModel())
+//    }
 
 }

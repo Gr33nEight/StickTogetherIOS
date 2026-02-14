@@ -13,7 +13,3 @@ struct AuthenticatedRootView: View {
         NavigationStackContentView(container: container)
     }
 }
-
-#Preview {
-    AuthenticatedRootView()
-}

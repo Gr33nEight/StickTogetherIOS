@@ -16,5 +16,29 @@ final class SessionViewModel: ObservableObject {
         case unauthenticated(UnauthenticatedAppContainer)
     }
     
-//    @Published private(set) var 
+    @Published private(set) var state: SessionState = .loading
+    
+    private let observeSession: ObserveSessionUseCase
+    private var task: Task<Void, Never>?
+    
+    init(observeSession: ObserveSessionUseCase) {
+        self.observeSession = observeSession
+    }
+    
+    deinit {
+        task?.cancel()
+    }
+    
+    private func start() {
+        task = Task {
+            for await session in observeSession.stream() {
+                switch session {
+                case .loggedOut:
+                    state = .unauthenticated(UnauthenticatedAppContainer())
+                case .loggedIn(let userId):
+                    state = .authenticated(AuthenticatedAppContainer(userId: userId))
+                }
+            }
+        }
+    }
 }

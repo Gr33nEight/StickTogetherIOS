@@ -62,7 +62,7 @@ extension CreateAccountView {
         
         Button(action: {
             if hasNoErrors {
-                Task { await vm.signUp(email: email, password: password, name: name) }
+                Task { await vm.signUp(email: email, password: password) }
             }
         }, label: {
             Text("Create Account")
@@ -77,24 +77,24 @@ extension CreateAccountView {
                 .font(.myCaption)
             VStack { Divider() }
         }
-        VStack {
-            SignInWithAppleButton(.signUp) { request in
-                let nonce = Constants.randomNonceString()
-                vm.currentNonce = nonce
-                request.requestedScopes = [.fullName, .email]
-                request.nonce = Constants.sha256(nonce)
-            } onCompletion: { result in
-                Task {
-                    await vm.handleAppleSignInResult(result)
-                }
-            }.signInWithAppleButtonStyle(.black)
-                .frame(height: 44)
-            
-            GoogleSignInButton(title: "Sign up with Google", style: .filled) {
-                Task {
-                    await vm.handleGoogleSignInResult()
-                }
-            }
-        }
+//        VStack {
+//            SignInWithAppleButton(.signUp) { request in
+//                let nonce = Constants.randomNonceString()
+//                vm.currentNonce = nonce
+//                request.requestedScopes = [.fullName, .email]
+//                request.nonce = Constants.sha256(nonce)
+//            } onCompletion: { result in
+//                Task {
+//                    await vm.handleAppleSignInResult(result)
+//                }
+//            }.signInWithAppleButtonStyle(.black)
+//                .frame(height: 44)
+//            
+//            GoogleSignInButton(title: "Sign up with Google", style: .filled) {
+//                Task {
+//                    await vm.handleGoogleSignInResult()
+//                }
+//            }
+//        }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LogInView: View {
-    @ObservedObject var vm: AuthViewModel
+    @StateObject var vm: AuthViewModelTemp
 
     @State var email: String = ""
     @State var password: String = ""

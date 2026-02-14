@@ -32,11 +32,6 @@ enum FirestoreValue {
     case date(Date)
 }
 
-enum HabitEndpoint: FirestoreEndpoint {
-    typealias DTO = HabitDTO
-    static var path = "habits"
-}
-
 enum FirestoreError: Error {
     case unknown
 }

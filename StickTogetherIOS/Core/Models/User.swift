@@ -6,21 +6,16 @@
 //
 
 import SwiftUI
-import Firebase
-import FirebaseFirestore
 
-struct User: Codable, Identifiable {
-    @DocumentID var id: String?
+struct User: Identifiable {
+    var id: String?
     var name: String
     var email: String
-    var friendsIds: [String] = []
-    var icon: String = "🙎‍♂️"
-    
-    // preferences
-    var language: Language = .en
-//    var notifications: Bool = true
-    var theme: Theme = .system
-    var mainHabitType: HabitType = .coop
+    var friendsIds: [String]
+    var icon: String
+    var language: Language
+    var theme: Theme
+    var mainHabitType: HabitType
 }
 
 enum Language: String, Codable, CaseIterable {
