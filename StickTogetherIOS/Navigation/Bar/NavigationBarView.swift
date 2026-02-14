@@ -11,14 +11,14 @@ struct NavigationBarView: View {
     @EnvironmentObject var appNotifications: AppNotificationsViewModel
     @EnvironmentObject var friendsVM: FriendsViewModel
     @Environment(\.navigate) var navigate
-    @Binding var selected: NavigationDestinations
-    @State private var selectedWithAnim = NavigationDestinations.home
+    @Binding var selected: TabDestinations
+    @State private var selectedWithAnim = TabDestinations.home
     
     @Namespace private var navNamespace
     
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(NavigationDestinations.allCases, id: \.rawValue) { dest in
+            ForEach(TabDestinations.allCases, id: \.rawValue) { dest in
                 let isPicked = self.selectedWithAnim == dest
                 let isHomeAndPicked = self.selectedWithAnim == .home && dest == .home
                 
@@ -45,7 +45,7 @@ struct NavigationBarView: View {
             }
     }
     @ViewBuilder
-    func navigationElement(dest: NavigationDestinations, isPicked: Bool, isHomeAndPicked: Bool) -> some View {
+    func navigationElement(dest: TabDestinations, isPicked: Bool, isHomeAndPicked: Bool) -> some View {
         HStack {
             ZStack {
                 if isHomeAndPicked {

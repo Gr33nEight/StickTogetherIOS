@@ -14,8 +14,6 @@ enum Route: Hashable, Codable {
     
     func hash(into hasher: inout Hasher) {
         switch self {
-        case .home:
-            break
         case .habit(_):
             break
         case .createHabit:
@@ -25,13 +23,7 @@ enum Route: Hashable, Codable {
         }
     }
     
-    case home
     case habit(HabitViewContainer)
     case createHabit
     case notifications
-}
-
-enum NavigationType {
-    case push(Route)
-    case unwind(Route)
 }

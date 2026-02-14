@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum NavigationDestinations: String, CaseIterable {
+enum TabDestinations: String, CaseIterable {
     case home = "Add Habit", friends, /*chats = "Messages", stats,*/ settings
     
     var icon: ImageResource {

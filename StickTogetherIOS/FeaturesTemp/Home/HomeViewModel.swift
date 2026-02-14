@@ -12,6 +12,7 @@ import SwiftUI
 final class HomeViewModel: ObservableObject {
     
     @Published var pickedHabitListType: HabitListType = .myHabits
+    @Published var selectedDate: Date = Date()
     
     @Published private(set) var visibleHabits: [Habit] = []
     @Published private(set) var error: String?
@@ -45,6 +46,7 @@ final class HomeViewModel: ObservableObject {
     func startListening() {
         stopListening()
         isLoading = true
+        defer { isLoading = false }
         
         ownedTask = Task { [weak self] in
             guard let self else { return }
@@ -93,6 +95,10 @@ final class HomeViewModel: ObservableObject {
         case .friendsHabits:
             self.visibleHabits = sharedHabits
         }
+    }
+    
+    private func updatedHabitsByDate() {
+        self.visibleHabits = visibleHabits.filter({ $0.isScheduled(on: selectedDate) })
     }
     
     private func stopListening() {

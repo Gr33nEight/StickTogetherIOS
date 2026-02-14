@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct NavigationContainer: View {
-    @EnvironmentObject var profileVM: ProfileViewModel
-    @EnvironmentObject var loading: LoadingManager
-    
-    @Binding var selected: NavigationDestinations
+    @Binding var selected: TabDestinations
         
     var body: some View {
         ZStack {
