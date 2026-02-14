@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -92,7 +92,6 @@
 		3C6688222EB6807300DE45E8 /* FirebaseHabitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688212EB6807300DE45E8 /* FirebaseHabitService.swift */; };
 		3C6688252EB6816400DE45E8 /* HabitServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */; };
 		3C6688272EB6822100DE45E8 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */; };
-		3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */; };
 		3C6688322EB7499F00DE45E8 /* ElegantEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 3C6688312EB7499F00DE45E8 /* ElegantEmojiPicker */; };
 		3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */; };
 		3C70E0962EB3DE4E00C325D9 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */; };
@@ -248,7 +247,6 @@
 		3C6688212EB6807300DE45E8 /* FirebaseHabitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHabitService.swift; sourceTree = "<group>"; };
 		3C6688242EB6816400DE45E8 /* HabitServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitServiceProtocol.swift; sourceTree = "<group>"; };
 		3C6688262EB6821C00DE45E8 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
-		3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitHelper.swift; sourceTree = "<group>"; };
 		3C70E0922EB3A49E00C325D9 /* CustomCellViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellViewModifier.swift; sourceTree = "<group>"; };
 		3C70E0952EB3DE4E00C325D9 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		3C70E0992EB3DE7B00C325D9 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -300,6 +298,15 @@
 		3CFF85442EE3422900171172 /* HabitViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewContainer.swift; sourceTree = "<group>"; };
 		3CFF85462EE3605C00171172 /* CustomBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBadgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3C68532B2F3F359700C4FC5F /* Data */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Data; sourceTree = "<group>"; };
+		3C68532D2F3F35B800C4FC5F /* UI */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UI; sourceTree = "<group>"; };
+		3C68532E2F3F35BD00C4FC5F /* Navigation */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Navigation; sourceTree = "<group>"; };
+		3C6853422F3FB0B100C4FC5F /* Domain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Domain; sourceTree = "<group>"; };
+		3C68534A2F3FBD1300C4FC5F /* FeaturesTemp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = FeaturesTemp; sourceTree = "<group>"; };
+		3C6853592F3FC62000C4FC5F /* AppTemp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AppTemp; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3C4D40062EB229BC00DD51A5 /* Frameworks */ = {
@@ -545,10 +552,16 @@
 		3C4D400B2EB229BC00DD51A5 /* StickTogetherIOS */ = {
 			isa = PBXGroup;
 			children = (
+				3C6853592F3FC62000C4FC5F /* AppTemp */,
+				3C68534A2F3FBD1300C4FC5F /* FeaturesTemp */,
+				3CB5041B2EB23168004AF0A9 /* App */,
+				3C68532B2F3F359700C4FC5F /* Data */,
+				3C6853422F3FB0B100C4FC5F /* Domain */,
+				3C68532E2F3F35BD00C4FC5F /* Navigation */,
+				3C68532D2F3F35B800C4FC5F /* UI */,
 				3C5C13AC2EC3C88F00693ED0 /* StickTogetherIOS.entitlements */,
 				3C5C13B72EC3DF6A00693ED0 /* GoogleService-Info.plist */,
 				3CB5043B2EB24E7C004AF0A9 /* Info.plist */,
-				3CB5041B2EB23168004AF0A9 /* App */,
 				3CB5041A2EB23164004AF0A9 /* Core */,
 				3CB504192EB2315F004AF0A9 /* Features */,
 				3CB504182EB23156004AF0A9 /* Resources */,
@@ -662,7 +675,6 @@
 			isa = PBXGroup;
 			children = (
 				3C42E7022EB3674F00D0D58C /* Habit.swift */,
-				3C66882E2EB6B54100DE45E8 /* HabitHelper.swift */,
 			);
 			path = Habit;
 			sourceTree = "<group>";
@@ -901,6 +913,14 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				3C68532B2F3F359700C4FC5F /* Data */,
+				3C68532D2F3F35B800C4FC5F /* UI */,
+				3C68532E2F3F35BD00C4FC5F /* Navigation */,
+				3C6853422F3FB0B100C4FC5F /* Domain */,
+				3C68534A2F3FBD1300C4FC5F /* FeaturesTemp */,
+				3C6853592F3FC62000C4FC5F /* AppTemp */,
+			);
 			name = StickTogetherIOS;
 			packageProductDependencies = (
 				3C70E0B32EB3FE3D00C325D9 /* FirebaseAnalytics */,
@@ -1131,7 +1151,6 @@
 				3CD2DA6B2ED1A8B6003C3552 /* ProfileServiceProtocol.swift in Sources */,
 				3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */,
 				3C6688022EB4F5D800DE45E8 /* AuthForm.swift in Sources */,
-				3C66882F2EB6B54100DE45E8 /* HabitHelper.swift in Sources */,
 				3CFF85412EE33CE600171172 /* NavigationStackContentView.swift in Sources */,
 				3C70E09E2EB3E1F600C325D9 /* CompletionState.swift in Sources */,
 				3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */,

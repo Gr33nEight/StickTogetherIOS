@@ -26,7 +26,7 @@ struct AppCoordinatorView: View {
                             profileService: di.profileService,
                             appNotificationsService: di.appNotificationsService,
                             currentUser: profileVM.safeUser,
-                            loading: loading
+                            loading: loading, authenticatedAppContainer: AuthenticatedAppContainer(userId: user.safeID)
                         )
                     }else{
                         LoadingView()

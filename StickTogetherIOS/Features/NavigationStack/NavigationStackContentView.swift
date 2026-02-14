@@ -15,13 +15,16 @@ struct NavigationStackContentView: View {
     @StateObject private var friendsVM: FriendsViewModel
     @StateObject private var appNotificationsVM: AppNotificationsViewModel
     
+    var authenticatedAppContainer: AuthenticatedAppContainer
+    
     init(
         habitService: HabitServiceProtocol,
          friendsService: FriendsServiceProtocol,
          profileService: ProfileServiceProtocol,
          appNotificationsService: AppNotificationsServiceProtocol,
          currentUser: User,
-         loading: LoadingManager? = nil
+         loading: LoadingManager? = nil,
+        authenticatedAppContainer: AuthenticatedAppContainer
     ) {
         
         let habitVM = HabitViewModel.configured(service: habitService,
@@ -35,40 +38,43 @@ struct NavigationStackContentView: View {
         _habitVM = StateObject(wrappedValue: habitVM)
         _friendsVM = StateObject(wrappedValue: friendsVM)
         _appNotificationsVM = StateObject(wrappedValue: appNotificationsVM)
+        
+        self.authenticatedAppContainer = authenticatedAppContainer
     }
     
     var body: some View {
-        NavigationStack(path: $path) {
-            NavigationContainer(selected: $selectedView)
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .home: NavigationContainer(selected: $selectedView)
-                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
-                    case .createHabit: CreateHabitView()
-                    case .notifications: NotificationView()
-                    }
-                }
-        }.environmentObject(habitVM)
-        .environmentObject(friendsVM)
-        .environmentObject(appNotificationsVM)
-        .environment(\.navigate) { type in
-            switch type {
-            case .push(let route):
-                path.append(route)
-            case .unwind(let route):
-                if route == .home {
-                    path = []
-                }else{
-                    guard let index = path.firstIndex(where: {$0 == route}) else { return }
-                    path = Array(path.prefix(upTo: index + 1))
-                }
-            }
-        }
-        .task {
-            await habitVM.startListening()
-            await friendsVM.startFriendsListener()
-            await appNotificationsVM.startListening()
-            selectedView = .home
-        }
+//        NavigationStack(path: $path) {
+//            NavigationContainer(selected: $selectedView)
+//                .navigationDestination(for: Route.self) { route in
+//                    switch route {
+//                    case .home: NavigationContainer(selected: $selectedView)
+//                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
+//                    case .createHabit: CreateHabitView()
+//                    case .notifications: NotificationView()
+//                    }
+//                }
+//        }.environmentObject(habitVM)
+//        .environmentObject(friendsVM)
+//        .environmentObject(appNotificationsVM)
+//        .environment(\.navigate) { type in
+//            switch type {
+//            case .push(let route):
+//                path.append(route)
+//            case .unwind(let route):
+//                if route == .home {
+//                    path = []
+//                }else{
+//                    guard let index = path.firstIndex(where: {$0 == route}) else { return }
+//                    path = Array(path.prefix(upTo: index + 1))
+//                }
+//            }
+//        }
+//        .task {
+//            await habitVM.startListening()
+//            await friendsVM.startFriendsListener()
+//            await appNotificationsVM.startListening()
+//            selectedView = .home
+//        }
+        authenticatedAppContainer.makeHomeView()
     }
 }
