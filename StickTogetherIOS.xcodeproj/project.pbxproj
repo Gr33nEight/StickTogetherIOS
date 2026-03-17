@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 73;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -98,7 +98,6 @@
 		3C70E0B82EB3FE3D00C325D9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3C70E0B72EB3FE3D00C325D9 /* FirebaseFirestore */; };
 		3C70E0BA2EB3FE3D00C325D9 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 3C70E0B92EB3FE3D00C325D9 /* FirebaseMessaging */; };
 		3C70E0BC2EB3FFC200C325D9 /* FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0BB2EB3FFC200C325D9 /* FirebaseAuthService.swift */; };
-		3C70E0C12EB4027600C325D9 /* UserMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C70E0C02EB4027600C325D9 /* UserMapper.swift */; };
 		3CA910982EE0BD110031100F /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA910972EE0BD110031100F /* NotificationView.swift */; };
 		3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5041E2EB231DB004AF0A9 /* DIContainer.swift */; };
 		3CB504212EB231F4004AF0A9 /* AppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504202EB231F4004AF0A9 /* AppEntry.swift */; };
@@ -231,7 +230,6 @@
 		3C70E0AB2EB3E3F600C325D9 /* CreateHabitViewReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewReminderView.swift; sourceTree = "<group>"; };
 		3C70E0AD2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewInviteFriend.swift; sourceTree = "<group>"; };
 		3C70E0BB2EB3FFC200C325D9 /* FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = "<group>"; };
-		3C70E0C02EB4027600C325D9 /* UserMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMapper.swift; sourceTree = "<group>"; };
 		3CA910972EE0BD110031100F /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		3CB5041E2EB231DB004AF0A9 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		3CB504202EB231F4004AF0A9 /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
@@ -267,13 +265,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3C28B79F2F408B840058E19A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Authenticated/AuthenticatedRootView.swift,
-			);
-			target = 3C4D40082EB229BC00DD51A5 /* StickTogetherIOS */;
-		};
 		3C28B7BD2F4093900058E19A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -283,22 +274,12 @@
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		3C28B7A02F408B840058E19A /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 3C4D40072EB229BC00DD51A5 /* Resources */;
-			membershipExceptions = (
-				Authenticated/AuthenticatedRootView.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3C329B032F406CCB00D15A32 /* Navigation */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Navigation; sourceTree = "<group>"; };
 		3C68532B2F3F359700C4FC5F /* Data */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Data; sourceTree = "<group>"; };
 		3C6853422F3FB0B100C4FC5F /* Domain */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Domain; sourceTree = "<group>"; };
 		3C68534A2F3FBD1300C4FC5F /* FeaturesTemp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3C28B7BD2F4093900058E19A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = FeaturesTemp; sourceTree = "<group>"; };
-		3C6853592F3FC62000C4FC5F /* AppTemp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3C28B79F2F408B840058E19A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 3C28B7A02F408B840058E19A /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = AppTemp; sourceTree = "<group>"; };
+		3C6853592F3FC62000C4FC5F /* AppTemp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AppTemp; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -568,13 +549,6 @@
 			path = StickTogetherIOSUITests;
 			sourceTree = "<group>";
 		};
-		3C584DA22EC900EF006D2E59 /* NavigationBar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = NavigationBar;
-			sourceTree = "<group>";
-		};
 		3C5C13832EC3697100693ED0 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -666,7 +640,6 @@
 		3C70E0BF2EB4026C00C325D9 /* Mappers */ = {
 			isa = PBXGroup;
 			children = (
-				3C70E0C02EB4027600C325D9 /* UserMapper.swift */,
 			);
 			path = Mappers;
 			sourceTree = "<group>";
@@ -710,12 +683,10 @@
 		3CB504192EB2315F004AF0A9 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				3CFF853F2EE33CC700171172 /* NavigationStack */,
 				3CA910952EE0B81E0031100F /* AppNotifications */,
 				3C41F8B92ECE50C60020E9EE /* Stats */,
 				3C41F8B82ECE50B40020E9EE /* Chats */,
 				3C41F8B72ECE50AB0020E9EE /* Settings */,
-				3C584DA22EC900EF006D2E59 /* NavigationBar */,
 				3C27EB362EB8B7E600BB39F7 /* FriendsList */,
 				3C42E7152EB38C1E00D0D58C /* Habit */,
 				3C42E70E2EB36CC100D0D58C /* CreateHabit */,
@@ -834,13 +805,6 @@
 			path = AppNotifications;
 			sourceTree = "<group>";
 		};
-		3CFF853F2EE33CC700171172 /* NavigationStack */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = NavigationStack;
-			sourceTree = "<group>";
-		};
 		3CFF85482EE3606400171172 /* CustomBadge */ = {
 			isa = PBXGroup;
 			children = (
@@ -945,6 +909,7 @@
 				};
 			};
 			buildConfigurationList = 3C4D40042EB229BC00DD51A5 /* Build configuration list for PBXProject "StickTogetherIOS" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -957,7 +922,6 @@
 				3C6688302EB7499E00DE45E8 /* XCRemoteSwiftPackageReference "Elegant-Emoji-Picker" */,
 				3C5C13B02EC3D72600693ED0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
-			preferredProjectObjectVersion = 56;
 			productRefGroup = 3C4D400A2EB229BC00DD51A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1093,7 +1057,6 @@
 				3CFF853C2EE2150A00171172 /* AppNotification.swift in Sources */,
 				3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */,
 				3C27EB502EBA5A2000BB39F7 /* FriendCellView.swift in Sources */,
-				3C70E0C12EB4027600C325D9 /* UserMapper.swift in Sources */,
 				3CFF853A2EE20F2800171172 /* FirebaseAppNotificationService.swift in Sources */,
 				3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */,
 				3C70E0A62EB3E2C200C325D9 /* HabitViewCell.swift in Sources */,

@@ -23,9 +23,7 @@ enum FriendsListType: CaseIterable {
 struct FriendsListView: View {
     var fullList: Bool = false
     
-    @EnvironmentObject var appNotifications: AppNotificationsViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    @EnvironmentObject var friendsVM: FriendsViewModel
+    @StateObject var viewModel: FriendsViewModelTemp
     
     @State var pickedFriendsListType: FriendsListType = .allFriends
     
@@ -58,7 +56,8 @@ struct FriendsListView: View {
                                     Text(type.text)
                                         .font(.customAppFont(size: 13, weight: .bold))
                                         .foregroundColor(pickedFriendsListType == type ? Color.custom.text : Color(.systemGray))
-                                        .customBadge(number: type == .invitationReceived ? appNotifications.friendsRequestNotReadNotificationsNum : 0, offset: CGPoint(x: 6, y: -2))
+                                    // TODO: implement appNotifications
+//                                        .customBadge(number: type == .invitationReceived ? appNotifications.friendsRequestNotReadNotificationsNum : 0, offset: CGPoint(x: 6, y: -2))
                                         .frame(width: (UIScreen.main.bounds.size.width-60)/3, height: 45)
                                 }
                             }

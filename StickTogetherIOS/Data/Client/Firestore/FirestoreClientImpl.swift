@@ -57,6 +57,10 @@ final class FirestoreClientImpl: FirestoreClient {
            try doc.setData(from: dto)
     }
     
+    func updateData<E>(for endpoint: E.Type, id: FirestoreDocumentID, _ fields: [String : FirestoreUpdateOperations]) async throws where E : FirestoreEndpoint {
+        try await db.collection(endpoint.path).document(id.value).updateData(FirestoreUpdateOperationsMapper.toUpdateData(fields))
+    }
+    
     
     func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         try await db.collection(endpoint.path).document(id.value).delete()

@@ -32,11 +32,13 @@ enum HabitListType: CaseIterable {
 }
 
 struct HomeView: View {
-    @EnvironmentObject var friendsVM: FriendsViewModel
-    @EnvironmentObject var habitVM: HabitViewModel
-    @EnvironmentObject var authVM: AuthViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
+//    @EnvironmentObject var friendsVM: FriendsViewModel
+//    @EnvironmentObject var habitVM: HabitViewModel
+//    @EnvironmentObject var authVM: AuthViewModel
+//    @EnvironmentObject var profileVM: ProfileViewModel
+//    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
+    
+    @StateObject var viewModel: HomeViewModel
     
     @Environment(\.confirm) var confirm
     @Environment(\.navigate) var navigate
@@ -50,11 +52,13 @@ struct HomeView: View {
     @Namespace var habitTypeAnimation
     
     var myHabitsOnDate: [Habit] {
-        habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
+        []
+//        habitVM.habits.filter { $0.isScheduled(on: selectedDate) }
     }
     
     var buddiesHabitsOnDate: [Habit] {
-        habitVM.friendsHabits.filter { $0.isScheduled(on: selectedDate) }
+        []
+//        habitVM.friendsHabits.filter { $0.isScheduled(on: selectedDate) }
     }
 
     var body: some View {

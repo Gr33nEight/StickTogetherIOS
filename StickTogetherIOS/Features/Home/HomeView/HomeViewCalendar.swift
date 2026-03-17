@@ -23,12 +23,12 @@ extension HomeView {
                         ForEach(weekDates(around: anchor), id: \.self) { date in
                             let isSelected = Calendar.current.isDate(date, inSameDayAs: selectedDate)
                             
-                            DayCell(date: date, isSelected: isSelected, done: habitVM.habitStats(on: date).done, skipped: habitVM.habitStats(on: date).skipped)
-                                .onTapGesture {
-                                    withAnimation(.bouncy) {
-                                        selectedDate = date
-                                    }
-                                }
+//                            DayCell(date: date, isSelected: isSelected, done: habitVM.habitStats(on: date).done, skipped: habitVM.habitStats(on: date).skipped)
+//                                .onTapGesture {
+//                                    withAnimation(.bouncy) {
+//                                        selectedDate = date
+//                                    }
+//                                }
                         }
                     }
                     .padding(.vertical)

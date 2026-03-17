@@ -17,25 +17,27 @@ struct LogInView: View {
     @State var passwordError: String?
     
     var body: some View {
-        VStack(spacing: 40) {
-            Spacer()
-            header
-            Divider()
-            content
-            Spacer()
-            footer
-        }.foregroundStyle(Color.custom.text)
-            .padding()
-            .background(
-                Color.custom.background.ignoresSafeArea()
-            )
-            .onChange(of: email) { _, _ in
-                emailError = validateEmail(email)
-            }
-            .onChange(of: password) { _, _ in
-                passwordError = validatePassword(password)
-            }
-            .edgesIgnoringSafeArea(.bottom)
+        NavigationStack {
+            VStack(spacing: 40) {
+                Spacer()
+                header
+                Divider()
+                content
+                Spacer()
+                footer
+            }.foregroundStyle(Color.custom.text)
+                .padding()
+                .background(
+                    Color.custom.background.ignoresSafeArea()
+                )
+                .onChange(of: email) { _, _ in
+                    emailError = validateEmail(email)
+                }
+                .onChange(of: password) { _, _ in
+                    passwordError = validatePassword(password)
+                }
+                .edgesIgnoringSafeArea(.bottom)
+        }
     }
     private func validateEmail(_ email: String) -> String? {
             guard !email.isEmpty else { return nil }

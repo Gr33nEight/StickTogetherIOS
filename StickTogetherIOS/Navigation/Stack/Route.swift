@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum Route: Hashable, Codable {
+enum Route: Hashable {
     static func == (lhs: Route, rhs: Route) -> Bool {
         return true
     }

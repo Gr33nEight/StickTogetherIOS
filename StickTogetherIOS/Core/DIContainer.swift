@@ -8,23 +8,23 @@
 import Foundation
 
 final class DIContainer: ObservableObject {
-    let authService: AuthServiceProtocol
+//    let authService: AuthServiceProtocol
     let habitService: HabitServiceProtocol
     let friendsService: FriendsServiceProtocol
-    let profileService: ProfileServiceProtocol
+//    let profileService: ProfileServiceProtocol
     let appNotificationsService: AppNotificationsServiceProtocol
     
     init(
-        authService: AuthServiceProtocol = FirebaseAuthService(),
+//        authService: AuthServiceProtocol = FirebaseAuthService(),
         habitService: HabitServiceProtocol = FirebaseHabitService(),
         friendsService: FriendsServiceProtocol = FirebaseFriendsService(),
-        profileService: ProfileServiceProtocol = FirebaseProfileService(),
+//        profileService: ProfileServiceProtocol = FirebaseProfileService(),
         appNotificationsService: AppNotificationsServiceProtocol = FirebaseAppNotificationService()
     ) {
-        self.authService = authService
+//        self.authService = authService
         self.habitService = habitService
         self.friendsService = friendsService
-        self.profileService = profileService
+//        self.profileService = profileService
         self.appNotificationsService = appNotificationsService
     }
 }

@@ -58,6 +58,7 @@ actor FirebaseFriendsService: @preconcurrency FriendsServiceProtocol {
     
     func getFriendById(_ uid: String) async throws -> User? {
         let snapshot = try await firestore.collection(usersCollection).document(uid).getDocument()
-        return try snapshot.data(as: User.self)
+        return nil
+//        return try snapshot.data(as: User.self)
     }
 }

@@ -32,6 +32,12 @@ protocol FirestoreClient {
         id: FirestoreDocumentID,
     ) throws
     
+    func updateData<E: FirestoreEndpoint>(
+        for endpoint: E.Type,
+        id: FirestoreDocumentID,
+        _ fields: [String : FirestoreUpdateOperations]
+    ) async throws
+    
     func delete<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         id: FirestoreDocumentID

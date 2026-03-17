@@ -12,9 +12,15 @@ protocol HabitRepository {
     func getBuddyHabits(for userId: String) async throws -> [Habit]
     func getHabit(with id: String) async throws -> Habit
     func deleteHabit(with id: String) async throws
-    func updateHabit(with id: String, newValue: Habit) async throws
-    func createHabit(_ habit: Habit) async throws
-    func listenToOwnedHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], Error>
-    func listenToBuddyHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], Error>
-    func listenToSharedHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], Error>
+    func updateHabit(_ newValue: Habit) throws
+    func updateData(with id: String, updates: HabitUpdates) async throws
+    func createHabit(_ habit: Habit) throws
+    func listenToOwnedHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
+    func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
+    func listenToSharedHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
 }
+
+enum HabitUpdates {
+    case completionState(date: Date, userId: String)
+}
+

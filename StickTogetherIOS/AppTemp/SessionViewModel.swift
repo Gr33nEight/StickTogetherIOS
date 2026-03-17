@@ -23,6 +23,8 @@ final class SessionViewModel: ObservableObject {
     
     init(observeSession: ObserveSessionUseCase) {
         self.observeSession = observeSession
+        
+        start()
     }
     
     deinit {
@@ -32,6 +34,7 @@ final class SessionViewModel: ObservableObject {
     private func start() {
         task = Task {
             for await session in observeSession.stream() {
+                print(session)
                 switch session {
                 case .loggedOut:
                     state = .unauthenticated(UnauthenticatedAppContainer())

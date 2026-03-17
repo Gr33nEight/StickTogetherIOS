@@ -12,6 +12,6 @@ struct RootView: View {
     let container: AuthenticatedAppContainer
     
     var body: some View {
-        NavigationContainer(selected: $selected)
+        NavigationContainer(selected: $selected, container: container)
     }
 }

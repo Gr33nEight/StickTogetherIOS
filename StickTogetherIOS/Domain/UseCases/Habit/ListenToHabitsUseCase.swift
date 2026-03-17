@@ -6,5 +6,5 @@
 //
 
 protocol ListenToHabitsUseCase {
-    func execute(for id: String) async throws -> AsyncThrowingStream<[Habit], any Error>
+    func stream(for id: String) async throws -> AsyncThrowingStream<[Habit], any Error>
 }

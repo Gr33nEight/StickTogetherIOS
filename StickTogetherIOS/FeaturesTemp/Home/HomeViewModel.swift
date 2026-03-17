@@ -51,7 +51,7 @@ final class HomeViewModel: ObservableObject {
         ownedTask = Task { [weak self] in
             guard let self else { return }
             do {
-                let stream = try await listenToOwnedHabits.execute(for: currentUserId)
+                let stream = try await listenToOwnedHabits.stream(for: currentUserId)
                 for try await habits in stream {
                     self.ownedHabits = habits
                     self.updateVisibleHabits()
@@ -64,7 +64,7 @@ final class HomeViewModel: ObservableObject {
         buddyTask = Task { [weak self] in
             guard let self else { return }
             do {
-                let stream = try await listenToBuddyHabits.execute(for: currentUserId)
+                let stream = try await listenToBuddyHabits.stream(for: currentUserId)
                 for try await habits in stream {
                     self.buddyHabits = habits
                     self.updateVisibleHabits()
@@ -77,7 +77,7 @@ final class HomeViewModel: ObservableObject {
         sharedTask = Task { [weak self] in
             guard let self else { return }
             do {
-                let stream = try await listenToSharedHabits.execute(for: currentUserId)
+                let stream = try await listenToSharedHabits.stream(for: currentUserId)
                 for try await habits in stream {
                     self.sharedHabits = habits
                     self.updateVisibleHabits()

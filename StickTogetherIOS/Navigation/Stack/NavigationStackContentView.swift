@@ -16,13 +16,13 @@ struct NavigationStackContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             RootView(selected: $selected, container: authenticatedAppContainer)
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
-                    case .createHabit: CreateHabitView()
-                    case .notifications: NotificationView()
-                    }
-                }
+//                .navigationDestination(for: Route.self) { route in
+//                    switch route {
+//                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
+//                    case .createHabit: CreateHabitView()
+//                    case .notifications: NotificationView()
+//                    }
+//                }
         }.rootRouter(path: $path)
     }
 }

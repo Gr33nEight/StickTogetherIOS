@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 final class HabitRepositoryImpl: HabitRepository {
     private let firestoreClient: FirestoreClient
@@ -45,25 +46,39 @@ final class HabitRepositoryImpl: HabitRepository {
         try await firestoreClient.delete(HabitEndpoint.self, id: FirestoreDocumentID(value: id))
     }
     
-    func updateHabit(with id: String, newValue: Habit) async throws {
+    func updateHabit(_ newValue: Habit) throws {
         let dto = HabitMapper.toDTO(newValue)
-        let docId = FirestoreDocumentID(value: id)
+        guard let dtoId = dto.id else {
+            throw FirestoreError.unknown
+        }
+        let docId = FirestoreDocumentID(value: dtoId)
         
-        try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
+        try firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
     }
     
-    func createHabit(_ habit: Habit) async throws {
+    func updateData(with id: String, updates: HabitUpdates) async throws {
+        var fields: [String: FirestoreUpdateOperations] = [:]
+        
+        switch updates {
+        case .completionState(let date, let userId):
+            fields["completion.\(Habit.dayKey(for: date))"] = FirestoreUpdateOperations.union([userId])
+        }
+        
+        try await firestoreClient.updateData(for: HabitEndpoint.self, id: .init(value: id), fields)
+    }
+    
+    func createHabit(_ habit: Habit) throws {
         let dto = HabitMapper.toDTO(habit)
         guard let dtoId = dto.id else {
             throw FirestoreError.unknown
         }
         let docId = FirestoreDocumentID(value: dtoId)
-        try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: false)
+        try firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: false)
         
     }
     
-    func listenToOwnedHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = await firestoreClient.listen(
+    func listenToOwnedHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
+        let stream = firestoreClient.listen(
             HabitEndpoint.self,
             query: FirestoreQuery(
                 filters: [
@@ -74,8 +89,8 @@ final class HabitRepositoryImpl: HabitRepository {
         return HabitMapper.habitStream(stream)
     }
     
-    func listenToBuddyHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = await firestoreClient.listen(
+    func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
+        let stream = firestoreClient.listen(
             HabitEndpoint.self,
             query: FirestoreQuery(
                 filters: [
@@ -86,8 +101,8 @@ final class HabitRepositoryImpl: HabitRepository {
         return HabitMapper.habitStream(stream)
     }
     
-    func listenToSharedHabits(for userId: String) async throws -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = await firestoreClient.listen(
+    func listenToSharedHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
+        let stream = firestoreClient.listen(
             HabitEndpoint.self,
             query: FirestoreQuery(
                 filters: [

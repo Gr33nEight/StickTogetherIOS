@@ -6,10 +6,9 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 struct Invitation: Codable, Identifiable {
-    @DocumentID var id: String?
+    var id: String? = nil
     var senderId: String
     var receiverId: String
 }

@@ -120,7 +120,7 @@ struct HabitView: View {
                             
                             switch result {
                             case .success:
-                                navigate(.unwind(.home))
+                                navigate(.unwind(nil))
                                 return
                             case .error(let error):
                                 toastMessage(.failed(error))

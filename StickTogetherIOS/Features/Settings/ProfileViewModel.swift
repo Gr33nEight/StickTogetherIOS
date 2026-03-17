@@ -17,7 +17,7 @@ class ProfileViewModel: ObservableObject {
     private var streamTask: Task<Void, Never>?
     
     var safeUser: User {
-        currentUser ?? User(name: "", email: "")
+        currentUser ?? User(name: "", email: "", friendsIds: [], icon: "", language: .en, theme: .dark, mainHabitType: .alone)
     }
     
     init(profileService: any ProfileServiceProtocol) {

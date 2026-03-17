@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NavigationContainer: View {
     @Binding var selected: TabDestinations
+    let container: AuthenticatedAppContainer
         
     var body: some View {
         ZStack {
@@ -25,7 +26,7 @@ struct NavigationContainer: View {
     private var content: some View {
         switch selected {
         case .home:
-            HomeView()
+            container.makeHomeView()
 //        case .stats:
 //            StatsView()
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -36,9 +37,10 @@ struct NavigationContainer: View {
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                .background(Color.custom.background)
         case .friends:
-            FriendsListView(fullList: true)
+            container.makeFriendsView()
+//            FriendsListView(fullList: true)
         case .settings:
-            SettingsView()
+            container.makeSettingsView()
         }
     }
 }

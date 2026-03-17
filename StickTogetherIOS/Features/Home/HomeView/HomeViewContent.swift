@@ -16,39 +16,42 @@ extension HomeView {
     }
     
     var sortedHabits: [Habit] {
-        return pickedListHabits.sorted { a, b in
-            let aPriority = a.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
-            let bPriority = b.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
-            
-            if aPriority != bPriority {
-                return aPriority > bPriority
-            }
-            
-            let aDate = habitVM.lastInteraction[a.id ?? ""] ?? .distantPast
-            let bDate = habitVM.lastInteraction[b.id ?? ""] ?? .distantPast
-
-            if aDate != bDate {
-                return aDate < bDate
-            }
-            
-            return a.title > b.title
-        }
+//        return pickedListHabits.sorted { a, b in
+//            let aPriority = a.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
+//            let bPriority = b.sortPriority(date: selectedDate, currentUserId: profileVM.safeUser.safeID)
+//            
+//            if aPriority != bPriority {
+//                return aPriority > bPriority
+//            }
+//            
+//            let aDate = habitVM.lastInteraction[a.id ?? ""] ?? .distantPast
+//            let bDate = habitVM.lastInteraction[b.id ?? ""] ?? .distantPast
+//
+//            if aDate != bDate {
+//                return aDate < bDate
+//            }
+//            
+//            return a.title > b.title
+//        }
+        viewModel.visibleHabits
     }
     
     func iAmOwner(_ ownerId: String) -> Bool {
-        profileVM.safeUser.safeID == ownerId
+//        profileVM.safeUser.safeID == ownerId
+        false
     }
     
     func buddy(_ habit: Habit) -> User? {
-        guard !habit.buddyId.isEmpty else { return nil }
-        
-        return friendsVM.friends.first(where: {
-            if let id = $0.id {
-                return iAmOwner(habit.ownerId) ? id == habit.buddyId : id == habit.ownerId
-            }else{
-                return false
-            }
-        })
+//        guard !habit.buddyId.isEmpty else { return nil }
+//        
+//        return friendsVM.friends.first(where: {
+//            if let id = $0.id {
+//                return iAmOwner(habit.ownerId) ? id == habit.buddyId : id == habit.ownerId
+//            }else{
+//                return false
+//            }
+//        })
+        nil
     }
     
     @ViewBuilder
@@ -83,11 +86,11 @@ extension HomeView {
                     VStack {
                         ForEach(sortedHabits) { habit in
                             Button {
-                                let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
-                                navigate(.push(.habit(container)))
+//                                let container = HabitViewContainer(habit: habit, selectedDate: selectedDate, friends: friendsVM.friends)
+//                                navigate(.push(.habit(container)))
                             } label: {
                                 HabitCell(habit: habit, selectedDate: selectedDate, buddy: buddy(habit)) {
-                                    Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
+//                                    Task { await habitVM.markHabitAsCompleted(habit, date: selectedDate) }
                                 }
                             }
                         }

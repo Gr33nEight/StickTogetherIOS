@@ -78,10 +78,10 @@ struct CreateHabitView: View {
                 id = UUID().uuidString
             }
             .fullScreenCover(isPresented: $showFriendsList, content: {
-                FriendsListView() { buddy in
-                    self.buddy = buddy
-                }.modal()
-                    .environmentObject(friendsVM)
+//                FriendsListView() { buddy in
+//                    self.buddy = buddy
+//                }.modal()
+//                    .environmentObject(friendsVM)
             })
     }
 

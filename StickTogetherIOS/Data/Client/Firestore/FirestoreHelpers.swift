@@ -25,6 +25,12 @@ struct FirestoreFilter {
     let value: FirestoreValue
 }
 
+enum FirestoreUpdateOperations {
+    case set(Any)
+    case union([Any])
+    case remove([Any])
+}
+
 enum FirestoreValue {
     case string(String)
     case int(Int)

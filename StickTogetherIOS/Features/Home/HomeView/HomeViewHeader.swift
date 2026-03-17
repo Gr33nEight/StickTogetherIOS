@@ -10,11 +10,13 @@ import ElegantEmojiPicker
 
 extension HomeView {
     var numberOfUnReadNotifications: Int {
-        appNotificationsVM.appNotifications.filter({!$0.isRead && $0.type == .friendMessage}).count
+//        appNotificationsVM.appNotifications.filter({!$0.isRead && $0.type == .friendMessage}).count
+        0
     }
     var header: some View {
         HStack {
-            Text("\(Date().timeOfDayGreeting),\n\(profileVM.safeUser.name.capitalized) 👋")
+            Text("Siema")
+//            Text("\(Date().timeOfDayGreeting),\n\(profileVM.safeUser.name.capitalized) 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {
