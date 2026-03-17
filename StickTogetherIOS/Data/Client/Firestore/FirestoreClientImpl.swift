@@ -17,16 +17,7 @@ final class FirestoreClientImpl: FirestoreClient {
         var ref: Query = db.collection(endpoint.path)
         
         for filter in query.filters {
-            switch filter.op {
-            case .isEqualTo:
-                ref = ref.whereField(filter.field, isEqualTo: filter.value.raw)
-            case .arrayContains:
-                ref = ref.whereField(filter.field, arrayContains: filter.value.raw)
-            case .greaterThan:
-                ref = ref.whereField(filter.field, isGreaterThan: filter.value.raw)
-            case .lessThan:
-                ref = ref.whereField(filter.field, isLessThan: filter.value.raw)
-            }
+            ref = applyFilter(ref, filter: filter)
         }
         
         if let order = query.order {
@@ -71,16 +62,7 @@ final class FirestoreClientImpl: FirestoreClient {
             var ref: Query = db.collection(endpoint.path)
 
             for filter in query.filters {
-                switch filter.op {
-                case .isEqualTo:
-                    ref = ref.whereField(filter.field, isEqualTo: filter.value.raw)
-                case .arrayContains:
-                    ref = ref.whereField(filter.field, arrayContains: filter.value.raw)
-                case .greaterThan:
-                    ref = ref.whereField(filter.field, isGreaterThan: filter.value.raw)
-                case .lessThan:
-                    ref = ref.whereField(filter.field, isLessThan: filter.value.raw)
-                }
+                ref = applyFilter(ref, filter: filter)
             }
 
             if let order = query.order {
@@ -135,6 +117,73 @@ final class FirestoreClientImpl: FirestoreClient {
             continuation.onTermination = { @Sendable _ in
                 listener.remove()
             }
+        }
+    }
+    
+    private func applyFilter(
+        _ ref: Query,
+        filter: FirestoreFilter
+    ) -> Query {
+
+        switch filter {
+
+        case .isEqual(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, isEqualTo: value.raw) },
+                documentIdBlock: { $0.whereField($1, isEqualTo: value.raw) }
+            )
+
+        case .arrayContains(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, arrayContains: value.raw) },
+                documentIdBlock: { $0.whereField($1, arrayContains: value.raw) }
+            )
+
+        case .greaterThan(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, isGreaterThan: value.raw) },
+                documentIdBlock: { $0.whereField($1, isGreaterThan: value.raw) }
+            )
+
+        case .lessThan(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, isLessThan: value.raw) },
+                documentIdBlock: { $0.whereField($1, isLessThan: value.raw) }
+            )
+
+        case .isIn(let field, let values):
+            let rawValues = values.map { $0.raw }
+
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, in: rawValues) },
+                documentIdBlock: { $0.whereField($1, in: rawValues) }
+            )
+        }
+    }
+    
+    private func apply(
+        _ ref: Query,
+        field: FirestoreField,
+        stringBlock: (Query, String) -> Query,
+        documentIdBlock: (Query, FieldPath) -> Query
+    ) -> Query {
+
+        switch field {
+        case .field(let name):
+            return stringBlock(ref, name)
+
+        case .documentId:
+            return documentIdBlock(ref, FieldPath.documentID())
         }
     }
 }

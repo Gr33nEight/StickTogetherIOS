@@ -18,13 +18,14 @@ final class AuthenticatedAppContainer {
     
     private lazy var habitRepository: HabitRepository = HabitRepositoryImpl(firestoreClient: firestoreClient)
     private lazy var friendsRepository: FriendsRepository = FriendsRepositoryImpl(firestoreClient: firestoreClient)
-    private lazy var profileRepository: ProfileRepository = ProfileRepositoryImpl(firestoreClient: firestoreClient)
+    private lazy var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
     private lazy var invitationsRepository: InvitationsRepository = InvitationsRepositoryImpl(firestoreClient: firestoreClient)
 
     private lazy var listenToOwnedHabits: ListenToHabitsUseCase = ListenToOwnedHabitsUseCase(repository: habitRepository)
     private lazy var listenToBuddyHabits: ListenToHabitsUseCase = ListenToBuddyHabitsUseCase(repository: habitRepository)
     private lazy var listenToSharedHabits: ListenToHabitsUseCase = ListenToSharedHabitsUseCase(repository: habitRepository)
     
+    private lazy var listenToFriends: ListenToFriendsUseCase = ListenToFriendsUseCaseImpl(repository: userRepository)
     private lazy var listenToReceivedInvitations: ListenToInvitations = ListenToReceivedInvitationsUseCase(repository: invitationsRepository)
     private lazy var listenToSentInvitations: ListenToInvitations = ListenToSentInvitationsUseCase(repository: invitationsRepository)
     
@@ -35,7 +36,7 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     private func makeFriendsViewModel() -> FriendsViewModelTemp {
-        return FriendsViewModelTemp(currentUserId: userId, listenToReceivedInvitations: listenToReceivedInvitations, listenToSentInvitations: listenToSentInvitations)
+        return FriendsViewModelTemp(currentUserId: userId, listenToFriends: listenToFriends, listenToReceivedInvitations: listenToReceivedInvitations, listenToSentInvitations: listenToSentInvitations)
     }
     
 //    @MainActor

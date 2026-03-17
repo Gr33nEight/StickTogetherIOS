@@ -32,4 +32,24 @@ enum UserMapper {
             mainHabitType: dto.mainHabitType
         )
     }
+    
+    static func userStream(_ stream: AsyncThrowingStream<UserDTO, Error>) -> AsyncThrowingStream<User, Error> {
+
+        AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    for try await dto in stream {
+                        continuation.yield(UserMapper.toDomain(dto))
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+
+            continuation.onTermination = { _ in
+                task.cancel()
+            }
+        }
+    }
 }

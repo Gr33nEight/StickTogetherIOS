@@ -16,24 +16,14 @@ final class HabitRepositoryImpl: HabitRepository {
     }
     
     func getOwnedHabits(for userId: String) async throws -> [Habit] {
-        let dtos = try await firestoreClient.fetch(HabitEndpoint.self,
-            query: FirestoreQuery(
-                filters: [
-                    FirestoreFilter(field: "ownerId", op: .isEqualTo, value: .string(userId))
-                ]
-            )
-        )
+        let query = FirestoreQuery().isEqual(.field("ownerId"), .string(userId))
+        let dtos = try await firestoreClient.fetch(HabitEndpoint.self, query: query)
         return dtos.map({ HabitMapper.toDomain($0) })
     }
     
     func getBuddyHabits(for userId: String) async throws -> [Habit] {
-        let dtos = try await firestoreClient.fetch(HabitEndpoint.self,
-            query: FirestoreQuery(
-                filters: [
-                    FirestoreFilter(field: "buddyId", op: .isEqualTo, value: .string(userId))
-                ]
-            )
-        )
+        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId))
+        let dtos = try await firestoreClient.fetch(HabitEndpoint.self, query: query)
         return dtos.map({ HabitMapper.toDomain($0) })
     }
     
@@ -78,39 +68,20 @@ final class HabitRepositoryImpl: HabitRepository {
     }
     
     func listenToOwnedHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = firestoreClient.listen(
-            HabitEndpoint.self,
-            query: FirestoreQuery(
-                filters: [
-                    FirestoreFilter(field: "ownerId", op: .isEqualTo, value: .string(userId))
-                ]
-            ))
-        
+        let query = FirestoreQuery().isEqual(.field("ownerId"), .string(userId))
+        let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream)
     }
     
     func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = firestoreClient.listen(
-            HabitEndpoint.self,
-            query: FirestoreQuery(
-                filters: [
-                    FirestoreFilter(field: "buddyId", op: .isEqualTo, value: .string(userId))
-                ]
-            ))
-        
+        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId))
+        let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream)
     }
     
     func listenToSharedHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let stream = firestoreClient.listen(
-            HabitEndpoint.self,
-            query: FirestoreQuery(
-                filters: [
-                    FirestoreFilter(field: "buddyId", op: .isEqualTo, value: .string(userId)),
-                    FirestoreFilter(field: "type", op: .isEqualTo, value: .int(2))
-                ]
-            ))
-        
+        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId)).isEqual(.field("type"), .int(2))
+        let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream) 
     }
 }

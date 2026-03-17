@@ -28,20 +28,14 @@ final class InvitationsRepositoryImpl: InvitationsRepository {
     }
     
     func listenToReceivedInvitations(for userId: String) -> AsyncThrowingStream<[Invitation], any Error> {
-        let stream = firestoreClient.listen(InvitationEndpoint.self, query: FirestoreQuery(
-            filters: [
-                FirestoreFilter(field: "receiverId", op: .isEqualTo, value: .string(userId))
-            ]
-        ))
+        let query = FirestoreQuery().isEqual(.field("receiverId"), .string(userId))
+        let stream = firestoreClient.listen(InvitationEndpoint.self, query: query)
         return InvitationMapper.invitationStream(stream)
     }
     
     func listenToSentInvitations(for userId: String) -> AsyncThrowingStream<[Invitation], any Error> {
-        let stream = firestoreClient.listen(InvitationEndpoint.self, query: FirestoreQuery(
-            filters: [
-                FirestoreFilter(field: "senderId", op: .isEqualTo, value: .string(userId))
-            ]
-        ))
+        let query = FirestoreQuery().isEqual(.field("senderId"), .string(userId))
+        let stream = firestoreClient.listen(InvitationEndpoint.self, query: query)
         return InvitationMapper.invitationStream(stream)
     }
 }

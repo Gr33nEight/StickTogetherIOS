@@ -24,39 +24,67 @@ final class FriendsViewModelTemp: ObservableObject {
     private var sentInvitationsTask: Task<Void, Never>?
     
     private let currentUserId: String
-//    private let listenToFriends:
+    private let listenToFriends: ListenToFriendsUseCase
     private let listenToReceivedInvitations: ListenToInvitations
     private let listenToSentInvitations: ListenToInvitations
     
     init(
         currentUserId: String,
+        listenToFriends: ListenToFriendsUseCase,
         listenToReceivedInvitations: ListenToInvitations,
         listenToSentInvitations: ListenToInvitations
     ) {
         self.currentUserId = currentUserId
+        self.listenToFriends = listenToFriends
         self.listenToReceivedInvitations = listenToReceivedInvitations
         self.listenToSentInvitations = listenToSentInvitations
     }
     
     func startListening() {
-        stopListening()
+        startListeningToFriends()
+        startListeningToSentInvitations()
+        startListeningToReceivedInvitations()
+    }
+    
+    func stopListening() {
+        stopListeningToFriends()
+        stopListeningToSentInvitations()
+        stopListeningToReceivedInvitations()
+    }
+    
+    private func stopListeningToFriends() {
+        friendsTask?.cancel()
+        friendsTask = nil
+    }
+    
+    private func startListeningToFriends() {
         isLoading = true
         defer { isLoading = false }
+        stopListeningToFriends()
         
-        
-        
-        receivedInvitationsTask = Task { [weak self] in
+        friendsTask = Task { [weak self] in
             guard let self else { return }
             do {
-                let stream = listenToReceivedInvitations.stream(for: currentUserId)
-                for try await invitations in stream {
-                    self.receivedInvitations = invitations
-                    self.updateVisibleInvitationType()
+                let stream = listenToFriends.stream(for: currentUserId)
+                for try await friends in stream {
+                    self.visibleFriends = friends
                 }
             } catch {
                 self.error = error.localizedDescription
             }
         }
+    }
+    
+    private func stopListeningToSentInvitations() {
+        sentInvitationsTask?.cancel()
+        sentInvitationsTask = nil
+    }
+    
+    private func startListeningToSentInvitations(){
+        isLoading = true
+        defer { isLoading = false }
+        
+        stopListeningToSentInvitations()
         
         sentInvitationsTask = Task { [weak self] in
             guard let self else { return }
@@ -72,22 +100,45 @@ final class FriendsViewModelTemp: ObservableObject {
         }
     }
     
-    func stopListening() {
+    private func stopListeningToReceivedInvitations() {
         receivedInvitationsTask?.cancel()
-        sentInvitationsTask?.cancel()
-        
         receivedInvitationsTask = nil
-        sentInvitationsTask = nil
+    }
+    
+    private func startListeningToReceivedInvitations(){
+        stopListeningToReceivedInvitations()
+        
+        isLoading = true
+        defer { isLoading = false }
+        
+        receivedInvitationsTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                let stream = listenToReceivedInvitations.stream(for: currentUserId)
+                for try await invitations in stream {
+                    self.receivedInvitations = invitations
+                    self.updateVisibleInvitationType()
+                }
+            } catch {
+                self.error = error.localizedDescription
+            }
+        }
     }
     
     private func updateVisibleInvitationType() {
         switch pickedFriendsListType {
         case .allFriends:
-            self.visibleInvitationType = []
+            visibleInvitationType = []
         case .invitationReceived:
-            self.visibleInvitationType = receivedInvitations
+            visibleInvitationType = receivedInvitations
         case .invitationSent:
-            self.visibleInvitationType = sentInvitations
+            visibleInvitationType = sentInvitations
         }
+    }
+    
+    deinit {
+        friendsTask?.cancel()
+        receivedInvitationsTask?.cancel()
+        sentInvitationsTask?.cancel()
     }
 }

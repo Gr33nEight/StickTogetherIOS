@@ -12,17 +12,17 @@ struct FirestoreDocumentID {
     var value: String
 }
 
-enum FirestoreFilterOperator {
-    case isEqualTo
-    case arrayContains
-    case greaterThan
-    case lessThan
+enum FirestoreFilter {
+    case isEqual(field: FirestoreField, value: FirestoreValue)
+    case arrayContains(field: FirestoreField, value: FirestoreValue)
+    case greaterThan(field: FirestoreField, value: FirestoreValue)
+    case lessThan(field: FirestoreField, value: FirestoreValue)
+    case isIn(field: FirestoreField, values: [FirestoreValue])
 }
 
-struct FirestoreFilter {
-    let field: String
-    let op: FirestoreFilterOperator
-    let value: FirestoreValue
+enum FirestoreField {
+    case field(String)
+    case documentId
 }
 
 enum FirestoreUpdateOperations {
