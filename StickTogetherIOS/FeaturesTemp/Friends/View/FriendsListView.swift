@@ -2,8 +2,9 @@
 //  FriendsListView.swift
 //  StickTogetherIOS
 //
-//  Created by Natanael Jop on 03/11/2025.
+//  Created by Natanael Jop on 19/03/2026.
 //
+
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -160,7 +161,7 @@ extension FriendsListView {
                                         .offset(x: removingStarted ? -65 : 0)
                                     Button {
                                         removingStarted.toggle()
-//                                        Task { await friendsVM.removeFromFriendsList(userId: uid)}
+                                        Task { await viewModel.removeFriend(by: uid) }
                                     } label: {
                                         Image(.trash)
                                             .resizable()
@@ -203,47 +204,19 @@ extension FriendsListView {
                                 ZStack {
                                     if type == .invitationReceived {
                                         InvitationReceivedView(invitation: invitation.invitation, accept: {
-                                            Task {
-//                                                let result = await friendsVM.acceptInvitation(invitation: invitation)
-//                                                if let errorMessage = result.errorMessage {
-//                                                    toastMessage(.failed(errorMessage))
-//                                                }else{
-//                                                   await removeNotification(invitation)
-//                                                }
-                                            }
+                                            Task { await viewModel.acceptInvitation(with: invitation.id) }
                                         }, decline: {
-                                            Task {
-//                                                let result = await friendsVM.declineInvitation(with: invitationId)
-//                                                if let errorMessage = result.errorMessage {
-//                                                    toastMessage(.failed(errorMessage))
-//                                                }else{
-//                                                    await removeNotification(invitation)
-//                                                }
-                                            }
+                                            Task { await viewModel.removeInvitation(with: invitation.id) }
                                         }, friend: invitation.user)
                                     }else{
                                         InvitationSentView(invitation: invitation.invitation, cancel: {
-                                            Task {
-//                                                let result = await friendsVM.cancelInvitation(with: invitationId)
-//                                                if let errorMessage = result.errorMessage {
-//                                                    toastMessage(.failed(errorMessage))
-//                                                }else{
-//                                                    await removeNotification(invitation)
-//                                                }
-                                            }
+                                            Task { await viewModel.removeInvitation(with: invitation.id) }
                                         }, friend: invitation.user)
                                     }
                                 }.offset(x: removingStarted ? -65 : 0)
                                 Button {
                                     removingStarted.toggle()
-                                    Task {
-//                                        let results = await friendsVM.cancelInvitation(with: invitationId)
-//                                        if let errorMessage = results.errorMessage {
-//                                            toastMessage(.failed(errorMessage))
-//                                        }else{
-//                                            await removeNotification(invitation)
-//                                        }
-                                    }
+                                    Task { await viewModel.removeInvitation(with: invitation.id) }
                                 } label: {
                                     Image(.trash)
                                         .resizable()

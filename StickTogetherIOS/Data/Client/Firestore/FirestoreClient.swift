@@ -24,13 +24,13 @@ protocol FirestoreClient {
         for endpoint: E.Type,
         id: FirestoreDocumentID,
         merge: Bool
-    ) throws
+    ) async throws
     
     func setData<E: FirestoreEndpoint>(
         _ dto: E.DTO,
         for endpoint: E.Type,
         id: FirestoreDocumentID,
-    ) throws
+    ) async throws
     
     func updateData<E: FirestoreEndpoint>(
         for endpoint: E.Type,
@@ -52,4 +52,13 @@ protocol FirestoreClient {
         _ endpoint: E.Type,
         id: FirestoreDocumentID
     ) -> AsyncThrowingStream<E.DTO, Error>
+    
+    func create<E: FirestoreEndpoint>(
+        _ dto: E.DTO,
+        for endpoint: E.Type
+    ) async throws -> FirestoreDocumentID
+    
+    func runTransaction(
+        _ block: @escaping (FirestoreTransaction) throws -> Void
+    ) async throws
 }

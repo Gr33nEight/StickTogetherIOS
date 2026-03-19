@@ -36,14 +36,14 @@ final class HabitRepositoryImpl: HabitRepository {
         try await firestoreClient.delete(HabitEndpoint.self, id: FirestoreDocumentID(value: id))
     }
     
-    func updateHabit(_ newValue: Habit) throws {
+    func updateHabit(_ newValue: Habit) async throws {
         let dto = HabitMapper.toDTO(newValue)
         guard let dtoId = dto.id else {
             throw FirestoreError.unknown
         }
         let docId = FirestoreDocumentID(value: dtoId)
         
-        try firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
+        try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
     }
     
     func updateData(with id: String, updates: HabitUpdates) async throws {
@@ -57,13 +57,10 @@ final class HabitRepositoryImpl: HabitRepository {
         try await firestoreClient.updateData(for: HabitEndpoint.self, id: .init(value: id), fields)
     }
     
-    func createHabit(_ habit: Habit) throws {
+    func createHabit(_ habit: Habit) async throws {
         let dto = HabitMapper.toDTO(habit)
-        guard let dtoId = dto.id else {
-            throw FirestoreError.unknown
-        }
-        let docId = FirestoreDocumentID(value: dtoId)
-        try firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: false)
+        let docId = try await firestoreClient.create(dto, for: HabitEndpoint.self)
+        try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: false)
         
     }
     

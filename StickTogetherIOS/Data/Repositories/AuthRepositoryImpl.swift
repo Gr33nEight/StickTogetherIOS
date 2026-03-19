@@ -28,7 +28,7 @@ final class AuthRepositoryImpl: AuthRepository {
             name: email.components(separatedBy: "@").first ?? "User",
             email: email)
         
-        try firestoreClient.setData(newUserDto, for: UserEndpoint.self, id: .init(value: session.uid))
+        try await firestoreClient.setData(newUserDto, for: UserEndpoint.self, id: .init(value: session.uid))
     }
     
     func signOut() throws {

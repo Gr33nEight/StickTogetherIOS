@@ -14,13 +14,15 @@ final class InvitationsRepositoryImpl: InvitationsRepository {
         self.firestoreClient = firestoreClient
     }
     
+    func getInvitation(with id: String) async throws -> Invitation {
+        let doc = try await firestoreClient.fetchDocument(InvitationEndpoint.self, id: FirestoreDocumentID(value: id))
+        return InvitationMapper.toDomain(doc)
+    }
+    
     func sendInvitation(_ invitation: Invitation) async throws {
         let dto = InvitationMapper.toDTO(invitation)
-        guard let dtoId = dto.id else {
-            throw FirestoreError.unknown
-        }
-        let docId = FirestoreDocumentID(value: dtoId)
-        try firestoreClient.setData(dto, for: InvitationEndpoint.self, id: docId, merge: false)
+        let docId = try await firestoreClient.create(dto, for: InvitationEndpoint.self)
+        try await firestoreClient.setData(dto, for: InvitationEndpoint.self, id: docId, merge: false)
     }
     
     func deleteInvitation(byId id: String) async throws {
@@ -37,5 +39,14 @@ final class InvitationsRepositoryImpl: InvitationsRepository {
         let query = FirestoreQuery().isEqual(.field("senderId"), .string(userId))
         let stream = firestoreClient.listen(InvitationEndpoint.self, query: query)
         return InvitationMapper.invitationStream(stream)
+    }
+    
+    func invitationBetween(userA: String, userB: String) async throws -> [Invitation] {
+        let query = FirestoreQuery()
+            .isIn(.field("senderId"), [.string(userA), .string(userB)])
+            .isIn(.field("receiverId"), [.string(userA), .string(userB)])
+        let dtos = try await firestoreClient.fetch(InvitationEndpoint.self, query: query)
+        
+        return dtos.map(InvitationMapper.toDomain(_:))
     }
 }

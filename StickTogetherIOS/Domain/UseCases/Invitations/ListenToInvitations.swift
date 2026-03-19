@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ListenToInvitations {
-    func stream(for id: String) -> AsyncThrowingStream<[Invitation], any Error>
+    func stream(for id: String) -> AsyncThrowingStream<[InvitationWithUser], any Error>
 }

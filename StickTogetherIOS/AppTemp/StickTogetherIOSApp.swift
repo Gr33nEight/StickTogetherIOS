@@ -35,14 +35,14 @@ struct StickTogetherApp: App {
     var body: some Scene {
         WindowGroup {
             container.makeAppEntry()
+                .confirmation()
+                .modal()
+                .customToastMessage()
+                .preferredColorScheme(.dark)
+                .onOpenURL { url in
+                    GIDSignIn.sharedInstance.handle(url)
+                }
 //            AppEntry(di: di)
-//                .confirmation()
-//                .modal()
-//                .customToastMessage()
-//                .preferredColorScheme(.dark)
-//                .onOpenURL { url in
-//                    GIDSignIn.sharedInstance.handle(url)
-//                }
 //                .environmentObject(loading)
 //                .environmentObject(authVM)
 //                .environmentObject(profileVM)

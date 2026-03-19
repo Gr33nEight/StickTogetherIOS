@@ -29,4 +29,18 @@ final class FriendsRepositoryImpl: FriendsRepository {
             ["friendsIds" : FirestoreUpdateOperations.remove([friendId])]
         )
     }
+    
+    func addEachOtherAsFriends(userId: String, friendId: String) async throws {
+        try await firestoreClient.runTransaction { transaction in
+            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: friendId), data: ["friendsIds" : .union([userId])])
+            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: userId), data: ["friendsIds" : .union([friendId])])
+        }
+    }
+    
+    func removeEachOtherFromFriends(userId: String, friendId: String) async throws {
+        try await firestoreClient.runTransaction { transaction in
+            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: friendId), data: ["friendsIds" : .remove([userId])])
+            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: userId), data: ["friendsIds" : .remove([friendId])])
+        }
+    }
 }

@@ -15,19 +15,30 @@ final class AuthenticatedAppContainer {
     }
     
     private lazy var firestoreClient: FirestoreClient = FirestoreClientImpl()
+    private lazy var authClient: AuthClient = AuthClientImpl()
     
     private lazy var habitRepository: HabitRepository = HabitRepositoryImpl(firestoreClient: firestoreClient)
     private lazy var friendsRepository: FriendsRepository = FriendsRepositoryImpl(firestoreClient: firestoreClient)
     private lazy var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
     private lazy var invitationsRepository: InvitationsRepository = InvitationsRepositoryImpl(firestoreClient: firestoreClient)
+    private lazy var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient, firestoreClient: firestoreClient)
 
+    private lazy var signOut: SignOutUseCase = SignOutUseCaseImpl(repository: authRepository)
+    
     private lazy var listenToOwnedHabits: ListenToHabitsUseCase = ListenToOwnedHabitsUseCase(repository: habitRepository)
     private lazy var listenToBuddyHabits: ListenToHabitsUseCase = ListenToBuddyHabitsUseCase(repository: habitRepository)
     private lazy var listenToSharedHabits: ListenToHabitsUseCase = ListenToSharedHabitsUseCase(repository: habitRepository)
     
     private lazy var listenToFriends: ListenToFriendsUseCase = ListenToFriendsUseCaseImpl(repository: userRepository)
-    private lazy var listenToReceivedInvitations: ListenToInvitations = ListenToReceivedInvitationsUseCase(repository: invitationsRepository)
-    private lazy var listenToSentInvitations: ListenToInvitations = ListenToSentInvitationsUseCase(repository: invitationsRepository)
+    private lazy var listenToReceivedInvitations: ListenToInvitations = ListenToReceivedInvitationsUseCase(repository: invitationsRepository, userRepository: userRepository)
+    private lazy var listenToSentInvitations: ListenToInvitations = ListenToSentInvitationsUseCase(repository: invitationsRepository, userRepository: userRepository)
+    private lazy var sendInvitation: SendInvitationUseCase = SendInvitationUseCaseImpl(invitationsRepository: invitationsRepository, userReporitory: userRepository)
+    private lazy var acceptInvitation = AcceptInvitationUseCaseImpl(friendsRepository: friendsRepository, invitationsRepository: invitationsRepository)
+    private lazy var removeInvitation = RemoveInvitationUseCaseImpl(invitationsRepository: invitationsRepository)
+    private lazy var removeFriend = RemoveFriendUseCaseImpl(friendsRepository: friendsRepository)
+    
+    private lazy var getUser: GetUserUseCase = GetUserUseCaseImpl(userRepository: userRepository)
+    private lazy var listenToUser: ListenToUserUseCase = ListenToUserUseCaseImpl(repository: userRepository)
     
     @MainActor
     private func makeHomeViewModel() -> HomeViewModel {
@@ -36,62 +47,26 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     private func makeFriendsViewModel() -> FriendsViewModelTemp {
-        return FriendsViewModelTemp(currentUserId: userId, listenToFriends: listenToFriends, listenToReceivedInvitations: listenToReceivedInvitations, listenToSentInvitations: listenToSentInvitations)
+        return FriendsViewModelTemp(currentUserId: userId, listenToFriends: listenToFriends, listenToReceivedInvitations: listenToReceivedInvitations, listenToSentInvitations: listenToSentInvitations, getUser: getUser, sendInvitation: sendInvitation, acceptInvitation: acceptInvitation, removeInvitation: removeInvitation, removeFriend: removeFriend)
     }
     
-//    @MainActor
-//    private func makeProfileViewModel() -> ProfileViewModel {
-//        return ProfileViewModel()
-//    }
-//    
-//    @MainActor
-//    private func makeNotificationViewModel() -> NotificationViewModel {
-//        return NotificationViewModel()
-//    }
-//    
-//    @MainActor
-//    private func makeCreateHabitViewModel() -> CreateHabitViewModel {
-//        return CreateHabitViewModel()
-//    }
-//    
-//    @MainActor
-//    private func makeHabitViewModel() -> HabitViewModel {
-//        return HabitViewModel()
-//    }
-//    
+    @MainActor
+    private func makeSettingsViewModel() -> SettingsViewModel {
+        return SettingsViewModel(currentUserId: userId, signOut: signOut, listenToUser: listenToUser)
+    }
+    
     @MainActor
     func makeHomeView() -> some View {
         HomeViewTemp(viewModel: self.makeHomeViewModel())
     }
-//        
+    
     @MainActor
     func makeFriendsView() -> some View {
-        FriendsListView(viewModel: self.makeFriendsViewModel())
+        FriendsListView(fullList: true, viewModel: self.makeFriendsViewModel())
     }
     
     @MainActor
     func makeSettingsView() -> some View {
-        SettingsView()
+        SettingsView(viewModel: self.makeSettingsViewModel())
     }
-//
-//    @MainActor
-//    func makeProfileView() -> some View {
-//        return ProfileView(viewModel: self.makeProfileViewModel())
-//    }
-//    
-//    @MainActor
-//    func makeNotificationView() -> some View {
-//        return NotificationView(viewModel: self.makeNotificationViewModel())
-//    }
-//    
-//    @MainActor
-//    func makeCreateHabitView() -> some View {
-//        return CreateHabitView(viewModel: self.makeCreateHabitViewModel())
-//    }
-//    
-//    @MainActor
-//    func makeHabitView() -> some View {
-//        return HabitView(viewModel: self.makeHabitViewModel())
-//    }
-
 }

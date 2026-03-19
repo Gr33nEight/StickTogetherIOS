@@ -38,12 +38,12 @@ final class FirestoreClientImpl: FirestoreClient {
         return try await db.collection(endpoint.path).document(id.value).getDocument().data(as: E.DTO.self)
     }
     
-     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) throws where E : FirestoreEndpoint {
+     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
             let doc = db.collection(endpoint.path).document(id.value)
             try doc.setData(from: dto, merge: merge)
     }
 
-    func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) throws where E : FirestoreEndpoint {
+    func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
            let doc = db.collection(endpoint.path).document(id.value)
            try doc.setData(from: dto)
     }
@@ -116,6 +116,39 @@ final class FirestoreClientImpl: FirestoreClient {
             }
             continuation.onTermination = { @Sendable _ in
                 listener.remove()
+            }
+        }
+    }
+    
+    func create<E: FirestoreEndpoint>(
+        _ dto: E.DTO,
+        for endpoint: E.Type
+    ) async throws -> FirestoreDocumentID {
+        
+        let ref = db.collection(endpoint.path).document()
+        try ref.setData(from: dto)
+        
+        return FirestoreDocumentID(value: ref.documentID)
+    }
+    
+    func runTransaction(_ block: @escaping (any FirestoreTransaction) throws -> Void) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            db.runTransaction({ [weak self] transaction, errorPointer -> Any? in
+                guard let self else { return }
+                let wrapper = FirestoreTransactionImpl(transaction: transaction, db: self.db)
+                do {
+                    try block(wrapper)
+                    return nil
+                } catch {
+                    errorPointer?.pointee = error as NSError
+                    return nil
+                }
+            }) { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
             }
         }
     }

@@ -9,15 +9,19 @@ import SwiftUI
 
 @MainActor
 final class FriendsViewModelTemp: ObservableObject {
-    @Published var pickedFriendsListType: FriendsListType = .allFriends
-
-    @Published private(set) var visibleFriends: [User] = []
-    @Published private(set) var visibleInvitationType: [Invitation] = []
-    @Published private(set) var isLoading = false
-    @Published private(set) var error: String?
+    @Published var pickedFriendsListType: FriendsListType = .allFriends {
+        didSet {
+            updateVisibleInvitationType()
+        }
+    }
+    @Published var event: FriendsViewEvent?
     
-    private var receivedInvitations: [Invitation] = []
-    private var sentInvitations: [Invitation] = []
+    @Published private(set) var visibleFriends: [User] = []
+    @Published private(set) var visibleInvitationType: [InvitationWithUser] = []
+    @Published private(set) var isLoading = false
+    
+    private var receivedInvitations: [InvitationWithUser] = []
+    private var sentInvitations: [InvitationWithUser] = []
     
     private var friendsTask: Task<Void, Never>?
     private var receivedInvitationsTask: Task<Void, Never>?
@@ -27,17 +31,32 @@ final class FriendsViewModelTemp: ObservableObject {
     private let listenToFriends: ListenToFriendsUseCase
     private let listenToReceivedInvitations: ListenToInvitations
     private let listenToSentInvitations: ListenToInvitations
+    private let getUser: GetUserUseCase
+    private let sendInvitation: SendInvitationUseCase
+    private let acceptInvitation: AcceptInvitationUseCase
+    private let removeInvitation: RemoveInvitationUseCase
+    private let removeFriend: RemoveFriendUseCase
     
     init(
         currentUserId: String,
         listenToFriends: ListenToFriendsUseCase,
         listenToReceivedInvitations: ListenToInvitations,
-        listenToSentInvitations: ListenToInvitations
+        listenToSentInvitations: ListenToInvitations,
+        getUser: GetUserUseCase,
+        sendInvitation: SendInvitationUseCase,
+        acceptInvitation: AcceptInvitationUseCase,
+        removeInvitation: RemoveInvitationUseCase,
+        removeFriend: RemoveFriendUseCase
     ) {
         self.currentUserId = currentUserId
         self.listenToFriends = listenToFriends
         self.listenToReceivedInvitations = listenToReceivedInvitations
         self.listenToSentInvitations = listenToSentInvitations
+        self.getUser = getUser
+        self.sendInvitation = sendInvitation
+        self.acceptInvitation = acceptInvitation
+        self.removeInvitation = removeInvitation
+        self.removeFriend = removeFriend
     }
     
     func startListening() {
@@ -50,6 +69,79 @@ final class FriendsViewModelTemp: ObservableObject {
         stopListeningToFriends()
         stopListeningToSentInvitations()
         stopListeningToReceivedInvitations()
+    }
+    
+    func handleInviteTap(
+        invitedBuddy: User?,
+        fullList: Bool,
+        onDismiss: ((User) -> Void)?
+    ) {
+        if let buddy = invitedBuddy,
+           let onDismiss = onDismiss {
+            onDismiss(buddy)
+            event = .dimsiss
+            return
+        }
+        
+        if invitedBuddy == nil || fullList {
+            event = .showInviteModal
+        }
+        
+    }
+    
+    func handleInvite(to userEmail: String) async {
+        if visibleFriends.contains(where: {$0.email == userEmail}) {
+            event = .showToastMessage(.info("This user is already your friend!"))
+            return
+        }
+        do {
+            try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            event = .closeModal
+            // sendAppNotification
+        } catch let error as InvitationError {
+            handleInvitationError(error)
+        } catch {
+            event = .showToastMessage(.failed("Something went wrong"))
+        }
+    }
+    
+    func acceptInvitation(with invitationId: String) async {
+        do {
+            try await acceptInvitation.execute(invitationId: invitationId)
+            self.updateVisibleInvitationType()
+        } catch {
+            event = .showToastMessage(.failed("Something went wrong"))
+        }
+    }
+
+    func removeInvitation(with invitationId: String) async {
+        do {
+            try await removeInvitation.execute(invitationId: invitationId)
+            self.updateVisibleInvitationType()
+        } catch {
+            event = .showToastMessage(.failed("Something went wrong"))
+        }
+    }
+    
+    func removeFriend(by userId: String) async {
+        do {
+            try await removeFriend.execute(userId: currentUserId, friendId: userId)
+        } catch {
+            event = .showToastMessage(.failed("Something went wrong"))
+        }
+    }
+    
+    private func handleInvitationError(_ error: InvitationError) {
+        switch error {
+        case .userNotFound:
+            event = .showToastMessage(.failed("Couldn't find user"))
+        case .cannotInviteYourself:
+            event = .showToastMessage(.info("You can't invite yourself"))
+        case .invitationAlreadySent:
+            event = .showToastMessage(.failed("Invitation already sent"))
+        case .invitationAlreadyReceived:
+            event = .showToastMessage(.failed("Invitation already received"))
+        }
     }
     
     private func stopListeningToFriends() {
@@ -70,7 +162,7 @@ final class FriendsViewModelTemp: ObservableObject {
                     self.visibleFriends = friends
                 }
             } catch {
-                self.error = error.localizedDescription
+                event = .showToastMessage(.failed("Failed to fetch friends."))
             }
         }
     }
@@ -81,10 +173,9 @@ final class FriendsViewModelTemp: ObservableObject {
     }
     
     private func startListeningToSentInvitations(){
+        stopListeningToSentInvitations()
         isLoading = true
         defer { isLoading = false }
-        
-        stopListeningToSentInvitations()
         
         sentInvitationsTask = Task { [weak self] in
             guard let self else { return }
@@ -92,10 +183,9 @@ final class FriendsViewModelTemp: ObservableObject {
                 let stream = listenToSentInvitations.stream(for: currentUserId)
                 for try await invitations in stream {
                     self.sentInvitations = invitations
-                    self.updateVisibleInvitationType()
                 }
             } catch {
-                self.error = error.localizedDescription
+                event = .showToastMessage(.failed("Failed to fetch sent invitations."))
             }
         }
     }
@@ -117,18 +207,17 @@ final class FriendsViewModelTemp: ObservableObject {
                 let stream = listenToReceivedInvitations.stream(for: currentUserId)
                 for try await invitations in stream {
                     self.receivedInvitations = invitations
-                    self.updateVisibleInvitationType()
                 }
             } catch {
-                self.error = error.localizedDescription
+                event = .showToastMessage(.failed("Failed to fetch received invitations."))
             }
         }
     }
     
-    private func updateVisibleInvitationType() {
+    func updateVisibleInvitationType() {
         switch pickedFriendsListType {
         case .allFriends:
-            visibleInvitationType = []
+            return
         case .invitationReceived:
             visibleInvitationType = receivedInvitations
         case .invitationSent:
@@ -137,6 +226,7 @@ final class FriendsViewModelTemp: ObservableObject {
     }
     
     deinit {
+        print("FriendsViewModel deinited")
         friendsTask?.cancel()
         receivedInvitationsTask?.cancel()
         sentInvitationsTask?.cancel()

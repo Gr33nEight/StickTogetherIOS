@@ -1,11 +1,10 @@
 //
-//  ListenToFriendsUseCase.swift
+//  ListenToUserUseCase.swift
 //  StickTogetherIOS
 //
-//  Created by Natanael Jop on 17/03/2026.
+//  Created by Natanael Jop on 19/03/2026.
 //
 
-import Foundation
 
 protocol ListenToFriendsUseCase {
     func stream(for userId: String) -> AsyncThrowingStream<[User], any Error>

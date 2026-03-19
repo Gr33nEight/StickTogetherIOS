@@ -9,7 +9,6 @@ import SwiftUI
 import ElegantEmojiPicker
 
 struct CreateHabitView: View {
-    @EnvironmentObject var friendsVM: FriendsViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
     @EnvironmentObject var habitVM: HabitViewModel
