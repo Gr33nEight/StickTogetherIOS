@@ -187,7 +187,7 @@ extension FriendsListView {
     @ViewBuilder
     func invitationList(_ type: FriendsListType) -> some View {
         ZStack {
-            if viewModel.visibleInvitationType.isEmpty {
+            if viewModel.visibleInvitations.isEmpty {
                 VStack {
                     Spacer()
                     Text("You don't have any\n\(type == .invitationReceived ? "invitations" : "sent invitations") yet.")
@@ -199,7 +199,7 @@ extension FriendsListView {
             } else {
                 ScrollView {
                     VStack {
-                        ForEach(viewModel.visibleInvitationType) { invitation in
+                        ForEach(viewModel.visibleInvitations) { invitation in
                             ZStack(alignment: .trailing) {
                                 ZStack {
                                     if type == .invitationReceived {

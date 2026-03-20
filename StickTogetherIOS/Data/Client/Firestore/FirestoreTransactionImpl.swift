@@ -8,22 +8,22 @@
 import Foundation
 import FirebaseFirestore
 
-final class FirestoreTransactionImpl: FirestoreTransaction {
-    private let transaction: FirebaseFirestore.Transaction
+final class FirestoreTransactionClientImpl: FirestoreTransactionClient {
     private let db: Firestore
     
-    init(transaction: FirebaseFirestore.Transaction, db: Firestore) {
-        self.transaction = transaction
+    init(db: Firestore = Firestore.firestore()) {
         self.db = db
     }
     
-    func update<E>(_ endpoint: E.Type, id: FirestoreDocumentID, data: [String : FirestoreUpdateOperations]) throws where E : FirestoreEndpoint {
+    func update<E>(_ endpoint: E.Type, id: FirestoreDocumentID, data: [String : FirestoreUpdateOperations], transactionContext: TransactionContext) throws where E : FirestoreEndpoint {
         let ref = db.collection(endpoint.path).document(id.value)
-        transaction.updateData(FirestoreUpdateOperationsMapper.toUpdateData(data), forDocument: ref)
+        let data = FirestoreUpdateOperationsMapper.toUpdateData(data)
+        
+        transactionContext.transaction.updateData(data, forDocument: ref)
     }
     
-    func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID) throws where E : FirestoreEndpoint {
+    func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID, transactionContext: TransactionContext) throws where E : FirestoreEndpoint {
         let ref = db.collection(endpoint.path).document(id.value)
-        transaction.deleteDocument(ref)
+        transactionContext.transaction.deleteDocument(ref)
     }
 }

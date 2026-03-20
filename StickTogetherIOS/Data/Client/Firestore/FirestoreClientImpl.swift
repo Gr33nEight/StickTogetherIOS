@@ -8,7 +8,11 @@ import FirebaseFirestore
 import Foundation
 
 final class FirestoreClientImpl: FirestoreClient {
-    private let db = Firestore.firestore()
+    private let db: Firestore
+    
+    init(db: Firestore = Firestore.firestore()) {
+        self.db = db
+    }
     
     func fetch<E>(
         _ endpoint: E.Type,
@@ -29,8 +33,8 @@ final class FirestoreClientImpl: FirestoreClient {
         }
         
         let snapshot = try await ref.getDocuments()
-        return snapshot.documents.compactMap {
-            try? $0.data(as: E.DTO.self)
+        return try snapshot.documents.compactMap {
+            try $0.data(as: E.DTO.self)
         }
     }
     
@@ -38,37 +42,46 @@ final class FirestoreClientImpl: FirestoreClient {
         return try await db.collection(endpoint.path).document(id.value).getDocument().data(as: E.DTO.self)
     }
     
-     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
-            let doc = db.collection(endpoint.path).document(id.value)
-            try doc.setData(from: dto, merge: merge)
+    func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
+        let doc = db.collection(endpoint.path).document(id.value)
+        try doc.setData(from: dto, merge: merge)
     }
-
+    
+    func setDataAsync<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
+        let doc = db.collection(endpoint.path).document(id.value)
+        try doc.setData(from: dto, merge: merge)
+    }
+    
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
-           let doc = db.collection(endpoint.path).document(id.value)
-           try doc.setData(from: dto)
+        let doc = db.collection(endpoint.path).document(id.value)
+        try doc.setData(from: dto)
     }
     
     func updateData<E>(for endpoint: E.Type, id: FirestoreDocumentID, _ fields: [String : FirestoreUpdateOperations]) async throws where E : FirestoreEndpoint {
-        try await db.collection(endpoint.path).document(id.value).updateData(FirestoreUpdateOperationsMapper.toUpdateData(fields))
+        let ref = db.collection(endpoint.path).document(id.value)
+        let data = FirestoreUpdateOperationsMapper.toUpdateData(fields)
+        
+        try await ref.updateData(data)
     }
     
     
     func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
-        try await db.collection(endpoint.path).document(id.value).delete()
+        let ref = db.collection(endpoint.path).document(id.value)
+        try await ref.delete()
     }
     
     func listen<E>(_ endpoint: E.Type, query: FirestoreQuery) -> AsyncThrowingStream<[E.DTO], any Error> where E : FirestoreEndpoint {
         AsyncThrowingStream { continuation in
             var ref: Query = db.collection(endpoint.path)
-
+            
             for filter in query.filters {
                 ref = applyFilter(ref, filter: filter)
             }
-
+            
             if let order = query.order {
                 ref = ref.order(by: order.field, descending: order.descending)
             }
-
+            
             if let limit = query.limit {
                 ref = ref.limit(to: limit)
             }
@@ -88,6 +101,7 @@ final class FirestoreClientImpl: FirestoreClient {
                     continuation.yield(data)
                 } catch {
                     continuation.finish(throwing: error)
+                    return
                 }
             }
             
@@ -112,6 +126,7 @@ final class FirestoreClientImpl: FirestoreClient {
                     continuation.yield(data)
                 } catch {
                     continuation.finish(throwing: error)
+                    return
                 }
             }
             continuation.onTermination = { @Sendable _ in
@@ -131,13 +146,12 @@ final class FirestoreClientImpl: FirestoreClient {
         return FirestoreDocumentID(value: ref.documentID)
     }
     
-    func runTransaction(_ block: @escaping (any FirestoreTransaction) throws -> Void) async throws {
+    func runTransaction(_ block: @escaping (TransactionContext) throws -> Void) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            db.runTransaction({ [weak self] transaction, errorPointer -> Any? in
-                guard let self else { return }
-                let wrapper = FirestoreTransactionImpl(transaction: transaction, db: self.db)
+            db.runTransaction({ transaction, errorPointer -> Any? in
+                let context = TransactionContext(transaction: transaction)
                 do {
-                    try block(wrapper)
+                    try block(context)
                     return nil
                 } catch {
                     errorPointer?.pointee = error as NSError
@@ -157,9 +171,9 @@ final class FirestoreClientImpl: FirestoreClient {
         _ ref: Query,
         filter: FirestoreFilter
     ) -> Query {
-
+        
         switch filter {
-
+            
         case .isEqual(let field, let value):
             return apply(
                 ref,
@@ -167,7 +181,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 stringBlock: { $0.whereField($1, isEqualTo: value.raw) },
                 documentIdBlock: { $0.whereField($1, isEqualTo: value.raw) }
             )
-
+            
         case .arrayContains(let field, let value):
             return apply(
                 ref,
@@ -175,7 +189,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 stringBlock: { $0.whereField($1, arrayContains: value.raw) },
                 documentIdBlock: { $0.whereField($1, arrayContains: value.raw) }
             )
-
+            
         case .greaterThan(let field, let value):
             return apply(
                 ref,
@@ -183,7 +197,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 stringBlock: { $0.whereField($1, isGreaterThan: value.raw) },
                 documentIdBlock: { $0.whereField($1, isGreaterThan: value.raw) }
             )
-
+            
         case .lessThan(let field, let value):
             return apply(
                 ref,
@@ -191,10 +205,10 @@ final class FirestoreClientImpl: FirestoreClient {
                 stringBlock: { $0.whereField($1, isLessThan: value.raw) },
                 documentIdBlock: { $0.whereField($1, isLessThan: value.raw) }
             )
-
+            
         case .isIn(let field, let values):
             let rawValues = values.map { $0.raw }
-
+            
             return apply(
                 ref,
                 field: field,
@@ -210,11 +224,11 @@ final class FirestoreClientImpl: FirestoreClient {
         stringBlock: (Query, String) -> Query,
         documentIdBlock: (Query, FieldPath) -> Query
     ) -> Query {
-
+        
         switch field {
         case .field(let name):
             return stringBlock(ref, name)
-
+            
         case .documentId:
             return documentIdBlock(ref, FieldPath.documentID())
         }

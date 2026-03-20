@@ -9,9 +9,11 @@ import Foundation
 
 final class FriendsRepositoryImpl: FriendsRepository {
     private let firestoreClient: FirestoreClient
+    private let firestoreTransactionClient: FirestoreTransactionClient
     
-    init(firestoreClient: FirestoreClient) {
+    init(firestoreClient: FirestoreClient, firestoreTransactionClient: FirestoreTransactionClient) {
         self.firestoreClient = firestoreClient
+        self.firestoreTransactionClient = firestoreTransactionClient
     }
     
     func addToFriendsList(userId: String, friendId: String) async throws {
@@ -22,6 +24,16 @@ final class FriendsRepositoryImpl: FriendsRepository {
         )
     }
     
+    func addToFriendsList(transactionContext: TransactionContext, userId: String, friendId: String) throws {
+        try firestoreTransactionClient.update(
+            UserEndpoint.self,
+            id: FirestoreDocumentID(value: userId),
+            data: ["friendsIds" : FirestoreUpdateOperations.union([friendId])],
+            transactionContext: transactionContext
+        )
+    }
+    
+    
     func removeFromFriendsList(userId: String, friendId: String) async throws {
         try await firestoreClient.updateData(
             for: UserEndpoint.self,
@@ -30,17 +42,12 @@ final class FriendsRepositoryImpl: FriendsRepository {
         )
     }
     
-    func addEachOtherAsFriends(userId: String, friendId: String) async throws {
-        try await firestoreClient.runTransaction { transaction in
-            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: friendId), data: ["friendsIds" : .union([userId])])
-            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: userId), data: ["friendsIds" : .union([friendId])])
-        }
-    }
-    
-    func removeEachOtherFromFriends(userId: String, friendId: String) async throws {
-        try await firestoreClient.runTransaction { transaction in
-            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: friendId), data: ["friendsIds" : .remove([userId])])
-            try transaction.update(UserEndpoint.self, id: FirestoreDocumentID(value: userId), data: ["friendsIds" : .remove([friendId])])
-        }
+    func removeFromFriendsList(transactionContext: TransactionContext, userId: String, friendId: String) throws {
+        try firestoreTransactionClient.update(
+            UserEndpoint.self,
+            id: FirestoreDocumentID(value: userId),
+            data: ["friendsIds" : FirestoreUpdateOperations.remove([friendId])],
+            transactionContext: transactionContext
+        )
     }
 }

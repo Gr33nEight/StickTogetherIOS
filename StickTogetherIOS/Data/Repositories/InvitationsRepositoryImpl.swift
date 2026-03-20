@@ -9,9 +9,11 @@ import Foundation
 
 final class InvitationsRepositoryImpl: InvitationsRepository {
     private let firestoreClient: FirestoreClient
+    private let firestoreTransactionClient: FirestoreTransactionClient
     
-    init(firestoreClient: FirestoreClient) {
+    init(firestoreClient: FirestoreClient, firestoreTransactionClient: FirestoreTransactionClient) {
         self.firestoreClient = firestoreClient
+        self.firestoreTransactionClient = firestoreTransactionClient
     }
     
     func getInvitation(with id: String) async throws -> Invitation {
@@ -27,6 +29,10 @@ final class InvitationsRepositoryImpl: InvitationsRepository {
     
     func deleteInvitation(byId id: String) async throws {
         try await firestoreClient.delete(InvitationEndpoint.self, id: FirestoreDocumentID(value: id))
+    }
+    
+    func deleteInvitation(transactionContext: TransactionContext, byId id: String) throws {
+        try firestoreTransactionClient.delete(InvitationEndpoint.self, id: FirestoreDocumentID(value: id), transactionContext: transactionContext)
     }
     
     func listenToReceivedInvitations(for userId: String) -> AsyncThrowingStream<[Invitation], any Error> {

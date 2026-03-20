@@ -9,19 +9,14 @@ import SwiftUI
 
 @MainActor
 final class FriendsViewModelTemp: ObservableObject {
-    @Published var pickedFriendsListType: FriendsListType = .allFriends {
-        didSet {
-            updateVisibleInvitationType()
-        }
-    }
+    @Published var pickedFriendsListType: FriendsListType = .allFriends
     @Published var event: FriendsViewEvent?
     
     @Published private(set) var visibleFriends: [User] = []
-    @Published private(set) var visibleInvitationType: [InvitationWithUser] = []
     @Published private(set) var isLoading = false
-    
-    private var receivedInvitations: [InvitationWithUser] = []
-    private var sentInvitations: [InvitationWithUser] = []
+
+    @Published private var receivedInvitations: [InvitationWithUser] = []
+    @Published private var sentInvitations: [InvitationWithUser] = []
     
     private var friendsTask: Task<Void, Never>?
     private var receivedInvitationsTask: Task<Void, Never>?
@@ -36,6 +31,18 @@ final class FriendsViewModelTemp: ObservableObject {
     private let acceptInvitation: AcceptInvitationUseCase
     private let removeInvitation: RemoveInvitationUseCase
     private let removeFriend: RemoveFriendUseCase
+    private let sendNotification: SendNotificationUseCase
+    
+    var visibleInvitations: [InvitationWithUser] {
+        switch pickedFriendsListType {
+        case .invitationReceived:
+            return receivedInvitations
+        case .invitationSent:
+            return sentInvitations
+        case .allFriends:
+            return []
+        }
+    }
     
     init(
         currentUserId: String,
@@ -46,7 +53,8 @@ final class FriendsViewModelTemp: ObservableObject {
         sendInvitation: SendInvitationUseCase,
         acceptInvitation: AcceptInvitationUseCase,
         removeInvitation: RemoveInvitationUseCase,
-        removeFriend: RemoveFriendUseCase
+        removeFriend: RemoveFriendUseCase,
+        sendNotification: SendNotificationUseCase
     ) {
         self.currentUserId = currentUserId
         self.listenToFriends = listenToFriends
@@ -57,6 +65,7 @@ final class FriendsViewModelTemp: ObservableObject {
         self.acceptInvitation = acceptInvitation
         self.removeInvitation = removeInvitation
         self.removeFriend = removeFriend
+        self.sendNotification = sendNotification
     }
     
     func startListening() {
@@ -108,7 +117,6 @@ final class FriendsViewModelTemp: ObservableObject {
     func acceptInvitation(with invitationId: String) async {
         do {
             try await acceptInvitation.execute(invitationId: invitationId)
-            self.updateVisibleInvitationType()
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -117,7 +125,6 @@ final class FriendsViewModelTemp: ObservableObject {
     func removeInvitation(with invitationId: String) async {
         do {
             try await removeInvitation.execute(invitationId: invitationId)
-            self.updateVisibleInvitationType()
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -126,6 +133,14 @@ final class FriendsViewModelTemp: ObservableObject {
     func removeFriend(by userId: String) async {
         do {
             try await removeFriend.execute(userId: currentUserId, friendId: userId)
+        } catch {
+            event = .showToastMessage(.failed("Something went wrong"))
+        }
+    }
+    
+    func sendNotification(toUserWith email: String) async {
+        do {
+            try await sendNotification.executeForUserWith(email: email)
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -211,17 +226,6 @@ final class FriendsViewModelTemp: ObservableObject {
             } catch {
                 event = .showToastMessage(.failed("Failed to fetch received invitations."))
             }
-        }
-    }
-    
-    func updateVisibleInvitationType() {
-        switch pickedFriendsListType {
-        case .allFriends:
-            return
-        case .invitationReceived:
-            visibleInvitationType = receivedInvitations
-        case .invitationSent:
-            visibleInvitationType = sentInvitations
         }
     }
     

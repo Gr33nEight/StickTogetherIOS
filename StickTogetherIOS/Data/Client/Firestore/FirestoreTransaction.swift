@@ -7,15 +7,17 @@
 
 import Foundation
 
-protocol FirestoreTransaction {
+protocol FirestoreTransactionClient {
     func update<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         id: FirestoreDocumentID,
-        data: [String: FirestoreUpdateOperations]
+        data: [String: FirestoreUpdateOperations],
+        transactionContext: TransactionContext
     ) throws
     
     func delete<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
-        id: FirestoreDocumentID
+        id: FirestoreDocumentID,
+        transactionContext: TransactionContext
     ) throws
 }

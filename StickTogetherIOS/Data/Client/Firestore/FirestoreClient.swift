@@ -59,6 +59,6 @@ protocol FirestoreClient {
     ) async throws -> FirestoreDocumentID
     
     func runTransaction(
-        _ block: @escaping (FirestoreTransaction) throws -> Void
+        _ block: @escaping (TransactionContext) throws -> Void
     ) async throws
 }

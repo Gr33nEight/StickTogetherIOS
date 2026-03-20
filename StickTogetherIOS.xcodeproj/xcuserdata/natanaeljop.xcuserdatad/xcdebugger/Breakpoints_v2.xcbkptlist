@@ -110,8 +110,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
             landmarkName = "startListeningToReceivedInvitations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "startListeningToReceivedInvitations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
             landmarkName = "handleInvite(to:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "startListeningToSentInvitations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "startListeningToReceivedInvitations()"
             landmarkType = "7">
          </BreakpointContent>
@@ -286,8 +286,8 @@
             filePath = "StickTogetherIOS/FeaturesTemp/Friends/FriendsViewModelTemp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "startListeningToReceivedInvitations()"
             landmarkType = "7">
          </BreakpointContent>
