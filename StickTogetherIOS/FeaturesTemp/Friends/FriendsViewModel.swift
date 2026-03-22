@@ -8,13 +8,14 @@
 import SwiftUI
 
 @MainActor
-final class FriendsViewModelTemp: ObservableObject {
+final class FriendsViewModel: ObservableObject {
     @Published var pickedFriendsListType: FriendsListType = .allFriends
     @Published var event: FriendsViewEvent?
     
     @Published private(set) var visibleFriends: [User] = []
     @Published private(set) var isLoading = false
-
+    @Published private(set) var friendRequestNotifications = [Notification]()
+    
     @Published private var receivedInvitations: [InvitationWithUser] = []
     @Published private var sentInvitations: [InvitationWithUser] = []
     
@@ -30,8 +31,8 @@ final class FriendsViewModelTemp: ObservableObject {
     private let sendInvitation: SendInvitationUseCase
     private let acceptInvitation: AcceptInvitationUseCase
     private let removeInvitation: RemoveInvitationUseCase
+    private let declineInvitation: DeclineInvitationUseCase
     private let removeFriend: RemoveFriendUseCase
-    private let sendNotification: SendNotificationUseCase
     
     var visibleInvitations: [InvitationWithUser] {
         switch pickedFriendsListType {
@@ -44,6 +45,10 @@ final class FriendsViewModelTemp: ObservableObject {
         }
     }
     
+    var numberOfReceivedInvitations: Int {
+        receivedInvitations.count
+    }
+    
     init(
         currentUserId: String,
         listenToFriends: ListenToFriendsUseCase,
@@ -53,8 +58,8 @@ final class FriendsViewModelTemp: ObservableObject {
         sendInvitation: SendInvitationUseCase,
         acceptInvitation: AcceptInvitationUseCase,
         removeInvitation: RemoveInvitationUseCase,
-        removeFriend: RemoveFriendUseCase,
-        sendNotification: SendNotificationUseCase
+        declineInvitation: DeclineInvitationUseCase,
+        removeFriend: RemoveFriendUseCase
     ) {
         self.currentUserId = currentUserId
         self.listenToFriends = listenToFriends
@@ -64,8 +69,8 @@ final class FriendsViewModelTemp: ObservableObject {
         self.sendInvitation = sendInvitation
         self.acceptInvitation = acceptInvitation
         self.removeInvitation = removeInvitation
+        self.declineInvitation = declineInvitation
         self.removeFriend = removeFriend
-        self.sendNotification = sendNotification
     }
     
     func startListening() {
@@ -105,8 +110,8 @@ final class FriendsViewModelTemp: ObservableObject {
         }
         do {
             try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            // sendNotification
             event = .closeModal
-            // sendAppNotification
         } catch let error as InvitationError {
             handleInvitationError(error)
         } catch {
@@ -130,17 +135,17 @@ final class FriendsViewModelTemp: ObservableObject {
         }
     }
     
-    func removeFriend(by userId: String) async {
+    func declineInvitation(with invitationId: String) async {
         do {
-            try await removeFriend.execute(userId: currentUserId, friendId: userId)
+            try await declineInvitation.execute(invitationId: invitationId)
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
     }
     
-    func sendNotification(toUserWith email: String) async {
+    func removeFriend(by userId: String) async {
         do {
-            try await sendNotification.executeForUserWith(email: email)
+            try await removeFriend.execute(userId: currentUserId, friendId: userId)
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }

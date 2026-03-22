@@ -55,7 +55,7 @@ final class AuthenticatedAppContainer {
         )
 
     private lazy var notificationsRepository: NotificationsRepository =
-        NotificationsRepositoryImpl()
+        NotificationsRepositoryImpl(firestoreClient: firestoreClient, transactionClient: firestoreTransactionClient)
 
     // MARK: - UseCases (Auth)
 
@@ -93,21 +93,32 @@ final class AuthenticatedAppContainer {
     private lazy var sendInvitation: SendInvitationUseCase =
         SendInvitationUseCaseImpl(
             invitationsRepository: invitationsRepository,
-            userReporitory: userRepository
+            userReporitory: userRepository,
+            notificationsRepository: notificationsRepository
         )
 
     private lazy var acceptInvitation: AcceptInvitationUseCase =
         AcceptInvitationUseCaseImpl(
             transactionFactory: transactionFactory,
             invitationsRepository: invitationsRepository,
-            friendsRepository: friendsRepository
+            friendsRepository: friendsRepository,
+            notificationsRepository: notificationsRepository
         )
 
     private lazy var removeInvitation: RemoveInvitationUseCase =
         RemoveInvitationUseCaseImpl(
-            invitationsRepository: invitationsRepository
+            invitationsRepository: invitationsRepository,
+            notificationsRepository: notificationsRepository,
+            transactionFactory: transactionFactory
         )
 
+    private lazy var declineInvitation: DeclineInvitationUseCase =
+        DeclineInvitationUseCaseImpl(
+            invitationsRepository: invitationsRepository,
+            notificationsRepository: notificationsRepository,
+            transactionFactory: transactionFactory
+        )
+    
     private lazy var removeFriend: RemoveFriendUseCase =
         RemoveFriendUseCaseImpl(
             transactionFactory: transactionFactory,
@@ -123,12 +134,7 @@ final class AuthenticatedAppContainer {
         ListenToUserUseCaseImpl(repository: userRepository)
 
     // MARK: - UseCases (Notifications)
-
-    private lazy var sendNotification: SendNotificationUseCase =
-        SendNotificationUseCaseImpl(
-            notificationsRepository: notificationsRepository
-        )
-
+    
     // MARK: - ViewModels
 
     @MainActor
@@ -142,8 +148,8 @@ final class AuthenticatedAppContainer {
     }
     
     @MainActor
-    private func makeFriendsViewModel() -> FriendsViewModelTemp {
-        FriendsViewModelTemp(
+    private func makeFriendsViewModel() -> FriendsViewModel {
+        FriendsViewModel(
             currentUserId: userId,
             listenToFriends: listenToFriends,
             listenToReceivedInvitations: listenToReceivedInvitations,
@@ -152,8 +158,8 @@ final class AuthenticatedAppContainer {
             sendInvitation: sendInvitation,
             acceptInvitation: acceptInvitation,
             removeInvitation: removeInvitation,
-            removeFriend: removeFriend,
-            sendNotification: sendNotification
+            declineInvitation: declineInvitation,
+            removeFriend: removeFriend
         )
     }
     

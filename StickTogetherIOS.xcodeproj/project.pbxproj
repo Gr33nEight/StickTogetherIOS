@@ -110,6 +110,7 @@
 		3CD4AA342F155763001F763E /* FriendsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AA332F155763001F763E /* FriendsViewModelTests.swift */; };
 		3CD4AA362F1BA303001F763E /* HabitViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AA352F1BA303001F763E /* HabitViewModelTests.swift */; };
 		3CE1A03B2F69A6250036330E /* InvitationWithUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */; };
+		3CE1A0892F6EB0320036330E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1A0882F6EB0320036330E /* Notification.swift */; };
 		3CFF85352EE2090400171172 /* AppNotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85342EE2090400171172 /* AppNotificationsViewModel.swift */; };
 		3CFF85382EE2097B00171172 /* AppNotificationsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85372EE2097B00171172 /* AppNotificationsServiceProtocol.swift */; };
 		3CFF853A2EE20F2800171172 /* FirebaseAppNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */; };
@@ -245,6 +246,7 @@
 		3CD4AA332F155763001F763E /* FriendsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModelTests.swift; sourceTree = "<group>"; };
 		3CD4AA352F1BA303001F763E /* HabitViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModelTests.swift; sourceTree = "<group>"; };
 		3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationWithUser.swift; sourceTree = "<group>"; };
+		3CE1A0882F6EB0320036330E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3CFF85342EE2090400171172 /* AppNotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationsViewModel.swift; sourceTree = "<group>"; };
 		3CFF85372EE2097B00171172 /* AppNotificationsServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationsServiceProtocol.swift; sourceTree = "<group>"; };
 		3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAppNotificationService.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 				3CB5042A2EB232F6004AF0A9 /* User.swift */,
 				3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */,
 				3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */,
+				3CE1A0882F6EB0320036330E /* Notification.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -954,6 +957,7 @@
 				3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */,
 				3C6687F22EB4EA6900DE45E8 /* ToastDelegator.swift in Sources */,
 				3C6687F32EB4EA6900DE45E8 /* ToastMessageService.swift in Sources */,
+				3CE1A0892F6EB0320036330E /* Notification.swift in Sources */,
 				3C5C13822EC342B200693ED0 /* NotificationManager.swift in Sources */,
 				3C6687F42EB4EA6900DE45E8 /* ToastMessage.swift in Sources */,
 				3C6687F52EB4EA6900DE45E8 /* ToastMessageView.swift in Sources */,

@@ -13,7 +13,7 @@ import UniformTypeIdentifiers
 struct FriendsListView: View {
     var fullList: Bool
     
-    @StateObject var viewModel: FriendsViewModelTemp
+    @StateObject var viewModel: FriendsViewModel
     
     @State var invitedBuddy: User? = nil
     @Namespace var friendsListAnimation
@@ -48,8 +48,7 @@ struct FriendsListView: View {
                                             Text(type.text)
                                                 .font(.customAppFont(size: 13, weight: .bold))
                                                 .foregroundColor(viewModel.pickedFriendsListType == type ? Color.custom.text : Color(.systemGray))
-                                            // TODO: implement appNotifications
-        //                                        .customBadge(number: type == .invitationReceived ? appNotifications.friendsRequestNotReadNotificationsNum : 0, offset: CGPoint(x: 6, y: -2))
+                                                .customBadge(number: type == .invitationReceived ? viewModel.numberOfReceivedInvitations : 0, offset: CGPoint(x: 6, y: -2))
                                                 .frame(width: (UIScreen.main.bounds.size.width-60)/3, height: 45)
                                         }
                                     }
@@ -124,18 +123,6 @@ struct FriendsListView: View {
                 viewModel.event = nil
             }
     }
-    
-    func sendAppNotification(toUserWith email: String) async {
-//        let receiver = await friendsVM.fetchFriendByEmail(email)
-//        guard let receiverId = receiver?.id else { return }
-//        
-//        let appNotification = AppNotification.friendRequestReceived(
-//            senderId: profileVM.safeUser.safeID,
-//            receiverId: receiverId,
-//            senderName: profileVM.safeUser.name
-//        )
-//        await appNotifications.sendAppNotification(appNotification)
-    }
 }
 
 
@@ -206,7 +193,7 @@ extension FriendsListView {
                                         InvitationReceivedView(invitation: invitation.invitation, accept: {
                                             Task { await viewModel.acceptInvitation(with: invitation.id) }
                                         }, decline: {
-                                            Task { await viewModel.removeInvitation(with: invitation.id) }
+                                            Task { await viewModel.declineInvitation(with: invitation.id) }
                                         }, friend: invitation.user)
                                     }else{
                                         InvitationSentView(invitation: invitation.invitation, cancel: {
@@ -235,13 +222,5 @@ extension FriendsListView {
                 }
             }
         }
-    }
-    func removeNotification(_ invitation: Invitation) async {
-//        guard let id = await appNotifications.appNotificationId(by: invitation) else {
-//            print("Coś nie tak z appNotificationIdBy(invitation: invitation)")
-//            return
-//        }
-//        print(id)
-//        await appNotifications.deleteAppNotification(id)
     }
 }
