@@ -13,10 +13,10 @@ extension CreateHabitView {
             HStack(spacing: 0) {
                 ForEach(FrequencyType.allCases, id:\.self) { f in
                     Button {
-                        pickedFrequency = f
+                        viewModel.pickedFrequency = f
                     } label: {
                         ZStack {
-                            if pickedFrequency == f {
+                            if viewModel.pickedFrequency == f {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.custom.primary)
                                     .matchedGeometryEffect(id: "freq-bg", in: frequencyAnimation)
@@ -24,52 +24,52 @@ extension CreateHabitView {
                             
                             Text(f.rawValue)
                                 .font(.myBody)
-                                .foregroundColor(pickedFrequency == f ? Color.custom.text : Color(.systemGray))
+                                .foregroundColor(viewModel.pickedFrequency == f ? Color.custom.text : Color(.systemGray))
                                 .frame(width: (UIScreen.main.bounds.size.width-60)/4, height: 45)
                         }
                     }
                 }
-            }.animation(.bouncy, value: pickedFrequency)
+            }.animation(.bouncy, value: viewModel.pickedFrequency)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
-            Stepper("Every \(interval == 1 ? pickedFrequency.value.dropLast() : ("\(interval) \(pickedFrequency.value)"))", value: $interval, in: 1...(pickedFrequency.limit))
+            Stepper("Every \(viewModel.interval == 1 ? viewModel.pickedFrequency.value.dropLast() : ("\(viewModel.interval) \(viewModel.pickedFrequency.value)"))", value: $viewModel.interval, in: 1...(viewModel.pickedFrequency.limit))
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
-            if pickedFrequency == .weekly {
+            if viewModel.pickedFrequency == .weekly {
                 HStack(spacing: 10) {
                     ForEach(Weekday.allCases, id:\.self) { day in
                         Button {
-                            if let idx = pickedDays.firstIndex(where: { $0 == day }) {
-                                pickedDays.remove(at: idx)
+                            if let idx = viewModel.pickedDays.firstIndex(where: { $0 == day }) {
+                                viewModel.pickedDays.remove(at: idx)
                             }else{
-                                pickedDays.append(day)
+                                viewModel.pickedDays.append(day)
                             }
                         } label: {
                             ZStack {
                                 Circle()
-                                    .fill(pickedDays.contains(day) ? Color.custom.primary : Color.custom.lightGrey)
+                                    .fill(viewModel.pickedDays.contains(day) ? Color.custom.primary : Color.custom.lightGrey)
                                 Text(day.shortened)
                                     .font(.customAppFont(size: 12, weight: .medium))
-                                    .foregroundStyle(pickedDays.contains(day) ? Color.custom.text : Color(.systemGray))
+                                    .foregroundStyle(viewModel.pickedDays.contains(day) ? Color.custom.text : Color(.systemGray))
                             }.frame(width: 38, height: 38)
                         }
                     }
                 }
             }
-            DatePicker("Start date", selection: $startDate, displayedComponents: .date)
+            DatePicker("Start date", selection: $viewModel.startDate, displayedComponents: .date)
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.custom.lightGrey)
                 )
-            DatePicker("End date", selection: $endDate, displayedComponents: .date)
+            DatePicker("End date", selection: $viewModel.endDate, displayedComponents: .date)
                 .padding(10)
                 .padding(.horizontal, 5)
                 .background(

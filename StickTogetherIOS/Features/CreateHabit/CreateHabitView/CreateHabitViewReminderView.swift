@@ -10,16 +10,16 @@ import SwiftUI
 extension CreateHabitView {
     var reminder: some View {
         VStack {
-            Toggle("Set reminder", isOn: $setReminder)
+            Toggle("Set reminder", isOn: $viewModel.setReminder)
                 .tint(Color.custom.primary)
                 .padding(5)
-            if setReminder {
-                DatePicker("Reminder time: ", selection: $reminderTime, displayedComponents: .hourAndMinute)
+            if viewModel.setReminder {
+                DatePicker("Reminder time: ", selection: $viewModel.reminderTime, displayedComponents: .hourAndMinute)
                     .padding(.top, 10)
                     .padding(.horizontal, 5)
                     .datePickerStyle(.compact)
             }
         }.customCellViewModifier()
-            .animation(.default, value: setReminder)
+            .animation(.default, value: viewModel.setReminder)
     }
 }

@@ -14,6 +14,6 @@ extension CreateHabitView {
                 .tint(Color.custom.primary)
                 .padding(5)
         }.customCellViewModifier()
-            .animation(.default, value: setReminder)
+            .animation(.default, value: viewModel.setReminder)
     }
 }

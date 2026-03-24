@@ -42,10 +42,10 @@ final class SendInvitationUseCaseImpl: SendInvitationUseCase {
             try await invitationsRepository.sendInvitation(invitation)
             
             let notification = Notification(
+                senderId: senderId,
                 receiverId: receiverId,
                 title: "New friend request",
                 body: "\(sender.name.capitalized) sent you a friend request",
-                date: Date(),
                 type: .friendRequest
             )
             

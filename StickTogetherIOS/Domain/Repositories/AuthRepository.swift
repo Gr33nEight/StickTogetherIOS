@@ -14,7 +14,3 @@ protocol AuthRepository {
     func listenSession() -> AsyncStream<UserSession>
 }
 
-enum UserSession {
-    case loggedOut
-    case loggedIn(userId: String)
-}

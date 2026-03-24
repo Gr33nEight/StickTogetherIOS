@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct CoopHabitCell: View {
-    @EnvironmentObject private var profileVM: ProfileViewModel
-
     let habit: Habit
     let selectedDate: Date
     let buddy: User?
@@ -19,7 +17,7 @@ struct CoopHabitCell: View {
     private var state: CompletionState {
         habit.completionState(
             on: selectedDate,
-            currentUserId: profileVM.safeUser.safeID
+            currentUserId: habit.ownerId
         )
     }
 

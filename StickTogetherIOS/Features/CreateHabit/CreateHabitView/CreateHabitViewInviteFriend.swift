@@ -13,7 +13,7 @@ extension CreateHabitView {
             HStack {
                 Text("Habit Type")
                 Spacer()
-                Picker("", selection: $type) {
+                Picker("", selection: $viewModel.type) {
                     ForEach(HabitType.allCases, id: \.self) { type in
                         Text(type.text).tag(type)
                     }
@@ -22,9 +22,9 @@ extension CreateHabitView {
                     .font(.myBody)
             }
             .padding(.horizontal, 5)
-            .padding(.bottom, type != .alone ? 8 : 0)
-            if type != .alone {
-                if let buddy = buddy {
+            .padding(.bottom, viewModel.type != .alone ? 8 : 0)
+            if viewModel.type != .alone {
+                if let buddy = viewModel.buddy {
                     HStack(spacing: 15) {
                         Text(buddy.icon)
                             .font(.system(size: 23))
@@ -45,7 +45,7 @@ extension CreateHabitView {
                         Spacer()
                         Button {
                             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-                            self.buddy = nil
+                            viewModel.buddy = nil
                         } label: {
                             Image(systemName: "minus")
                                 .font(.mySubtitle)
@@ -63,7 +63,7 @@ extension CreateHabitView {
                 }
             }
         }.customCellViewModifier()
-            .animation(.default, value: setReminder)
+            .animation(.default, value: viewModel.setReminder)
 //            .onChange(of: alone) { oldValue, newValue in
 //                if newValue {
 //                    self.buddy = nil

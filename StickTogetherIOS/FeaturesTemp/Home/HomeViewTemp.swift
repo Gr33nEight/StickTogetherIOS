@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeViewTemp: View {
     @StateObject var viewModel: HomeViewModel
+    @EnvironmentObject var notificationsVM: NotificationsViewModel
     @Environment(\.navigate) var navigate
     
     @State var pageIndex: Int = 0
@@ -19,20 +20,16 @@ struct HomeViewTemp: View {
             header
             calendar
             content
-        }.onAppear {
-            viewModel.startListening()
+        }.task {
+            await viewModel.onAppear()
         }
     }
 }
 
 extension HomeViewTemp {
-//    var numberOfUnReadNotifications: Int {
-//        appNotificationsVM.appNotifications.filter({!$0.isRead && $0.type == .friendMessage}).count
-//    }
     var header: some View {
         HStack {
-//            Text("\(Date().timeOfDayGreeting),\n\(profileVM.safeUser.name.capitalized) 👋")
-            Text("\(Date().timeOfDayGreeting),\nNatanael Jop 👋")
+            Text("\(Date().timeOfDayGreeting),\n\(viewModel.currentUserName.capitalized) 👋")
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {
@@ -42,7 +39,7 @@ extension HomeViewTemp {
                     .resizable()
                     .scaledToFit()
                     .frame(height: 24)
-            }//.customBadge(number: numberOfUnReadNotifications)
+            }.customBadge(number: notificationsVM.numberOfUserNotReadNotifications)
 
         }.foregroundStyle(Color.custom.text)
             .padding([.top, .horizontal], 20)

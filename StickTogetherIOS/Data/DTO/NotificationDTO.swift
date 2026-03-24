@@ -10,6 +10,7 @@ import FirebaseFirestore
 
 struct NotificationDTO: Codable, Equatable {
     @DocumentID var id: String? = nil
+    var senderId: String
     var receiverId: String
     var title: String
     var body: String

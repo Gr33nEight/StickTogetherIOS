@@ -1,13 +1,17 @@
 //
-//  FriendCellView.swift
+//  FriendsListCellView.swift
 //  StickTogetherIOS
 //
-//  Created by Natanael Jop on 04/11/2025.
+//  Created by Natanael Jop on 24/03/2026.
 //
 import SwiftUI
 
-struct FriendCellView: View {
+struct FriendsListCellView: View {
     let friend: User
+    @Binding var invitedUser: User?
+    private var invited: Bool {
+        invitedUser?.id == friend.id
+    }
     var body: some View {
         HStack(spacing: 15) {
             Text("🙍‍♂️")
@@ -24,14 +28,21 @@ struct FriendCellView: View {
                     .foregroundStyle(Color.custom.text)
                 Text(friend.email)
                     .font(.customAppFont(size: 12, weight: .medium))
-                    .foregroundStyle(Color.custom.primary)
+                    .foregroundStyle(invited ? Color.custom.background : Color.custom.primary)
             }.multilineTextAlignment(.leading)
             Spacer()
         }.padding()
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.custom.background)
+                    .fill(invited ? Color.custom.primary : Color.custom.background)
             )
+            .onTapGesture {
+                if invited {
+                    invitedUser = nil
+                }else{
+                    invitedUser = friend
+                }
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            }
     }
 }
-

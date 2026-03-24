@@ -85,23 +85,7 @@ final class FriendsViewModel: ObservableObject {
         stopListeningToReceivedInvitations()
     }
     
-    func handleInviteTap(
-        invitedBuddy: User?,
-        fullList: Bool,
-        onDismiss: ((User) -> Void)?
-    ) {
-        if let buddy = invitedBuddy,
-           let onDismiss = onDismiss {
-            onDismiss(buddy)
-            event = .dimsiss
-            return
-        }
-        
-        if invitedBuddy == nil || fullList {
-            event = .showInviteModal
-        }
-        
-    }
+    func handleInviteTap() { event = .showInviteModal }
     
     func handleInvite(to userEmail: String) async {
         if visibleFriends.contains(where: {$0.email == userEmail}) {
@@ -110,7 +94,6 @@ final class FriendsViewModel: ObservableObject {
         }
         do {
             try await sendInvitation.execute(from: currentUserId, to: userEmail)
-            // sendNotification
             event = .closeModal
         } catch let error as InvitationError {
             handleInvitationError(error)

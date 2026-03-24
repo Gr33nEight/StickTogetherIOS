@@ -20,7 +20,5 @@ protocol HabitRepository {
     func listenToSharedHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
 }
 
-enum HabitUpdates {
-    case completionState(date: Date, userId: String)
-}
+
 

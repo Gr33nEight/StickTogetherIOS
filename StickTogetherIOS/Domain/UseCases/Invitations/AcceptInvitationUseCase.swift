@@ -31,7 +31,7 @@ final class AcceptInvitationUseCaseImpl: AcceptInvitationUseCase {
     
     func execute(invitationId: String) async throws {
         let invitation = try await invitationsRepository.getInvitation(with: invitationId)
-        let notification = try await notificationsRepository.getNotification(byReceiver: invitation.receiverId)
+        let notification = try await notificationsRepository.getNotification(byReceiver: invitation.receiverId, and: invitation.senderId)
         
         try await transactionFactory.run { [weak self] ctx in
             guard let self else { return }

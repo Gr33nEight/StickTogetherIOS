@@ -11,10 +11,12 @@ enum NotificationMapper {
     static func toDomain(_ dto: NotificationDTO) -> Notification {
         Notification(
             id: dto.id,
+            senderId: dto.senderId,
             receiverId: dto.receiverId,
             title: dto.title,
             body: dto.body,
             date: dto.date,
+            isRead: dto.isRead,
             type: mapType(dto)
         )
     }
@@ -22,10 +24,12 @@ enum NotificationMapper {
     static func toDTO(_ domain: Notification) -> NotificationDTO {
         NotificationDTO(
             id: domain.id,
+            senderId: domain.senderId,
             receiverId: domain.receiverId,
             title: domain.title,
             body: domain.body,
             date: domain.date,
+            isRead: domain.isRead,
             type: Int(domain.type.value)
         )
     }

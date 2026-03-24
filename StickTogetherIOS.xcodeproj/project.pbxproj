@@ -13,7 +13,6 @@
 		3C27EB402EB9237E00BB39F7 /* ScreenOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB3F2EB9237E00BB39F7 /* ScreenOverlay.swift */; };
 		3C27EB422EB923A100BB39F7 /* Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB412EB923A100BB39F7 /* Blur.swift */; };
 		3C27EB492EBA515A00BB39F7 /* FriendsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB482EBA515A00BB39F7 /* FriendsServiceProtocol.swift */; };
-		3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */; };
 		3C27EB4E2EBA527E00BB39F7 /* FirebaseFriendsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB4D2EBA527E00BB39F7 /* FirebaseFriendsService.swift */; };
 		3C27EB522EBB632400BB39F7 /* ValueOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB512EBB632400BB39F7 /* ValueOrError.swift */; };
 		3C27EB552EBB636100BB39F7 /* SuccessOrError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */; };
@@ -27,7 +26,6 @@
 		3C42E6EC2EB28C4E00D0D58C /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6EB2EB28C4E00D0D58C /* TextField.swift */; };
 		3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */; };
 		3C42E6FA2EB3562400D0D58C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E6F92EB3562400D0D58C /* HomeView.swift */; };
-		3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7022EB3674F00D0D58C /* Habit.swift */; };
 		3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7042EB3677200D0D58C /* HabitCell.swift */; };
 		3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7062EB3678200D0D58C /* DayCell.swift */; };
 		3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */; };
@@ -97,7 +95,6 @@
 		3CB504212EB231F4004AF0A9 /* AppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504202EB231F4004AF0A9 /* AppEntry.swift */; };
 		3CB504252EB23283004AF0A9 /* AuthServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504242EB23283004AF0A9 /* AuthServiceProtocol.swift */; };
 		3CB504272EB2328F004AF0A9 /* MockAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504262EB2328F004AF0A9 /* MockAuthService.swift */; };
-		3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5042A2EB232F6004AF0A9 /* User.swift */; };
 		3CB5043A2EB24ACC004AF0A9 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB504392EB24ACC004AF0A9 /* CustomFont.swift */; };
 		3CB5043D2EB25034004AF0A9 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB5043C2EB25034004AF0A9 /* ColorExtension.swift */; };
 		3CD0D4162EF858680092BDE2 /* AloneHabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0D4152EF858680092BDE2 /* AloneHabitCell.swift */; };
@@ -109,12 +106,9 @@
 		3CD2DA6F2ED1B09A003C3552 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD2DA6E2ED1B097003C3552 /* ProfileViewModel.swift */; };
 		3CD4AA342F155763001F763E /* FriendsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AA332F155763001F763E /* FriendsViewModelTests.swift */; };
 		3CD4AA362F1BA303001F763E /* HabitViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AA352F1BA303001F763E /* HabitViewModelTests.swift */; };
-		3CE1A03B2F69A6250036330E /* InvitationWithUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */; };
-		3CE1A0892F6EB0320036330E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1A0882F6EB0320036330E /* Notification.swift */; };
 		3CFF85352EE2090400171172 /* AppNotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85342EE2090400171172 /* AppNotificationsViewModel.swift */; };
 		3CFF85382EE2097B00171172 /* AppNotificationsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85372EE2097B00171172 /* AppNotificationsServiceProtocol.swift */; };
 		3CFF853A2EE20F2800171172 /* FirebaseAppNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */; };
-		3CFF853C2EE2150A00171172 /* AppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF853B2EE2150A00171172 /* AppNotification.swift */; };
 		3CFF853E2EE2153E00171172 /* AppNotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF853D2EE2153E00171172 /* AppNotificationType.swift */; };
 		3CFF85452EE3422900171172 /* HabitViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85442EE3422900171172 /* HabitViewContainer.swift */; };
 		3CFF85472EE3605C00171172 /* CustomBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFF85462EE3605C00171172 /* CustomBadgeView.swift */; };
@@ -144,7 +138,6 @@
 		3C27EB3F2EB9237E00BB39F7 /* ScreenOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOverlay.swift; sourceTree = "<group>"; };
 		3C27EB412EB923A100BB39F7 /* Blur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blur.swift; sourceTree = "<group>"; };
 		3C27EB482EBA515A00BB39F7 /* FriendsServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsServiceProtocol.swift; sourceTree = "<group>"; };
-		3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invitation.swift; sourceTree = "<group>"; };
 		3C27EB4D2EBA527E00BB39F7 /* FirebaseFriendsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFriendsService.swift; sourceTree = "<group>"; };
 		3C27EB512EBB632400BB39F7 /* ValueOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueOrError.swift; sourceTree = "<group>"; };
 		3C27EB542EBB636100BB39F7 /* SuccessOrError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessOrError.swift; sourceTree = "<group>"; };
@@ -158,7 +151,6 @@
 		3C42E6EB2EB28C4E00D0D58C /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		3C42E6EE2EB2956100D0D58C /* CustomButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyles.swift; sourceTree = "<group>"; };
 		3C42E6F92EB3562400D0D58C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		3C42E7022EB3674F00D0D58C /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		3C42E7042EB3677200D0D58C /* HabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCell.swift; sourceTree = "<group>"; };
 		3C42E7062EB3678200D0D58C /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
 		3C42E7082EB367AB00D0D58C /* HomeViewCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewCalendar.swift; sourceTree = "<group>"; };
@@ -225,7 +217,6 @@
 		3CB504202EB231F4004AF0A9 /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
 		3CB504242EB23283004AF0A9 /* AuthServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceProtocol.swift; sourceTree = "<group>"; };
 		3CB504262EB2328F004AF0A9 /* MockAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthService.swift; sourceTree = "<group>"; };
-		3CB5042A2EB232F6004AF0A9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3CB504312EB24A7A004AF0A9 /* HelveticaNeueUltraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueUltraLight.otf; sourceTree = "<group>"; };
 		3CB504322EB24A7B004AF0A9 /* HelveticaNeueHeavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueHeavy.otf; sourceTree = "<group>"; };
 		3CB504332EB24A7B004AF0A9 /* HelveticaNeueBlack.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBlack.otf; sourceTree = "<group>"; };
@@ -245,12 +236,9 @@
 		3CD2DA6E2ED1B097003C3552 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		3CD4AA332F155763001F763E /* FriendsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModelTests.swift; sourceTree = "<group>"; };
 		3CD4AA352F1BA303001F763E /* HabitViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModelTests.swift; sourceTree = "<group>"; };
-		3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationWithUser.swift; sourceTree = "<group>"; };
-		3CE1A0882F6EB0320036330E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3CFF85342EE2090400171172 /* AppNotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationsViewModel.swift; sourceTree = "<group>"; };
 		3CFF85372EE2097B00171172 /* AppNotificationsServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationsServiceProtocol.swift; sourceTree = "<group>"; };
 		3CFF85392EE20F2800171172 /* FirebaseAppNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAppNotificationService.swift; sourceTree = "<group>"; };
-		3CFF853B2EE2150A00171172 /* AppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotification.swift; sourceTree = "<group>"; };
 		3CFF853D2EE2153E00171172 /* AppNotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationType.swift; sourceTree = "<group>"; };
 		3CFF85442EE3422900171172 /* HabitViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewContainer.swift; sourceTree = "<group>"; };
 		3CFF85462EE3605C00171172 /* CustomBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBadgeView.swift; sourceTree = "<group>"; };
@@ -583,14 +571,6 @@
 			path = Habit;
 			sourceTree = "<group>";
 		};
-		3C66882B2EB6B52800DE45E8 /* Habit */ = {
-			isa = PBXGroup;
-			children = (
-				3C42E7022EB3674F00D0D58C /* Habit.swift */,
-			);
-			path = Habit;
-			sourceTree = "<group>";
-		};
 		3C70E0912EB3A48E00C325D9 /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -668,7 +648,6 @@
 		3CB5041A2EB23164004AF0A9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				3CB504292EB232F0004AF0A9 /* Models */,
 				3CB504222EB2326A004AF0A9 /* Services */,
 				3CB5041E2EB231DB004AF0A9 /* DIContainer.swift */,
 			);
@@ -716,19 +695,6 @@
 				3CB504262EB2328F004AF0A9 /* MockAuthService.swift */,
 			);
 			path = Auth;
-			sourceTree = "<group>";
-		};
-		3CB504292EB232F0004AF0A9 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3CFF853B2EE2150A00171172 /* AppNotification.swift */,
-				3C66882B2EB6B52800DE45E8 /* Habit */,
-				3CB5042A2EB232F6004AF0A9 /* User.swift */,
-				3C27EB4B2EBA51B800BB39F7 /* Invitation.swift */,
-				3CE1A03A2F69A6250036330E /* InvitationWithUser.swift */,
-				3CE1A0882F6EB0320036330E /* Notification.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3CB504382EB24A82004AF0A9 /* Font */ = {
@@ -957,7 +923,6 @@
 				3CB5041F2EB231DB004AF0A9 /* DIContainer.swift in Sources */,
 				3C6687F22EB4EA6900DE45E8 /* ToastDelegator.swift in Sources */,
 				3C6687F32EB4EA6900DE45E8 /* ToastMessageService.swift in Sources */,
-				3CE1A0892F6EB0320036330E /* Notification.swift in Sources */,
 				3C5C13822EC342B200693ED0 /* NotificationManager.swift in Sources */,
 				3C6687F42EB4EA6900DE45E8 /* ToastMessage.swift in Sources */,
 				3C6687F52EB4EA6900DE45E8 /* ToastMessageView.swift in Sources */,
@@ -1013,17 +978,13 @@
 				3C42E7072EB3678200D0D58C /* DayCell.swift in Sources */,
 				3C70E0932EB3A49E00C325D9 /* CustomCellViewModifier.swift in Sources */,
 				3C27EB352EB7FC1200BB39F7 /* DeepLinkService.swift in Sources */,
-				3CE1A03B2F69A6250036330E /* InvitationWithUser.swift in Sources */,
 				3C6687F92EB4EA8A00DE45E8 /* EnvironmentKeys.swift in Sources */,
-				3C42E7032EB3674F00D0D58C /* Habit.swift in Sources */,
 				3CD2DA6B2ED1A8B6003C3552 /* ProfileServiceProtocol.swift in Sources */,
-				3C27EB4C2EBA51B800BB39F7 /* Invitation.swift in Sources */,
 				3C6688022EB4F5D800DE45E8 /* AuthForm.swift in Sources */,
 				3C70E09E2EB3E1F600C325D9 /* CompletionState.swift in Sources */,
 				3C42E7092EB367AB00D0D58C /* HomeViewCalendar.swift in Sources */,
 				3C42E7052EB3677200D0D58C /* HabitCell.swift in Sources */,
 				3C6687FC2EB4F5A600DE45E8 /* ValidationResult.swift in Sources */,
-				3CFF853C2EE2150A00171172 /* AppNotification.swift in Sources */,
 				3C42E6E72EB27E0B00D0D58C /* FontExtension.swift in Sources */,
 				3CFF853A2EE20F2800171172 /* FirebaseAppNotificationService.swift in Sources */,
 				3C42E6EF2EB2956100D0D58C /* CustomButtonStyles.swift in Sources */,
@@ -1031,7 +992,6 @@
 				3C70E09A2EB3DE7B00C325D9 /* DateExtension.swift in Sources */,
 				3CFF85452EE3422900171172 /* HabitViewContainer.swift in Sources */,
 				3C70E0AE2EB3E43300C325D9 /* CreateHabitViewInviteFriend.swift in Sources */,
-				3CB5042B2EB232F6004AF0A9 /* User.swift in Sources */,
 				3C5C13852EC3698E00693ED0 /* CalendarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

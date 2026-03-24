@@ -11,7 +11,7 @@ extension CreateHabitView {
     var titleTextField: some View {
         HStack(spacing: 15) {
             Button(action: { isEmojiPickerPresented.toggle() }, label: {
-                Text(selectedEmoji == nil ? autoEmoji == nil ? "➕" : autoEmoji! : selectedEmoji!.emoji)
+                Text(viewModel.selectedEmoji == nil ? viewModel.autoEmoji == nil ? "➕" : viewModel.autoEmoji! : viewModel.selectedEmoji!.emoji)
                     .font(.customAppFont(size: 50))
                     .shadow(color: Color.custom.lightGrey, radius: 10)
                     .padding(10)
@@ -25,15 +25,15 @@ extension CreateHabitView {
                 Text("Habit Title")
                     .font(.myBody)
                     .foregroundStyle(Color.custom.primary)
-                TextField(text: $title, axis: .horizontal) {
+                TextField(text: $viewModel.title, axis: .horizontal) {
                     Text("Type here")
                 }.font(.customAppFont(size: 26, weight: .medium))
             }
             Spacer()
         }.customCellViewModifier()
-            .onChange(of: title) { oldValue, newValue in
-                autoEmoji = IconPicker.iconUsingNLP(for: newValue)
-                selectedEmoji = nil
+            .onChange(of: viewModel.title) { oldValue, newValue in
+                viewModel.autoEmoji = IconPicker.iconUsingNLP(for: newValue)
+                viewModel.selectedEmoji = nil
             }
     }
 }

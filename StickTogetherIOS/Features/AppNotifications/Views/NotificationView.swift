@@ -9,11 +9,11 @@ import SwiftUI
 
 struct NotificationView: View {
     @State var removingStarted: Bool = false
-    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
+    @EnvironmentObject var notificationVM: NotificationsViewModel
     var body: some View {
         CustomView(title: "Notifications") {
             ZStack {
-                if appNotificationsVM.appNotifications.isEmpty {
+                if notificationVM.userNotifications.isEmpty {
                     Text("You don't have any notifications.")
                         .foregroundStyle(Color.custom.lightGrey)
                         .font(.mySubtitle)
@@ -22,11 +22,11 @@ struct NotificationView: View {
                 }else{
                     ScrollView {
                         VStack {
-                            ForEach(appNotificationsVM.appNotifications, id:\.id) { notification in
+                            ForEach(notificationVM.userNotifications, id:\.id) { notification in
                                 NotificationCell(notification: notification)
                                     .onTapGesture {
                                         Task {
-                                            await appNotificationsVM.markAsRead(notification.id)
+                                            await notificationVM.markAsRead(notification.id)
                                         }
                                     }
                             }
@@ -35,10 +35,10 @@ struct NotificationView: View {
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         } buttons: {
-            if !appNotificationsVM.appNotifications.isEmpty {
+            if !notificationVM.userNotifications.isEmpty {
                 Button("Mark all as read"){
                     Task {
-                        await appNotificationsVM.markAllAsRead()
+                        await notificationVM.markAllAsRead()
                     }
                 }.customButtonStyle(.primary)
             }
@@ -59,7 +59,7 @@ struct NotificationView: View {
 }
 
 struct NotificationCell: View {
-    let notification: AppNotification
+    let notification: Notification
     var body: some View {
         switch notification.type {
         case .systemMessage:
@@ -78,7 +78,7 @@ struct NotificationCell: View {
 }
 
 struct SystemMessageCell: View {
-    let notification: AppNotification
+    let notification: Notification
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
@@ -89,7 +89,7 @@ struct SystemMessageCell: View {
                 .clipShape(Circle())
                 .shadow(color: .black.opacity(0.5), radius: 5)
             VStack(alignment: .leading, spacing: 3) {
-                Text(notification.content)
+                Text(notification.body)
                     .font(.customAppFont(size: 13, weight: .bold))
                     .foregroundStyle(Color.custom.text)
                 Text(notification.dateString)
@@ -112,7 +112,7 @@ struct SystemMessageCell: View {
     }
 }
 struct FriendMessageCell: View {
-    let notification: AppNotification
+    let notification: Notification
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
             Text("🙍‍♂️")
@@ -124,7 +124,7 @@ struct FriendMessageCell: View {
                         .fill(Color.custom.text)
                 )
             VStack(alignment: .leading, spacing: 3) {
-                Text(notification.content)
+                Text(notification.body)
                     .font(.customAppFont(size: 13, weight: .bold))
                     .foregroundStyle(Color.custom.text)
                 Text(notification.dateString)
@@ -147,13 +147,10 @@ struct FriendMessageCell: View {
     }
 }
 struct HabitInviteCell: View {
-    @EnvironmentObject var appNotificationsVM: AppNotificationsViewModel
-    @EnvironmentObject var habitVM: HabitViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    
+    @EnvironmentObject var notificationsVM: NotificationsViewModel
     @State var habit: Habit? = nil
     
-    let notification: AppNotification
+    let notification: Notification
     
     private var dateString: String {
         let df = RelativeDateTimeFormatter()
@@ -163,7 +160,7 @@ struct HabitInviteCell: View {
 
     var body: some View {
         ZStack {
-            if habit != nil {
+//            if habit != nil {
                 VStack{
                     HStack(spacing: 15) {
                         Text("🙍‍♂️")
@@ -175,7 +172,7 @@ struct HabitInviteCell: View {
                                     .fill(Color.custom.text)
                             )
                         VStack(alignment: .leading, spacing: 3) {
-                            Text(notification.content)
+                            Text(notification.body)
                                 .font(.customAppFont(size: 13, weight: .bold))
                                 .foregroundStyle(Color.custom.text)
                             Text(notification.dateString)
@@ -194,10 +191,10 @@ struct HabitInviteCell: View {
                     HStack(spacing: 10) {
                         Button {
                             Task {
-                                await appNotificationsVM.deleteAppNotification(notification.id)
-                                habit!.buddyId = profileVM.safeUser.safeID
-                                await habitVM.updateHabit(habit!)
-                                await informAboutAcceptance()
+//                                await appNotificationsVM.deleteAppNotification(notification.id)
+//                                habit!.buddyId = profileVM.safeUser.safeID
+//                                await habitVM.updateHabit(habit!)
+//                                await informAboutAcceptance()
                             }
                         } label: {
                             Text("Accept")
@@ -205,11 +202,11 @@ struct HabitInviteCell: View {
                         }.customButtonStyle(.primary)
                         Button {
                             Task {
-                                await appNotificationsVM.deleteAppNotification(notification.id)
-                                habit!.type = .alone
-                                habit!.buddyId = ""
-                                await habitVM.updateHabit(habit!)
-                                await informAboutDecline()
+//                                await appNotificationsVM.deleteAppNotification(notification.id)
+//                                habit!.type = .alone
+//                                habit!.buddyId = ""
+//                                await habitVM.updateHabit(habit!)
+//                                await informAboutDecline()
                             }
                         } label: {
                             Text("Decline")
@@ -222,43 +219,43 @@ struct HabitInviteCell: View {
                             .fill(notification.isRead ? Color.custom.background : Color.custom.grey)
                     )
 
-            }
+//            }
         }.task {
-            guard let habitId = notification.habitId else { return }
-            let result = await habitVM.getHabitById(habitId)
-            
-            switch result {
-            case .value(let h):
-                habit = h
-                return
-            case .error(_):
-                await appNotificationsVM.deleteAppNotification(notification.id)
-            }
+//            guard let habitId = notification.habitId else { return }
+//            let result = await habitVM.getHabitById(habitId)
+//            
+//            switch result {
+//            case .value(let h):
+//                habit = h
+//                return
+//            case .error(_):
+//                await appNotificationsVM.deleteAppNotification(notification.id)
+//            }
         }
     }
     
     func informAboutAcceptance() async {
-        guard let habit = habit else { return }
-        let appNotification = AppNotification.habitInviteAccepted(
-            senderId: profileVM.safeUser.safeID,
-            receiverId: notification.senderId,
-            senderName: profileVM.safeUser.name,
-            habitId: habit.id ?? "",
-            habitTitle: habit.title
-        )
-        await appNotificationsVM.sendAppNotification(appNotification)
+//        guard let habit = habit else { return }
+//        let appNotification = AppNotification.habitInviteAccepted(
+//            senderId: profileVM.safeUser.safeID,
+//            receiverId: notification.senderId,
+//            senderName: profileVM.safeUser.name,
+//            habitId: habit.id ?? "",
+//            habitTitle: habit.title
+//        )
+//        await appNotificationsVM.sendAppNotification(appNotification)
     }
     
     func informAboutDecline() async {
-        guard let habit = habit else { return }
-        let appNotification = AppNotification.habitInviteDeclined(
-            senderId: profileVM.safeUser.safeID,
-            receiverId: notification.senderId,
-            senderName: profileVM.safeUser.name,
-            habitId: habit.id ?? "",
-            habitTitle: habit.title
-        )
-        await appNotificationsVM.sendAppNotification(appNotification)
+//        guard let habit = habit else { return }
+//        let appNotification = AppNotification.habitInviteDeclined(
+//            senderId: profileVM.safeUser.safeID,
+//            receiverId: notification.senderId,
+//            senderName: profileVM.safeUser.name,
+//            habitId: habit.id ?? "",
+//            habitTitle: habit.title
+//        )
+//        await appNotificationsVM.sendAppNotification(appNotification)
     }
 }
 

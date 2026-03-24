@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct AloneHabitCell: View {
-    @EnvironmentObject private var profileVM: ProfileViewModel
-
     let habit: Habit
     let selectedDate: Date
     let isToday: Bool
@@ -18,7 +16,7 @@ struct AloneHabitCell: View {
     private var state: CompletionState {
         habit.completionState(
             on: selectedDate,
-            currentUserId: profileVM.safeUser.safeID
+            currentUserId: habit.ownerId
         )
     }
 

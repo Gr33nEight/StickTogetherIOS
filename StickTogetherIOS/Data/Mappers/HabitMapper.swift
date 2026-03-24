@@ -21,7 +21,6 @@ enum HabitMapper {
             endDate: dto.endDate,
             reminderTime: dto.reminderTime,
             createdAt: dto.createdAt,
-            completion: dto.completion,
             type: dto.type
         )
     }
@@ -38,7 +37,6 @@ enum HabitMapper {
             endDate: habit.endDate,
             reminderTime: habit.reminderTime,
             createdAt: habit.createdAt,
-            completion: habit.completion,
             type: habit.type
         )
     }

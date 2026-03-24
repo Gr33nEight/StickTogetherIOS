@@ -10,9 +10,10 @@ import SwiftUI
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    
     @Published var pickedHabitListType: HabitListType = .myHabits
     @Published var selectedDate: Date = Date()
+    
+    @Published private var currentUser: User?
     
     @Published private(set) var visibleHabits: [Habit] = []
     @Published private(set) var error: String?
@@ -30,20 +31,32 @@ final class HomeViewModel: ObservableObject {
     private let listenToOwnedHabits: ListenToHabitsUseCase
     private let listenToBuddyHabits: ListenToHabitsUseCase
     private let listenToSharedHabits: ListenToHabitsUseCase
+    private let getCurrentUser: GetUserUseCase
+    
+    var currentUserName: String {
+        currentUser?.name ?? "Unknown user"
+    }
     
     init(
         currentUserId: String,
         listenToOwnedHabits: ListenToHabitsUseCase,
         listenToBuddyHabits: ListenToHabitsUseCase,
-        listenToSharedHabits: ListenToHabitsUseCase
+        listenToSharedHabits: ListenToHabitsUseCase,
+        getCurrentUser: GetUserUseCase,
     ) {
         self.currentUserId = currentUserId
         self.listenToOwnedHabits = listenToOwnedHabits
         self.listenToBuddyHabits = listenToBuddyHabits
         self.listenToSharedHabits = listenToSharedHabits
+        self.getCurrentUser = getCurrentUser
     }
     
-    func startListening() {
+    func onAppear() async {
+        startListening()
+        await getCurrentUser()
+    }
+    
+    private func startListening() {
         stopListening()
         isLoading = true
         defer { isLoading = false }
@@ -85,6 +98,14 @@ final class HomeViewModel: ObservableObject {
             } catch {
                 self.error = error.localizedDescription
             }
+        }
+    }
+    
+    func getCurrentUser() async {
+        do {
+            currentUser = try await getCurrentUser.byId(with: currentUserId)
+        } catch {
+            self.error = error.localizedDescription
         }
     }
     

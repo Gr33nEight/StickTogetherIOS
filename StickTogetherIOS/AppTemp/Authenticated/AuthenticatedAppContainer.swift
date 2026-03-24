@@ -72,6 +72,13 @@ final class AuthenticatedAppContainer {
 
     private lazy var listenToSharedHabits: ListenToHabitsUseCase =
         ListenToSharedHabitsUseCase(repository: habitRepository)
+    
+    private lazy var createHabitUseCase: CreateHabitUseCase =
+        CreateHabitUseCaseImpl(
+            habitRepository: habitRepository,
+            userRepository: userRepository,
+            notificationsRepository: notificationsRepository
+        )
 
     // MARK: - UseCases (Friends & Invitations)
 
@@ -135,6 +142,12 @@ final class AuthenticatedAppContainer {
 
     // MARK: - UseCases (Notifications)
     
+    private lazy var listenToNotification: ListenToNotificationsUseCase =
+        ListenToNotificationsUseCaseImpl(notificationsRepository: notificationsRepository)
+    
+    private lazy var markAsRead: MarkAsReadUseCase =
+        MarkAsReadUseCaseImpl(notificationsRepository: notificationsRepository)
+    
     // MARK: - ViewModels
 
     @MainActor
@@ -143,7 +156,8 @@ final class AuthenticatedAppContainer {
             currentUserId: userId,
             listenToOwnedHabits: listenToOwnedHabits,
             listenToBuddyHabits: listenToBuddyHabits,
-            listenToSharedHabits: listenToSharedHabits
+            listenToSharedHabits: listenToSharedHabits,
+            getCurrentUser: getUser
         )
     }
     
@@ -171,6 +185,32 @@ final class AuthenticatedAppContainer {
             listenToUser: listenToUser
         )
     }
+    
+    @MainActor
+    func makeNotificationsViewModel() -> NotificationsViewModel {
+        NotificationsViewModel(
+            currentUserId: userId,
+            listenToUserNotifications: listenToNotification,
+            markAsReadUseCase: markAsRead
+        )
+    }
+    
+    @MainActor
+    func makeCreateHabitViewModel() -> CreateHabitViewModel {
+        CreateHabitViewModel(
+            currentUserId: userId,
+            createHabit: createHabitUseCase
+        )
+    }
+    
+    @MainActor
+    func makeFriendsListViewModel() -> FriendsListViewModel {
+        FriendsListViewModel(
+            currentUserId: userId,
+            listenToFriends: listenToFriends,
+            sendInvitation: sendInvitation
+        )
+    }
 
     // MARK: - Views
 
@@ -178,17 +218,24 @@ final class AuthenticatedAppContainer {
     func makeHomeView() -> some View {
         HomeViewTemp(viewModel: self.makeHomeViewModel())
     }
-    
+        
     @MainActor
     func makeFriendsView() -> some View {
-        FriendsListView(
-            fullList: true,
-            viewModel: self.makeFriendsViewModel()
-        )
+        FriendsView(viewModel: self.makeFriendsViewModel())
     }
     
     @MainActor
     func makeSettingsView() -> some View {
         SettingsView(viewModel: self.makeSettingsViewModel())
+    }
+    
+    @MainActor
+    func makeNotificationsView() -> some View {
+        NotificationView()
+    }
+    
+    @MainActor
+    func makeCreateHabitView() -> some View {
+        CreateHabitView(viewModel: self.makeCreateHabitViewModel(), friendsListVM: self.makeFriendsListViewModel())
     }
 }

@@ -19,6 +19,8 @@ struct NavigationContainer: View {
                 NavigationBarView(selected: $selected)
                     .padding(.horizontal)
             }
+        }.task {
+            
         }
     }
     

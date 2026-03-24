@@ -19,6 +19,5 @@ struct HabitDTO: Codable, Equatable {
     var endDate: Date
     var reminderTime: Date? = nil
     var createdAt: Date = Date()
-    var completion: [String: [String]]
     var type: HabitType = .alone
 }
