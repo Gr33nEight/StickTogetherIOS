@@ -13,12 +13,18 @@ protocol DeleteHabitUseCase {
 
 final class DeleteHabitUseCaseImpl: DeleteHabitUseCase {
     private let habitRepository: HabitRepository
+    private let habitEntryRepository: HabitEntryRepository
     
-    init(habitRepository: HabitRepository) {
+    init(
+        habitRepository: HabitRepository,
+        habitEntryRepository: HabitEntryRepository
+    ) {
         self.habitRepository = habitRepository
+        self.habitEntryRepository = habitEntryRepository
     }
     
     func execute(_ habitId: String) async throws {
         try await habitRepository.deleteHabit(with: habitId)
+        try await habitEntryRepository.deleteEntries(byHabit: habitId)
     }
 }

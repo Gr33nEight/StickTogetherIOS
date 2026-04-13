@@ -10,5 +10,4 @@ import Foundation
 struct HabitViewContainer {
     let habit: Habit
     let selectedDate: Date
-    let friends: [User]
 }

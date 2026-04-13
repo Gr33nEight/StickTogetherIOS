@@ -35,4 +35,19 @@ enum HabitEntryMapper {
         default: return .notDone
         }
     }
+    
+    static func entryStream(_ stream: AsyncThrowingStream<[HabitEntryDTO], any Error>) -> AsyncThrowingStream<[HabitEntry], any Error> {
+        return AsyncThrowingStream { continuation in
+            Task {
+                do {
+                    for try await dtos in stream {
+                        continuation.yield(dtos.map(HabitEntryMapper.toDomain(_:)))
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+        }
+    }
 }

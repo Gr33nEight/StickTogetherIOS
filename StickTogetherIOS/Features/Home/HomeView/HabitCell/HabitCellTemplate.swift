@@ -35,39 +35,39 @@ struct HabitCellTemplate: View {
                     .strikethrough(strikethrough)
                     .foregroundStyle(Color.custom.text)
 
-                if let buddyInfo = showBuddyStatus {
-                    HStack(spacing: 5) {
-                        Image(.user)
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 15)
-                            .foregroundStyle(
-                                buddyInfo.buddyName == nil ? Color.custom.text : buddyInfo.buddyStatusColor
-                            )
-                        if let buddyName = buddyInfo.buddyName {
-                            Text(buddyName)
-                                .foregroundStyle(buddyInfo.buddyStatusColor)
-
-                            if buddyInfo.showStatusBadge {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 2)
-                                        .fill(buddyInfo.buddyStatusColor)
-                                        .frame(width: 12, height: 12)
-
-                                    Image(systemName: buddyInfo.buddyMarkedAsDone ? "checkmark" : "xmark")
-                                        .font(.customAppFont(size: 8, weight: .bold))
-                                        .foregroundStyle(buddyInfo.buddyBadgeColor)
-                                }
-                                .padding(.leading, 2)
-                            }
-                        } else {
-                            Text("Waiting for response")
-                                .foregroundStyle(Color.custom.text)
-                        }
-                    }
-                    .font(.customAppFont(size: 12, weight: .medium))
-                }
+//                if let buddyInfo = showBuddyStatus {
+//                    HStack(spacing: 5) {
+//                        Image(.user)
+//                            .renderingMode(.template)
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 15)
+//                            .foregroundStyle(
+//                                buddyInfo.buddyName == nil ? Color.custom.text : buddyInfo.buddyStatusColor
+//                            )
+//                        if let buddyName = buddyInfo.buddyName {
+//                            Text(buddyName)
+//                                .foregroundStyle(buddyInfo.buddyStatusColor)
+//
+//                            if buddyInfo.showStatusBadge {
+//                                ZStack {
+//                                    RoundedRectangle(cornerRadius: 2)
+//                                        .fill(buddyInfo.buddyStatusColor)
+//                                        .frame(width: 12, height: 12)
+//
+//                                    Image(systemName: buddyInfo.buddyMarkedAsDone ? "checkmark" : "xmark")
+//                                        .font(.customAppFont(size: 8, weight: .bold))
+//                                        .foregroundStyle(buddyInfo.buddyBadgeColor)
+//                                }
+//                                .padding(.leading, 2)
+//                            }
+//                        } else {
+//                            Text("Waiting for response")
+//                                .foregroundStyle(Color.custom.text)
+//                        }
+//                    }
+//                    .font(.customAppFont(size: 12, weight: .medium))
+//                }
             }.multilineTextAlignment(.leading)
             Spacer()
             if showCompletionButton {

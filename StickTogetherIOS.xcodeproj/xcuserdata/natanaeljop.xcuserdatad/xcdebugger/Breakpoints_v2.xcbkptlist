@@ -311,16 +311,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "93C1576F-4D12-4CEF-8D5C-0DC4396D5D8E"
+            uuid = "D3DEA4F1-7DF8-4780-A123-2C6DDC0162D8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "StickTogetherIOS/FeaturesTemp/Home/HomeViewModel.swift"
+            filePath = "StickTogetherIOS/Domain/UseCases/HabitEntry/ToggleHabitCompletionStateUseCase.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "startListening()"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "execute(forHabit:on:forUser:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "78C4AAA3-09AD-4349-95AA-46897FE378D2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StickTogetherIOS/Domain/UseCases/HabitEntry/ToggleHabitCompletionStateUseCase.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "execute(forHabit:on:forUser:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5314A551-CBE4-4166-A86D-0637CF3ED765"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StickTogetherIOS/Domain/UseCases/HabitEntry/ToggleHabitCompletionStateUseCase.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "execute(forHabit:on:forUser:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

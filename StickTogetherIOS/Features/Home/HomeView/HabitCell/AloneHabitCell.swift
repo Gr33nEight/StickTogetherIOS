@@ -11,16 +11,12 @@ struct AloneHabitCell: View {
     let habit: Habit
     let selectedDate: Date
     let isToday: Bool
-    let updateCompletion: () -> Void
-
-    private var state: CompletionState {
-        habit.completionState(
-            on: selectedDate,
-            currentUserId: habit.ownerId
-        )
+    let onToggle: () -> Void
+    let state: CompletionState
+    
+    private var done: Bool {
+        state == .all
     }
-
-    private var done: Bool { state == .both }
     
     private var isPastAndNotDone: Bool {
         selectedDate < Calendar.current.startOfDay(for: Date()) && !done
@@ -39,7 +35,7 @@ struct AloneHabitCell: View {
             showCheckmark: done,
             checkmarkColor: done ? Color.custom.primary : Color.custom.text,
             completionButtonBorderColor: done ? .clear : Color(.systemGray),
-            updateCompletion: updateCompletion
+            updateCompletion: onToggle
         ).opacity(isToday ? 1 : 0.6)
     }
 }

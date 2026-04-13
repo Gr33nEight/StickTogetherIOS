@@ -15,5 +15,5 @@ struct CreateHabitInput {
     let endDate: Date
     let reminderTime: Date?
     let type: HabitType
-    let buddyId: String?
+    let buddyIds: [String]
 }

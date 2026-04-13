@@ -10,20 +10,14 @@ import SwiftUI
 struct CoopHabitCell: View {
     let habit: Habit
     let selectedDate: Date
-    let buddy: User?
     let isToday: Bool
-    let updateCompletion: () -> Void
+    let onToggle: () -> Void
 
-    private var state: CompletionState {
-        habit.completionState(
-            on: selectedDate,
-            currentUserId: habit.ownerId
-        )
-    }
+    var state: CompletionState
 
-    private var done: Bool { state == .both }
-    private var iDid: Bool { state == .me || state == .both }
-    private var buddyDid: Bool { state == .buddy || state == .both }
+    private var done: Bool { state == .all }
+    private var iDid: Bool { state == .onlyMe || state == .all }
+    private var buddyDid: Bool { state == .onlyOthers || state == .all }
 
     private var isPastAndNotDone: Bool {
         selectedDate < Calendar.current.startOfDay(for: Date()) && !done
@@ -35,28 +29,30 @@ struct CoopHabitCell: View {
     }
     
     var body: some View {
-        HabitCellTemplate(
-            icon: habit.icon,
-            title: habit.title,
-            habitCellBackground: isPastAndNotDone ? Color.custom.red :
-                done ? Color.custom.primary : Color.custom.grey,
-            strikethrough: iDid || done,
-            showCompletionButton: isToday,
-            completionButtonBackground: done ? Color.custom.text :
-                iDid ? Color.custom.primary : Color.custom.grey,
-            showBuddyStatus: HabitCellBuddyInfo(
-                buddyStatusColor: buddyColor,
-                buddyBadgeColor: done
-                    ? (buddyDid ? Color.custom.primary : Color.custom.red)
-                : isToday ? Color.custom.text : Color.custom.red,
-                buddyName: buddy?.name,
-                showStatusBadge: true,
-                buddyMarkedAsDone: buddyDid
-            ),
-            showCheckmark: iDid || done,
-            checkmarkColor: done ? Color.custom.primary : Color.custom.text,
-            completionButtonBorderColor: iDid || done ? .clear : Color(.systemGray),
-            updateCompletion: updateCompletion
-        ).opacity(isToday ? 1 : 0.6)
+        ZStack {
+            HabitCellTemplate(
+                icon: habit.icon,
+                title: habit.title,
+                habitCellBackground: isPastAndNotDone ? Color.custom.red :
+                    done ? Color.custom.primary : Color.custom.grey,
+                strikethrough: iDid || done,
+                showCompletionButton: isToday,
+                completionButtonBackground: done ? Color.custom.text :
+                    iDid ? Color.custom.primary : Color.custom.grey,
+                showBuddyStatus: HabitCellBuddyInfo(
+                    buddyStatusColor: buddyColor,
+                    buddyBadgeColor: done
+                        ? (buddyDid ? Color.custom.primary : Color.custom.red)
+                    : isToday ? Color.custom.text : Color.custom.red,
+                    buddiesName: [""],
+                    showStatusBadge: true,
+                    buddyMarkedAsDone: buddyDid
+                ),
+                showCheckmark: iDid || done,
+                checkmarkColor: done ? Color.custom.primary : Color.custom.text,
+                completionButtonBorderColor: iDid || done ? .clear : Color(.systemGray),
+                updateCompletion: onToggle
+            ).opacity(isToday ? 1 : 0.6)
+        }
     }
 }

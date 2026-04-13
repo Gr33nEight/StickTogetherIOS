@@ -16,7 +16,9 @@ enum FirestoreFilter {
     case isEqual(field: FirestoreField, value: FirestoreValue)
     case arrayContains(field: FirestoreField, value: FirestoreValue)
     case greaterThan(field: FirestoreField, value: FirestoreValue)
+    case greaterThanOrEqualTo(field: FirestoreField, value: FirestoreValue)
     case lessThan(field: FirestoreField, value: FirestoreValue)
+    case lessThanOrEqualTo(field: FirestoreField, value: FirestoreValue)
     case isIn(field: FirestoreField, values: [FirestoreValue])
 }
 

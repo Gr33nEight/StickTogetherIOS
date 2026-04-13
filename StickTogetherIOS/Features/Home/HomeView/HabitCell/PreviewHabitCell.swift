@@ -8,23 +8,12 @@
 import SwiftUI
 
 struct PreviewHabitCell: View {
-    @EnvironmentObject private var profileVM: ProfileViewModel
-
     let habit: Habit
     let selectedDate: Date
-    let buddy: User?
     let isToday: Bool
-    let updateCompletion: () -> Void
-
-    private var state: CompletionState {
-        habit.completionState(
-            on: selectedDate,
-            currentUserId: profileVM.safeUser.safeID
-        )
-    }
 
     private var buddyDid: Bool {
-        state == .buddy
+        false
     }
 
     var body: some View {
@@ -38,7 +27,7 @@ struct PreviewHabitCell: View {
             showBuddyStatus: HabitCellBuddyInfo(
                 buddyStatusColor: Color.custom.text,
                 buddyBadgeColor: buddyDid ? Color.custom.primary : Color.custom.red,
-                buddyName: buddy?.name,
+                buddiesName: [""],
                 showStatusBadge: false,
                 buddyMarkedAsDone: buddyDid
             ),

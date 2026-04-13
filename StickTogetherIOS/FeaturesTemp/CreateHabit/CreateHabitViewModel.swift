@@ -48,7 +48,8 @@ final class CreateHabitViewModel: ObservableObject {
                 endDate: endDate,
                 reminderTime: reminderTime,
                 type: type,
-                buddyId: buddy?.id)
+                buddyIds: [buddy?.id ?? ""])
+            //TODO: Fix later
             
             try await createHabit.execute(input, for: currentUserId)
             event = .success

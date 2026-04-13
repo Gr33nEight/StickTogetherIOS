@@ -41,12 +41,30 @@ extension FirestoreQuery {
         return copy
     }
 
+    func greaterThanOrEqualTo(
+        _ field: FirestoreField,
+        _ value: FirestoreValue
+    ) -> Self {
+        var copy = self
+        copy.filters.append(.greaterThanOrEqualTo(field: field, value: value))
+        return copy
+    }
+
     func lessThan(
         _ field: FirestoreField,
         _ value: FirestoreValue
     ) -> Self {
         var copy = self
         copy.filters.append(.lessThan(field: field, value: value))
+        return copy
+    }
+    
+    func lessThanOrEqualTo(
+        _ field: FirestoreField,
+        _ value: FirestoreValue
+    ) -> Self {
+        var copy = self
+        copy.filters.append(.lessThanOrEqualTo(field: field, value: value))
         return copy
     }
 

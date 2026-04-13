@@ -8,7 +8,7 @@
 import SwiftUI
 
 @MainActor
-class HabitViewModel: ObservableObject {
+class HabitViewModel1: ObservableObject {
     @Published var habits: [Habit] = []
     @Published var friendsHabits: [Habit] = []
 
@@ -39,8 +39,8 @@ class HabitViewModel: ObservableObject {
     
     static func configured(service: HabitServiceProtocol,
                            loading: LoadingManager? = nil,
-                           currentUser: User) -> HabitViewModel {
-        return HabitViewModel(service: service, loading: loading, currentUser: currentUser)
+                           currentUser: User) -> HabitViewModel1 {
+        return HabitViewModel1(service: service, loading: loading, currentUser: currentUser)
     }
 
     private func loadUserHabits() async {
@@ -149,60 +149,63 @@ class HabitViewModel: ObservableObject {
     }
     
     func markHabitAsCompleted(_ habit: Habit, date: Date) async {
-        guard let habitId = habit.id else { return }
-        
-        lastInteraction[habitId] = Date()
-        
-        let key = Habit.dayKey(for: date)
-        let users = habit.completion[key] ?? []
-        let isMarked = users.contains(currentUser.safeID)
-
-        do {
-            try await service.updatedCompletionState(for: habitId, date: date, userId: currentUser.safeID, markCompleted: !isMarked)
-        } catch {
-            print("Failed to update completion: \(error)")
-        }
+//        guard let habitId = habit.id else { return }
+//        
+//        lastInteraction[habitId] = Date()
+//        
+//        let key = Habit.dayKey(for: date)
+//        let users = habit.completion[key] ?? []
+//        let isMarked = users.contains(currentUser.safeID)
+//
+//        do {
+//            try await service.updatedCompletionState(for: habitId, date: date, userId: currentUser.safeID, markCompleted: !isMarked)
+//        } catch {
+//            print("Failed to update completion: \(error)")
+//        }
     }
     
     func currentUserDidComplete(_ habit: Habit, on date: Date) -> Bool {
-        let key = Habit.dayKey(for: date)
-        return habit.userDidComplete(currentUser.safeID, forDayKey: key)
+//        let key = Habit.dayKey(for: date)
+//        return habit.userDidComplete(currentUser.safeID, forDayKey: key)
+        false
     }
     
     func habitState(_ habit: Habit, on date: Date) -> HabitState {
-        let key = Habit.dayKey(for: date)
-        let isPast = date < Calendar.current.startOfDay(for: Date())
-        let isAfterStartDate = date >= habit.startDate
-        
-        guard isPast && isAfterStartDate else { return .none }
-        
-        return habit.completionCount(forDayKey: key) >= habit.numberOfParticipants() ? .done : .skipped
+//        let key = Habit.dayKey(for: date)
+//        let isPast = date < Calendar.current.startOfDay(for: Date())
+//        let isAfterStartDate = date >= habit.startDate
+//        
+//        guard isPast && isAfterStartDate else { return .none }
+//        
+//        return habit.completionCount(forDayKey: key) >= habit.numberOfParticipants() ? .done : .skipped
+        .done
     }
     
     func habitStats(on date: Date) -> (skipped: Int, done: Int) {
-        let key = Habit.dayKey(for: date)
-        let isPastOrToday = date <= Calendar.current.startOfDay(for: Date())
-
-        guard isPastOrToday else { return (skipped: 0, done: 0) }
-
-        let relevantHabits = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
-        guard !relevantHabits.isEmpty else { return (skipped: 0, done: 0) }
-
-        var skipped = 0
-        var done = 0
-
-        for habit in relevantHabits {
-            let completions = habit.completion[key] ?? []
-            let participants = habit.numberOfParticipants()
-            
-            if completions.count >= participants {
-                done += 1
-            } else {
-                skipped += 1
-            }
-        }
-
-        return (skipped: skipped, done: done)
+//        let key = Habit.dayKey(for: date)
+//        let isPastOrToday = date <= Calendar.current.startOfDay(for: Date())
+//
+//        guard isPastOrToday else { return (skipped: 0, done: 0) }
+//
+//        let relevantHabits = habits.filter { $0.frequency.occurs(on: date, startDate: $0.startDate) }
+//        guard !relevantHabits.isEmpty else { return (skipped: 0, done: 0) }
+//
+//        var skipped = 0
+//        var done = 0
+//
+//        for habit in relevantHabits {
+//            let completions = habit.completion[key] ?? []
+//            let participants = habit.numberOfParticipants()
+//            
+//            if completions.count >= participants {
+//                done += 1
+//            } else {
+//                skipped += 1
+//            }
+//        }
+//
+//        return (skipped: skipped, done: done)
+        return (skipped: 1, done: 1)
     }
     
     deinit {

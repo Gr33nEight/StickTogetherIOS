@@ -15,12 +15,19 @@ struct HomeViewTemp: View {
     @State var pageIndex: Int = 0
     @State var baseWeekAnchor: Date = Date()
     
+    @Namespace var dayAnimation
+    @Namespace var habitTypeAnimation
+    
     var body: some View {
         VStack(spacing: 15) {
             header
             calendar
             content
-        }.task {
+        }
+        .background(Color.custom.background)
+        .navigationBarBackButtonHidden()
+        .edgesIgnoringSafeArea(.bottom)
+        .task {
             await viewModel.onAppear()
         }
     }
@@ -131,28 +138,103 @@ extension HomeViewTemp {
 
 extension HomeViewTemp {
     private var content: some View {
-        ZStack {
+        Group {
             if viewModel.isLoading {
                 ProgressView()
-            }
-            
-            if !viewModel.isLoading && viewModel.visibleHabits.isEmpty {
-                Text("Puste")
-            }
-            
-            if let error = viewModel.error {
+            } else if let error = viewModel.error {
                 Text(error)
-            }
-            
-            ScrollView {
-                VStack {
-                    ForEach(viewModel.visibleHabits) { habit in
-                        HabitCell(habit: habit, selectedDate: Date(), buddy: nil) {
-                            //
+            } else {
+                VStack(spacing: 0) {
+                    picker.padding(.bottom).padding([.top, .horizontal], 5)
+                    if !viewModel.visibleHabits.isEmpty {
+                        ScrollView(showsIndicators: false) {
+                            VStack {
+                                ForEach(viewModel.habitItems) { item in
+                                    Button {
+                                        let container = HabitViewContainer(habit: item.habit, selectedDate: viewModel.selectedDate)
+                                        navigate(.push(.habit(container)))
+                                    } label: {
+                                        HabitCell(
+                                            habitItem: item,
+                                            selectedDate: viewModel.selectedDate,
+                                        ) {
+                                            guard let habitId = item.habit.id else { return }
+                                                Task {
+                                                    await viewModel.toggleHabitCompletion(of: habitId)
+                                                }
+                                            }
+                                    }
+                                }
+                            }.padding(.bottom, Calendar.current.isDate(viewModel.selectedDate, inSameDayAs: Date()) ? 130 : 0)
                         }
+                    } else {
+                        emptyView
+                    }
+                    if !Calendar.current.isDate(viewModel.selectedDate, inSameDayAs: Date()) {
+                        Button {
+                            viewModel.selectedDate = Date()
+                            pageIndex = centerPage
+                            baseWeekAnchor = viewModel.selectedDate
+                        } label: {
+                            Text("Return to today")
+                        }.customButtonStyle(.primary)
+                            .padding(.vertical, 15)
+                            .padding(.bottom, 110)
                     }
                 }
             }
         }
+        .padding(.horizontal, 20)
+    }
+    
+    private var emptyView: some View {
+        VStack {
+            Spacer()
+            VStack {
+                Text(viewModel.pickedHabitListType.noHabitsText)
+                    .foregroundStyle(Color.custom.lightGrey)
+                    .font(.mySubtitle)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                if viewModel.pickedHabitListType == .myHabits {
+                    Button(action: {
+                        navigate(.push(.createHabit))
+                    }, label: {
+                        HStack {
+                            Image(systemName: "plus")
+                                .frame(height: 24)
+                            Text("Add new")
+                                .font(.customAppFont(size: 15, weight: .semibold))
+                        }
+                    })
+                    .foregroundStyle(Color.custom.tertiary)
+                }
+            }.padding(.bottom, 100)
+            Spacer()
+        }
+    }
+    
+    var picker: some View {
+        HStack(spacing: 0) {
+            ForEach(HabitListType.allCases, id: \.self) { type in
+                Button {
+                    viewModel.pickedHabitListType = type
+                } label: {
+                    ZStack {
+                        if viewModel.pickedHabitListType == type {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.custom.primary)
+                                .matchedGeometryEffect(id: "habitsList-bg", in: habitTypeAnimation)
+                        }
+                        Text(type.text)
+                            .font(.customAppFont(size: 13, weight: .bold))
+                            .foregroundColor(viewModel.pickedHabitListType == type ? Color.custom.text : Color(.systemGray))
+                            .frame(width: (UIScreen.main.bounds.size.width-80)/2, height: 40)
+                    }
+                }
+            }
+        }
+            .frame(height: 40)
+            .padding(.horizontal)
     }
 }

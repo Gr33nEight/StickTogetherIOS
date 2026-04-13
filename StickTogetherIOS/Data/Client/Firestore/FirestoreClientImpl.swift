@@ -18,21 +18,7 @@ final class FirestoreClientImpl: FirestoreClient {
         _ endpoint: E.Type,
         query: FirestoreQuery
     ) async throws -> [E.DTO] where E : FirestoreEndpoint {
-        var ref: Query = db.collection(endpoint.path)
-        
-        for filter in query.filters {
-            ref = applyFilter(ref, filter: filter)
-        }
-        
-        if let order = query.order {
-            ref = ref.order(by: order.field, descending: order.descending)
-        }
-        
-        if let limit = query.limit {
-            ref = ref.limit(to: limit)
-        }
-        
-        let snapshot = try await ref.getDocuments()
+        let snapshot = try await self.fetchSnapshot(endpoint, query: query)
         return try snapshot.documents.compactMap {
             try $0.data(as: E.DTO.self)
         }
@@ -68,6 +54,17 @@ final class FirestoreClientImpl: FirestoreClient {
     func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         let ref = db.collection(endpoint.path).document(id.value)
         try await ref.delete()
+    }
+    
+    func batchDelete<E>(_ endpoint: E.Type, query: FirestoreQuery) async throws where E : FirestoreEndpoint {
+        let snapshot = try await self.fetchSnapshot(endpoint, query: query)
+        let batch = db.batch()
+        
+        for doc in snapshot.documents {
+            batch.deleteDocument(doc.reference)
+        }
+        
+        try await batch.commit()
     }
     
     func listen<E>(_ endpoint: E.Type, query: FirestoreQuery) -> AsyncThrowingStream<[E.DTO], any Error> where E : FirestoreEndpoint {
@@ -167,6 +164,46 @@ final class FirestoreClientImpl: FirestoreClient {
         }
     }
     
+    func listenChunked<E>(
+        _ endpoint: E.Type,
+        chunks: [[String]],
+        queryBuilder: @escaping ([String]) -> FirestoreQuery
+    ) -> AsyncThrowingStream<[E.DTO], Error> where E: FirestoreEndpoint {
+        
+        return AsyncThrowingStream { continuation in
+            var tasks: [Task<Void, Never>] = []
+            var latestPerChunk: [Int: [E.DTO]] = [:]
+            
+            for (index, chunk) in chunks.enumerated() {
+                let query = queryBuilder(chunk)
+                
+                let stream = self.listen(endpoint, query: query)
+                
+                let task = Task {
+                    do {
+                        for try await dtos in stream {
+                            latestPerChunk[index] = dtos
+                            
+                            let merged = latestPerChunk
+                                .values
+                                .flatMap { $0 }
+                            
+                            continuation.yield(merged)
+                        }
+                    } catch {
+                        continuation.finish(throwing: error)
+                    }
+                }
+                
+                tasks.append(task)
+            }
+            
+            continuation.onTermination = { @Sendable _ in
+                tasks.forEach { $0.cancel() }
+            }
+        }
+    }
+    
     private func applyFilter(
         _ ref: Query,
         filter: FirestoreFilter
@@ -198,6 +235,14 @@ final class FirestoreClientImpl: FirestoreClient {
                 documentIdBlock: { $0.whereField($1, isGreaterThan: value.raw) }
             )
             
+        case .greaterThanOrEqualTo(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, isGreaterThanOrEqualTo: value.raw) },
+                documentIdBlock: { $0.whereField($1, isGreaterThanOrEqualTo: value.raw) }
+            )
+            
         case .lessThan(let field, let value):
             return apply(
                 ref,
@@ -205,6 +250,15 @@ final class FirestoreClientImpl: FirestoreClient {
                 stringBlock: { $0.whereField($1, isLessThan: value.raw) },
                 documentIdBlock: { $0.whereField($1, isLessThan: value.raw) }
             )
+            
+        case .lessThanOrEqualTo(let field, let value):
+            return apply(
+                ref,
+                field: field,
+                stringBlock: { $0.whereField($1, isLessThanOrEqualTo: value.raw) },
+                documentIdBlock: { $0.whereField($1, isLessThanOrEqualTo: value.raw) }
+            )
+
             
         case .isIn(let field, let values):
             let rawValues = values.map { $0.raw }
@@ -232,5 +286,23 @@ final class FirestoreClientImpl: FirestoreClient {
         case .documentId:
             return documentIdBlock(ref, FieldPath.documentID())
         }
+    }
+    
+    private func fetchSnapshot<E>(_ endpoint: E.Type, query: FirestoreQuery) async throws -> QuerySnapshot where E: FirestoreEndpoint {
+        var ref: Query = db.collection(endpoint.path)
+        
+        for filter in query.filters {
+            ref = applyFilter(ref, filter: filter)
+        }
+        
+        if let order = query.order {
+            ref = ref.order(by: order.field, descending: order.descending)
+        }
+        
+        if let limit = query.limit {
+            ref = ref.limit(to: limit)
+        }
+        
+        return try await ref.getDocuments()
     }
 }

@@ -8,56 +8,49 @@
 import SwiftUI
 
 struct HabitCell: View {
-    @EnvironmentObject private var profileVM: ProfileViewModel
-
-    let habit: Habit
+    let habitItem: HabitListItem
     let selectedDate: Date
-    let buddy: User?
-    let updateCompletion: () -> Void
+    let onToggle: () -> Void
 
-    private var iAmOwner: Bool {
-        habit.ownerId == profileVM.safeUser.safeID
-    }
-    
     private var isToday: Bool {
         Calendar.current.isDateInToday(selectedDate)
     }
 
     var body: some View {
         ZStack {
-            switch habit.type {
+            switch habitItem.habit.type {
             case .alone:
                 AloneHabitCell(
-                    habit: habit,
+                    habit: habitItem.habit,
                     selectedDate: selectedDate,
                     isToday: isToday,
-                    updateCompletion: updateCompletion
+                    onToggle: onToggle,
+                    state: habitItem.state
                 )
 
             case .coop:
                 CoopHabitCell(
-                    habit: habit,
+                    habit: habitItem.habit,
                     selectedDate: selectedDate,
-                    buddy: buddy,
                     isToday: isToday,
-                    updateCompletion: updateCompletion
+                    onToggle: onToggle,
+                    state: habitItem.state
                 )
 
             case .preview:
-                if iAmOwner {
+                if habitItem.isOwner {
                     AloneHabitCell(
-                        habit: habit,
+                        habit: habitItem.habit,
                         selectedDate: selectedDate,
                         isToday: isToday,
-                        updateCompletion: updateCompletion
+                        onToggle: onToggle,
+                        state: habitItem.state
                     )
                 } else {
                     PreviewHabitCell(
-                        habit: habit,
+                        habit: habitItem.habit,
                         selectedDate: selectedDate,
-                        buddy: buddy,
                         isToday: isToday,
-                        updateCompletion: updateCompletion
                     )
                 }
             }

@@ -33,6 +33,8 @@ final class CreateHabitUseCaseImpl: CreateHabitUseCase {
             title: input.title,
             icon: input.icon,
             ownerId: userId,
+            acceptedBuddyIds: [],
+            invitedBuddyIds: input.buddyIds,
             frequency: input.frequency,
             startDate: input.startDate,
             endDate: input.endDate,
@@ -42,17 +44,19 @@ final class CreateHabitUseCaseImpl: CreateHabitUseCase {
         
         try await habitRepository.createHabit(habit)
         
-        if let buddyId = input.buddyId {
-            let sender = try await userRepository.getUser(withId: buddyId)
-            
-            let notification = Notification(
-                senderId: userId,
-                receiverId: buddyId,
-                title: "Habit invite",
-                body: "\(sender.name) invited you to join a habit: \(habit.title) \(habit.icon)",
-                type: .habitInvite(habitId: habitId)
-            )
-            try await notificationsRepository.createNotification(notification)
+        if !input.buddyIds.isEmpty {
+            for buddyId in input.buddyIds {
+                let sender = try await userRepository.getUser(withId: buddyId)
+                
+                let notification = Notification(
+                    senderId: userId,
+                    receiverId: buddyId,
+                    title: "Habit invite",
+                    body: "\(sender.name) invited you to join a habit: \(habit.title) \(habit.icon)",
+                    type: .habitInvite(habitId: habitId)
+                )
+                try await notificationsRepository.createNotification(notification)
+            }
         }
     }
 }

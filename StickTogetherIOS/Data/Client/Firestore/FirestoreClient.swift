@@ -43,6 +43,11 @@ protocol FirestoreClient {
         id: FirestoreDocumentID
     ) async throws
     
+    func batchDelete<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        query: FirestoreQuery
+    ) async throws
+    
     func listen<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         query: FirestoreQuery
@@ -61,4 +66,10 @@ protocol FirestoreClient {
     func runTransaction(
         _ block: @escaping (TransactionContext) throws -> Void
     ) async throws
+    
+    func listenChunked<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        chunks: [[String]],
+        queryBuilder: @escaping ([String]) -> FirestoreQuery
+    ) -> AsyncThrowingStream<[E.DTO], Error>
 }

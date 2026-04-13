@@ -18,7 +18,7 @@ struct NavigationStackContentView: View {
             RootView(selected: $selected, container: authenticatedAppContainer)
                 .navigationDestination(for: Route.self) { route in
                     switch route {
-                    case .habit(let container): HabitView(habit: container.habit, selectedDate: container.selectedDate, friends: container.friends)
+                    case .habit(let container): authenticatedAppContainer.makeHabitView(container)
                     case .createHabit: authenticatedAppContainer.makeCreateHabitView()
                     case .notifications: authenticatedAppContainer.makeNotificationsView()
                     }

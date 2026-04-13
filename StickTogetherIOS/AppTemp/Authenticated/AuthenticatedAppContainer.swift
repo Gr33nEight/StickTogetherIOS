@@ -33,6 +33,9 @@ final class AuthenticatedAppContainer {
     private lazy var habitRepository: HabitRepository =
         HabitRepositoryImpl(firestoreClient: firestoreClient)
 
+    private lazy var habitEntryRepository: HabitEntryRepository =
+        HabitEntryRepositoryImpl(firestoreClient: firestoreClient)
+    
     private lazy var friendsRepository: FriendsRepository =
         FriendsRepositoryImpl(
             firestoreClient: firestoreClient,
@@ -73,13 +76,33 @@ final class AuthenticatedAppContainer {
     private lazy var listenToSharedHabits: ListenToHabitsUseCase =
         ListenToSharedHabitsUseCase(repository: habitRepository)
     
-    private lazy var createHabitUseCase: CreateHabitUseCase =
+    private lazy var createHabit: CreateHabitUseCase =
         CreateHabitUseCaseImpl(
             habitRepository: habitRepository,
             userRepository: userRepository,
             notificationsRepository: notificationsRepository
         )
+    
+    private lazy var deleteHabit: DeleteHabitUseCase =
+        DeleteHabitUseCaseImpl(habitRepository: habitRepository, habitEntryRepository: habitEntryRepository)
+    
+    private lazy var listenToHabit: ListenToHabitUseCase =
+        ListenToHabitUseCaseImpl(habitRepository: habitRepository)
 
+    // MARK: - UseCases (Habit Entries)
+    
+    private lazy var getHabitEntries: GetHabitEntriesUseCase =
+        GetHabitEntriesUseCaseImpl(habitEntryRepository: habitEntryRepository)
+    
+    private lazy var toggleHabitCompletionState: ToggleHabitCompletionStateUseCase =
+        ToggleHabitCompletionStateUseCaseImpl(habitEntryRepository: habitEntryRepository, habitRepository: habitRepository)
+    
+    private lazy var listenToHabitEntries: ListenToHabitEntriesUseCase =
+        ListenToHabitEntriesUseCaseImpl(habitEntryRepository: habitEntryRepository)
+    
+    private lazy var listenToAllHabitEntries: ListenToAllHabitEntriesOnDate =
+        ListenToAllHabitEntriesOnDateImpl(habitEntryRepository: habitEntryRepository)
+    
     // MARK: - UseCases (Friends & Invitations)
 
     private lazy var listenToFriends: ListenToFriendsUseCase =
@@ -148,6 +171,9 @@ final class AuthenticatedAppContainer {
     private lazy var markAsRead: MarkAsReadUseCase =
         MarkAsReadUseCaseImpl(notificationsRepository: notificationsRepository)
     
+    private lazy var encourageBuddies: EncourageBuddiesUseCase =
+        EncourageBuddiesUseCaseImpl(notificationsRepository: notificationsRepository, userRepository: userRepository)
+    
     // MARK: - ViewModels
 
     @MainActor
@@ -157,7 +183,9 @@ final class AuthenticatedAppContainer {
             listenToOwnedHabits: listenToOwnedHabits,
             listenToBuddyHabits: listenToBuddyHabits,
             listenToSharedHabits: listenToSharedHabits,
-            getCurrentUser: getUser
+            getCurrentUser: getUser,
+            toggleHabitCompletion: toggleHabitCompletionState,
+            listenToAllHabitEntriesOnDate: listenToAllHabitEntries
         )
     }
     
@@ -199,7 +227,7 @@ final class AuthenticatedAppContainer {
     func makeCreateHabitViewModel() -> CreateHabitViewModel {
         CreateHabitViewModel(
             currentUserId: userId,
-            createHabit: createHabitUseCase
+            createHabit: createHabit
         )
     }
     
@@ -212,6 +240,21 @@ final class AuthenticatedAppContainer {
         )
     }
 
+    @MainActor
+    func makeHabitViewModel(_ container: HabitViewContainer) -> HabitViewModel {
+        HabitViewModel(
+            container: container,
+            currentUserId: userId,
+            getHabitEntries: getHabitEntries,
+            getUserById: getUser,
+            deleteHabit: deleteHabit,
+            encourageBuddies: encourageBuddies,
+            toggleHabitCompletionState: toggleHabitCompletionState,
+            listenToHabit: listenToHabit,
+            listenToEntries: listenToHabitEntries
+        )
+    }
+    
     // MARK: - Views
 
     @MainActor
@@ -232,6 +275,11 @@ final class AuthenticatedAppContainer {
     @MainActor
     func makeNotificationsView() -> some View {
         NotificationView()
+    }
+    
+    @MainActor
+    func makeHabitView(_ container: HabitViewContainer) -> some View {
+        HabitView(viewModel: self.makeHabitViewModel(container))
     }
     
     @MainActor

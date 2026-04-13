@@ -46,17 +46,6 @@ final class HabitRepositoryImpl: HabitRepository {
         try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
     }
     
-    func updateData(with id: String, updates: HabitUpdates) async throws {
-        var fields: [String: FirestoreUpdateOperations] = [:]
-        
-        switch updates {
-        case .completionState(let date, let userId):
-            fields["completion.\(Habit.dayKey(for: date))"] = FirestoreUpdateOperations.union([userId])
-        }
-        
-        try await firestoreClient.updateData(for: HabitEndpoint.self, id: .init(value: id), fields)
-    }
-    
     func createHabit(_ habit: Habit) async throws {
         let dto = HabitMapper.toDTO(habit)
         let docId = try await firestoreClient.create(dto, for: HabitEndpoint.self)
@@ -80,5 +69,10 @@ final class HabitRepositoryImpl: HabitRepository {
         let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId)).isEqual(.field("type"), .int(2))
         let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream) 
+    }
+    
+    func listenToHabit(with id: String) -> AsyncThrowingStream<Habit, any Error> {
+        let stream = firestoreClient.listenDocument(HabitEndpoint.self, id: .init(value: id))
+        return HabitMapper.habitStream(stream)
     }
 }

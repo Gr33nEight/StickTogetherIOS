@@ -75,7 +75,7 @@ final class FriendsViewModelTests: XCTestCase {
         XCTAssertTrue(added.isEmpty)
     }
 
-    func testRemoveFriend_callsServiceForBothUsers() async {
+    func testRemoveFriend_callsServiceForallUsers() async {
         // when
         let result = await vm.removeFromFriendsList(userId: "friend123")
 
