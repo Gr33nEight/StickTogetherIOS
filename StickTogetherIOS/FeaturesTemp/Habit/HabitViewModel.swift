@@ -23,7 +23,6 @@ final class HabitViewModel: ObservableObject {
     private var habitEntriesTask: Task<Void, Never>?
     
     private var currentUserId: String
-    private var getHabitEntries: GetHabitEntriesUseCase
     private var getUser: GetUserUseCase
     private var deleteHabit: DeleteHabitUseCase
     private var encourageBuddies: EncourageBuddiesUseCase
@@ -71,7 +70,6 @@ final class HabitViewModel: ObservableObject {
     init(
         container: HabitViewContainer,
         currentUserId: String,
-        getHabitEntries: GetHabitEntriesUseCase,
         getUserById: GetUserUseCase,
         deleteHabit: DeleteHabitUseCase,
         encourageBuddies: EncourageBuddiesUseCase,
@@ -82,7 +80,6 @@ final class HabitViewModel: ObservableObject {
         self.habit = container.habit
         self.selectedDate = container.selectedDate
         self.currentUserId = currentUserId
-        self.getHabitEntries = getHabitEntries
         self.getUser = getUserById
         self.deleteHabit = deleteHabit
         self.encourageBuddies = encourageBuddies
@@ -108,7 +105,7 @@ final class HabitViewModel: ObservableObject {
             try await deleteHabit.execute(habitId)
             event = .dimsiss
         } catch {
-            event = .showToastMessage(.failed("Something went wrong"))
+            event = .showToastMessage(.failed(error.localizedDescription))
         }
     }
     
@@ -119,7 +116,7 @@ final class HabitViewModel: ObservableObject {
         do {
             try await encourageBuddies.execute(forUsers: habit.acceptedBuddyIds, from: habit.ownerId, habitId: habitId)
         } catch {
-            event = .showToastMessage(.failed("Something went wrong"))
+            event = .showToastMessage(.failed(error.localizedDescription))
         }
     }
     
@@ -150,8 +147,7 @@ final class HabitViewModel: ObservableObject {
             )
         } catch {
             entries = previousEntries
-            print(error.localizedDescription)
-            event = .showToastMessage(.failed("Something went wrong"))
+            event = .showToastMessage(.failed(error.localizedDescription))
         }
     }
 
@@ -173,7 +169,7 @@ final class HabitViewModel: ObservableObject {
             }
             self.buddies = users
         } catch {
-            event = .showToastMessage(.failed("Something went wrong"))
+            event = .showToastMessage(.failed(error.localizedDescription))
         }
     }
     
@@ -188,7 +184,7 @@ final class HabitViewModel: ObservableObject {
                     self.habit = habit
                 }
             } catch {
-                event = .showToastMessage(.failed("Something went wrong"))
+                event = .showToastMessage(.failed(error.localizedDescription))
             }
         }
     }
@@ -214,7 +210,7 @@ final class HabitViewModel: ObservableObject {
                     self.entries = newEntries
                 }
             } catch {
-                self.event = .showToastMessage(.failed("Something went wrong"))
+                self.event = .showToastMessage(.failed(error.localizedDescription))
             }
         }
     }

@@ -24,7 +24,18 @@ final class DeleteHabitUseCaseImpl: DeleteHabitUseCase {
     }
     
     func execute(_ habitId: String) async throws {
-        try await habitRepository.deleteHabit(with: habitId)
-        try await habitEntryRepository.deleteEntries(byHabit: habitId)
+        do {
+            try await habitRepository.deleteHabit(with: habitId)
+        } catch {
+            throw DeleteHabitError.failedToDeleteHabit
+        }
+        
+        do {
+            try await habitEntryRepository.deleteEntries(byHabit: habitId)
+        } catch HabitEntryRepositoryError.habitEntriesNotFound {
+            throw DeleteHabitError.notFound
+        } catch {
+            throw DeleteHabitError.failedToDeleteEntries
+        }
     }
 }

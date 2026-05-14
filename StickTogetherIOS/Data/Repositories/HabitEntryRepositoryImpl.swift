@@ -34,16 +34,17 @@ final class HabitEntryRepositoryImpl: HabitEntryRepository {
         return HabitEntryMapper.toDomain(dto)
     }
     
-    func getAllEntries(of habitId: String, on date: Date) async throws -> [HabitEntry] {
+    func getAllEntries(for userId: String, from fromDate: Date, to referenceDate: Date) async throws -> [HabitEntry] {
         let query = FirestoreQuery()
-            .isEqual(.field("date"), .date(date))
-            .isEqual(.field("habitId"), .string(habitId))
+            .isEqual(.field("userId"), .string(userId))
+            .greaterThanOrEqualTo(.field("date"), .date(fromDate))
+            .lessThanOrEqualTo(.field("date"), .date(referenceDate))
+            .order(by: "date", descending: true)
         let results: [HabitEntryDTO] = try await firestoreClient.fetch(HabitEntryEndpoint.self, query: query)
-        
         return results.map(HabitEntryMapper.toDomain(_:))
     }
     
-    func getAllEntries(for id: String, from fromDate: Date, to referenceDate: Date) async throws -> [HabitEntry] {
+    func getAllEntries(by id: String, from fromDate: Date, to referenceDate: Date) async throws -> [HabitEntry] {
         let query = FirestoreQuery()
             .isEqual(.field("habitId"), .string(id))
             .greaterThanOrEqualTo(.field("date"), .date(fromDate))
@@ -64,12 +65,22 @@ final class HabitEntryRepositoryImpl: HabitEntryRepository {
     
     func deleteEntry(by id: String, and date: Date, for userId: String) async throws {
         let entryId = "\(id)_\(userId)_\(date.formattedDate)"
-        try await firestoreClient.delete(HabitEntryEndpoint.self, id: .init(value: entryId))
+        do {
+            try await firestoreClient.delete(HabitEntryEndpoint.self, id: .init(value: entryId))
+        } catch FirestoreClientError.documentNotFound {
+            throw HabitEntryRepositoryError.habitEntryNotFound
+        } catch {
+            throw HabitEntryRepositoryError.failedToDelete
+        }
     }
     
     func deleteEntries(byHabit id: String) async throws {
         let query = FirestoreQuery().isEqual(.field("habitId"), .string(id))
-        try await firestoreClient.batchDelete(HabitEntryEndpoint.self, query: query)
+        do {
+            try await firestoreClient.batchDelete(HabitEntryEndpoint.self, query: query)
+        } catch {
+            throw HabitEntryRepositoryError.habitEntriesNotFound
+        }
     }
     
     func listenToEntries(of habitId: String, on date: Date) -> AsyncThrowingStream<[HabitEntry], any Error> {

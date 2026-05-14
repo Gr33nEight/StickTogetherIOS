@@ -91,8 +91,8 @@ final class AuthenticatedAppContainer {
 
     // MARK: - UseCases (Habit Entries)
     
-    private lazy var getHabitEntries: GetHabitEntriesUseCase =
-        GetHabitEntriesUseCaseImpl(habitEntryRepository: habitEntryRepository)
+    private lazy var getHabitEntries: GetHabitEntriesFromDateRangeUseCase =
+        GetHabitEntriesFromDateRangeUseCaseImpl(habitEntryRepository: habitEntryRepository)
     
     private lazy var toggleHabitCompletionState: ToggleHabitCompletionStateUseCase =
         ToggleHabitCompletionStateUseCaseImpl(habitEntryRepository: habitEntryRepository, habitRepository: habitRepository)
@@ -185,7 +185,8 @@ final class AuthenticatedAppContainer {
             listenToSharedHabits: listenToSharedHabits,
             getCurrentUser: getUser,
             toggleHabitCompletion: toggleHabitCompletionState,
-            listenToAllHabitEntriesOnDate: listenToAllHabitEntries
+            listenToAllHabitEntriesOnDate: listenToAllHabitEntries,
+            getHabitEntries: getHabitEntries
         )
     }
     
@@ -245,7 +246,6 @@ final class AuthenticatedAppContainer {
         HabitViewModel(
             container: container,
             currentUserId: userId,
-            getHabitEntries: getHabitEntries,
             getUserById: getUser,
             deleteHabit: deleteHabit,
             encourageBuddies: encourageBuddies,

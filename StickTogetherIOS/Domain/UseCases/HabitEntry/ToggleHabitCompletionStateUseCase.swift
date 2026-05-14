@@ -44,7 +44,7 @@ final class ToggleHabitCompletionStateUseCaseImpl: ToggleHabitCompletionStateUse
         let fromDate = calendar.date(byAdding: .day, value: -90, to: referenceDate)!
         
         let entries = try await habitEntryRepository.getAllEntries(
-            for: id,
+            by: id,
             from: fromDate,
             to: referenceDate
         )

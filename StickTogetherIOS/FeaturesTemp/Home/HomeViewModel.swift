@@ -20,8 +20,9 @@ final class HomeViewModel: ObservableObject {
             startListeningToAllHabitEntries()
         }
     }
-    
+    @Published var weeklyEntries: [HabitEntry] = []
     @Published private var currentUser: User?
+    @Published var visibleWeekDates: [Date] = []
     
     @Published private(set) var visibleHabits: [Habit] = []
     @Published private(set) var entries: [HabitEntry] = []
@@ -44,17 +45,18 @@ final class HomeViewModel: ObservableObject {
     private let getCurrentUser: GetUserUseCase
     private let toggleHabitCompletion: ToggleHabitCompletionStateUseCase
     private let listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate
+    private var getHabitEntries: GetHabitEntriesFromDateRangeUseCase
     
     var currentUserName: String {
         currentUser?.name ?? "Unknown user"
     }
     
     var habitItems: [HabitListItem] {
-        visibleHabits.map { habit in
+        habits(for: selectedDate).map { habit in
             HabitListItem(
                 id: habit.id ?? UUID().uuidString,
                 habit: habit,
-                state: completionState(for: habit),
+                state: completionState(for: habit, on: selectedDate),
                 isOwner: iAmOwner(of: habit.id)
             )
         }
@@ -64,6 +66,10 @@ final class HomeViewModel: ObservableObject {
         Dictionary(grouping: entries) { $0.habitId }
     }
     
+    var weeklyEntriesByHabit: [String: [HabitEntry]] {
+        Dictionary(grouping: weeklyEntries) { $0.habitId }
+    }
+    
     init(
         currentUserId: String,
         listenToOwnedHabits: ListenToHabitsUseCase,
@@ -71,7 +77,8 @@ final class HomeViewModel: ObservableObject {
         listenToSharedHabits: ListenToHabitsUseCase,
         getCurrentUser: GetUserUseCase,
         toggleHabitCompletion: ToggleHabitCompletionStateUseCase,
-        listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate
+        listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate,
+        getHabitEntries: GetHabitEntriesFromDateRangeUseCase
     ) {
         self.currentUserId = currentUserId
         self.listenToOwnedHabits = listenToOwnedHabits
@@ -80,8 +87,64 @@ final class HomeViewModel: ObservableObject {
         self.getCurrentUser = getCurrentUser
         self.toggleHabitCompletion = toggleHabitCompletion
         self.listenToAllHabitEntriesOnDate = listenToAllHabitEntriesOnDate
+        self.getHabitEntries = getHabitEntries
+    }
+
+    func doneHabitsOnDate(_ date: Date) -> Int {
+        habits(for: date)
+            .filter {
+                guard let id = $0.id else { return false }
+
+                return weeklyEntriesByHabit[id]?.contains {
+                    Calendar.current.isDate($0.date, inSameDayAs: date)
+                    && $0.userId == currentUserId
+                    && $0.status == .done
+                } ?? false
+            }
+            .count
+    }
+
+    func notDoneHabitsOnDate(_ date: Date) -> Int {
+        habits(for: date).count - doneHabitsOnDate(date)
     }
     
+    func habits(for date: Date) -> [Habit] {
+        visibleHabits.filter {
+            $0.frequency.occurs(
+                on: date,
+                startDate: $0.startDate
+            )
+        }
+    }
+    
+    func fetchHabitEntries(from startDate: Date, to endDate: Date) async  {
+        do {
+            weeklyEntries = try await getHabitEntries.execute(userId: currentUserId, from: startDate, to: endDate)
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+    
+    private func didComplete(
+        habitId: String,
+        on date: Date
+    ) -> Bool {
+        entriesByHabit[habitId]?.contains {
+            Calendar.current.isDate($0.date, inSameDayAs: date)
+            && $0.userId == currentUserId
+            && $0.status == .done
+        } ?? false
+    }
+    
+    private func scheduledHabits(on date: Date) -> [Habit] {
+        visibleHabits.filter {
+            $0.frequency.occurs(
+                on: date,
+                startDate: $0.startDate
+            )
+        }
+    }
+
     func onAppear() async {
         startListening()
         await getCurrentUser()
@@ -199,9 +262,10 @@ final class HomeViewModel: ObservableObject {
         ownedHabits.contains(where: { $0.id == habitId })
     }
     
-    private func completionState(for habit: Habit) -> CompletionState {
-        let entries = entriesByHabit[habit.id ?? ""] ?? []
-        
+    private func completionState(for habit: Habit, on date: Date) -> CompletionState {
+        let entries = (entriesByHabit[habit.id ?? ""] ?? []).filter {
+                Calendar.current.isDate($0.date, inSameDayAs: date)
+            }
         let participants = Set([habit.ownerId] + habit.acceptedBuddyIds)
         let doneUserIds = Set(entries.map { $0.userId })
         

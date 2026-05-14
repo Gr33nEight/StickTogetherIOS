@@ -83,7 +83,7 @@ extension Date {
     
     var formattedDate: String {
         let formatter = ISO8601DateFormatter()
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // 🔥 UTC
+        formatter.timeZone = .current
         formatter.formatOptions = [.withFullDate]
         return formatter.string(from: self)
     }

@@ -31,7 +31,7 @@ struct DayCell: View {
     private var isToday: Bool { Calendar.current.isDate(date, inSameDayAs: Date()) }
     private var fullyDone: Bool { done == 0 || skipped == 0}
     private var fullStateColor: Color {
-        if done == 0 && skipped == 0 {
+        if date > Date() && (done != 0 || skipped != 0) {
             return Color.custom.grey
         }else if done > 0 {
             return Color.custom.primary

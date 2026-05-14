@@ -61,12 +61,12 @@ struct NavigationBarView: View {
             if isPicked {
                 Spacer()
                 Text(dest.rawValue.capitalized)
-                    .font(.customAppFont(size: 15, weight: .semibold))
+                    .font(.customAppFont(size: 16, weight: .semibold))
                     .matchedGeometryEffect(id: "label_\(dest.rawValue)", in: navNamespace)
                 Spacer()
             }
         }
-        .foregroundStyle(isPicked ? Color.custom.secondary : Color.custom.text)
+        .foregroundStyle(isPicked ? Color.custom.primary : Color.custom.text)
         .frame(maxWidth: isPicked ? .infinity : 50)
         .padding(isPicked ? 12 : 0)
         .background(

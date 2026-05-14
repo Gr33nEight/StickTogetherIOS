@@ -18,53 +18,85 @@ final class FirestoreClientImpl: FirestoreClient {
         _ endpoint: E.Type,
         query: FirestoreQuery
     ) async throws -> [E.DTO] where E : FirestoreEndpoint {
-        let snapshot = try await self.fetchSnapshot(endpoint, query: query)
-        return try snapshot.documents.compactMap {
-            try $0.data(as: E.DTO.self)
+        do {
+            let snapshot = try await self.fetchSnapshot(endpoint, query: query)
+            return try snapshot.documents.compactMap {
+                try $0.data(as: E.DTO.self)
+            }
+        } catch {
+            throw FirestoreErrorMapper.map(error)
         }
     }
     
     func fetchDocument<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws -> E.DTO where E : FirestoreEndpoint{
-        return try await db.collection(endpoint.path).document(id.value).getDocument().data(as: E.DTO.self)
+        do {
+            return try await db.collection(endpoint.path).document(id.value).getDocument().data(as: E.DTO.self)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
-        try doc.setData(from: dto, merge: merge)
+        do {
+            try doc.setData(from: dto, merge: merge)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     func setDataAsync<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
-        try doc.setData(from: dto, merge: merge)
+        do {
+            try doc.setData(from: dto, merge: merge)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
-        try doc.setData(from: dto)
+        do {
+            try doc.setData(from: dto)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     func updateData<E>(for endpoint: E.Type, id: FirestoreDocumentID, _ fields: [String : FirestoreUpdateOperations]) async throws where E : FirestoreEndpoint {
         let ref = db.collection(endpoint.path).document(id.value)
         let data = FirestoreUpdateOperationsMapper.toUpdateData(fields)
         
-        try await ref.updateData(data)
+        do {
+            try await ref.updateData(data)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     
     func delete<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         let ref = db.collection(endpoint.path).document(id.value)
-        try await ref.delete()
+        do {
+            try await ref.delete()
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
     
     func batchDelete<E>(_ endpoint: E.Type, query: FirestoreQuery) async throws where E : FirestoreEndpoint {
-        let snapshot = try await self.fetchSnapshot(endpoint, query: query)
-        let batch = db.batch()
-        
-        for doc in snapshot.documents {
-            batch.deleteDocument(doc.reference)
+        do {
+            let snapshot = try await self.fetchSnapshot(endpoint, query: query)
+            let batch = db.batch()
+            
+            for doc in snapshot.documents {
+                batch.deleteDocument(doc.reference)
+            }
+            
+            try await batch.commit()
+        } catch {
+            throw FirestoreErrorMapper.map(error)
         }
-        
-        try await batch.commit()
     }
     
     func listen<E>(_ endpoint: E.Type, query: FirestoreQuery) -> AsyncThrowingStream<[E.DTO], any Error> where E : FirestoreEndpoint {
@@ -85,7 +117,7 @@ final class FirestoreClientImpl: FirestoreClient {
             
             let listener = ref.addSnapshotListener { snapshot, error in
                 if let error {
-                    continuation.finish(throwing: error)
+                    continuation.finish(throwing: FirestoreErrorMapper.map(error))
                     return
                 }
                 
@@ -97,7 +129,7 @@ final class FirestoreClientImpl: FirestoreClient {
                     }
                     continuation.yield(data)
                 } catch {
-                    continuation.finish(throwing: error)
+                    continuation.finish(throwing: FirestoreErrorMapper.map(error))
                     return
                 }
             }
@@ -112,7 +144,7 @@ final class FirestoreClientImpl: FirestoreClient {
         return AsyncThrowingStream { continuation in
             let listener = db.collection(endpoint.path).document(id.value).addSnapshotListener { snapshot, error in
                 if let error {
-                    continuation.finish(throwing: error)
+                    continuation.finish(throwing: FirestoreErrorMapper.map(error))
                     return
                 }
                 
@@ -122,7 +154,7 @@ final class FirestoreClientImpl: FirestoreClient {
                     let data = try snapshot.data(as: E.DTO.self)
                     continuation.yield(data)
                 } catch {
-                    continuation.finish(throwing: error)
+                    continuation.finish(throwing: FirestoreErrorMapper.map(error))
                     return
                 }
             }
@@ -138,7 +170,12 @@ final class FirestoreClientImpl: FirestoreClient {
     ) async throws -> FirestoreDocumentID {
         
         let ref = db.collection(endpoint.path).document()
-        try ref.setData(from: dto)
+        
+        do {
+            try ref.setData(from: dto)
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
         
         return FirestoreDocumentID(value: ref.documentID)
     }
@@ -156,7 +193,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 }
             }) { _, error in
                 if let error {
-                    continuation.resume(throwing: error)
+                    continuation.resume(throwing: FirestoreErrorMapper.map(error))
                 } else {
                     continuation.resume()
                 }
@@ -191,7 +228,7 @@ final class FirestoreClientImpl: FirestoreClient {
                             continuation.yield(merged)
                         }
                     } catch {
-                        continuation.finish(throwing: error)
+                        continuation.finish(throwing: FirestoreErrorMapper.map(error))
                     }
                 }
                 
@@ -303,6 +340,10 @@ final class FirestoreClientImpl: FirestoreClient {
             ref = ref.limit(to: limit)
         }
         
-        return try await ref.getDocuments()
+        do {
+            return try await ref.getDocuments()
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
     }
 }

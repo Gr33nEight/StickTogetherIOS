@@ -69,7 +69,12 @@ extension HomeViewTemp {
                         ForEach(weekDates(around: anchor), id: \.self) { date in
                             let isSelected = Calendar.current.isDate(date, inSameDayAs: viewModel.selectedDate)
                             
-                            DayCell(date: date, isSelected: isSelected, done: /*habitVM.habitStats(on: date).done*/ 10, skipped: /*habitVM.habitStats(on: date).skipped*/ 5)
+                            DayCell(
+                                date: date,
+                                isSelected: isSelected,
+                                done: viewModel.doneHabitsOnDate(date),
+                                skipped: viewModel.notDoneHabitsOnDate(date)
+                            )
                                 .onTapGesture {
                                     withAnimation(.bouncy) {
                                         viewModel.selectedDate = date
@@ -92,6 +97,11 @@ extension HomeViewTemp {
                     viewModel.selectedDate = today
                 } else if let first = week.first {
                     viewModel.selectedDate = first
+                }
+                
+                guard let first = week.first, let last = week.last else { return }
+                Task {
+                    await viewModel.fetchHabitEntries(from: first, to: last)
                 }
             }
         }
@@ -145,7 +155,7 @@ extension HomeViewTemp {
                 Text(error)
             } else {
                 VStack(spacing: 0) {
-                    picker.padding(.bottom).padding([.top, .horizontal], 5)
+                    picker.padding(.bottom).padding(.top, 5)
                     if !viewModel.visibleHabits.isEmpty {
                         ScrollView(showsIndicators: false) {
                             VStack {
@@ -235,6 +245,6 @@ extension HomeViewTemp {
             }
         }
             .frame(height: 40)
-            .padding(.horizontal)
+//            .padding(.horizontal)
     }
 }
