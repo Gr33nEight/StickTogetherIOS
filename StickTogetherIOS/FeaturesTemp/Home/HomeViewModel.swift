@@ -23,6 +23,7 @@ final class HomeViewModel: ObservableObject {
     @Published var weeklyEntries: [HabitEntry] = []
     @Published private var currentUser: User?
     @Published var visibleWeekDates: [Date] = []
+    @Published private var usersById: [String: User] = [:]
     
     @Published private(set) var visibleHabits: [Habit] = []
     @Published private(set) var entries: [HabitEntry] = []
@@ -42,7 +43,7 @@ final class HomeViewModel: ObservableObject {
     private let listenToOwnedHabits: ListenToHabitsUseCase
     private let listenToBuddyHabits: ListenToHabitsUseCase
     private let listenToSharedHabits: ListenToHabitsUseCase
-    private let getCurrentUser: GetUserUseCase
+    private let getUser: GetUserUseCase
     private let toggleHabitCompletion: ToggleHabitCompletionStateUseCase
     private let listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate
     private var getHabitEntries: GetHabitEntriesFromDateRangeUseCase
@@ -57,7 +58,8 @@ final class HomeViewModel: ObservableObject {
                 id: habit.id ?? UUID().uuidString,
                 habit: habit,
                 state: completionState(for: habit, on: selectedDate),
-                isOwner: iAmOwner(of: habit.id)
+                isOwner: iAmOwner(of: habit.id),
+                buddyInfos: makeBuddyInfos(for: habit)
             )
         }
     }
@@ -75,7 +77,7 @@ final class HomeViewModel: ObservableObject {
         listenToOwnedHabits: ListenToHabitsUseCase,
         listenToBuddyHabits: ListenToHabitsUseCase,
         listenToSharedHabits: ListenToHabitsUseCase,
-        getCurrentUser: GetUserUseCase,
+        getUser: GetUserUseCase,
         toggleHabitCompletion: ToggleHabitCompletionStateUseCase,
         listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate,
         getHabitEntries: GetHabitEntriesFromDateRangeUseCase
@@ -84,7 +86,7 @@ final class HomeViewModel: ObservableObject {
         self.listenToOwnedHabits = listenToOwnedHabits
         self.listenToBuddyHabits = listenToBuddyHabits
         self.listenToSharedHabits = listenToSharedHabits
-        self.getCurrentUser = getCurrentUser
+        self.getUser = getUser
         self.toggleHabitCompletion = toggleHabitCompletion
         self.listenToAllHabitEntriesOnDate = listenToAllHabitEntriesOnDate
         self.getHabitEntries = getHabitEntries
@@ -112,7 +114,8 @@ final class HomeViewModel: ObservableObject {
         visibleHabits.filter {
             $0.frequency.occurs(
                 on: date,
-                startDate: $0.startDate
+                startDate: $0.startDate,
+                endDate: $0.endDate
             )
         }
     }
@@ -194,7 +197,7 @@ final class HomeViewModel: ObservableObject {
     
     func getCurrentUser() async {
         do {
-            currentUser = try await getCurrentUser.byId(with: currentUserId)
+            currentUser = try await getUser.byId(with: currentUserId)
         } catch {
             self.error = error.localizedDescription
         }
@@ -233,6 +236,122 @@ final class HomeViewModel: ObservableObject {
             entries = previousEntries
             self.error = error.localizedDescription
         }
+    }
+    
+    private func fetchMissingUsers() async {
+        let allBuddyIds = Set(
+            visibleHabits.flatMap {
+                $0.acceptedBuddyIds + $0.invitedBuddyIds
+            }
+        )
+
+        let missingIds = allBuddyIds.filter {
+            usersById[$0] == nil
+        }
+
+        guard !missingIds.isEmpty else { return }
+
+        do {
+            let users = try await withThrowingTaskGroup(
+                of: User.self
+            ) { group in
+
+                for id in missingIds {
+                    group.addTask {
+                        try await self.getUser.byId(with: id)
+                    }
+                }
+
+                var result: [User] = []
+
+                for try await user in group {
+                    result.append(user)
+                }
+
+                return result
+            }
+
+            users.forEach {
+                usersById[$0.id ?? ""] = $0
+            }
+
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+    
+    private func makeBuddyInfos(
+        for habit: Habit
+    ) -> [HabitCellBuddyInfo] {
+
+        let habitEntries = (entriesByHabit[habit.id ?? ""] ?? []).filter {
+            Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
+        }
+
+        let doneUserIds = Set(
+            habitEntries
+                .filter { $0.status == .done }
+                .map(\ .userId)
+        )
+
+        let accepted = habit.acceptedBuddyIds.map { id in
+
+            let name = usersById[id]?.name ?? "Unknown"
+            let buddyDidComplete = doneUserIds.contains(id)
+            let participants = Set([habit.ownerId] + habit.acceptedBuddyIds)
+            let allDone = participants.isSubset(of: doneUserIds)
+
+            let isPastAndNotDone =
+                selectedDate < Calendar.current.startOfDay(for: Date())
+                && !allDone
+
+            let buddyStatusColor: Color = {
+                if allDone || isPastAndNotDone {
+                    return .custom.text
+                }
+
+                return buddyDidComplete
+                    ? .custom.primary
+                    : .custom.red
+            }()
+            
+            let buddyBadgeColor: Color = {
+                if allDone {
+                    return buddyDidComplete
+                        ? .custom.primary
+                        : .custom.red
+                }
+
+                return isPastAndNotDone
+                    ? .custom.red
+                    : .custom.text
+            }()
+            
+            return HabitCellBuddyInfo(
+                id: id,
+                buddyStatusColor: buddyStatusColor,
+                buddyBadgeColor: buddyBadgeColor,
+                buddyName: name,
+                showStatusBadge: buddyDidComplete
+                    ? .checkmark
+                    : .xmark
+            )
+        }
+
+        let invited = habit.invitedBuddyIds.map { id in
+
+            let name = usersById[id]?.name ?? "Unknown"
+
+            return HabitCellBuddyInfo(
+                id: id,
+                buddyStatusColor: .custom.text,
+                buddyBadgeColor: .custom.text,
+                buddyName: name,
+                showStatusBadge: .invited
+            )
+        }
+
+        return Array(Set(accepted + invited))
     }
     
     private func startListeningToAllHabitEntries() {
@@ -288,6 +407,11 @@ final class HomeViewModel: ObservableObject {
         case .friendsHabits:
             self.visibleHabits = sharedHabits
         }
+        
+        Task {
+            await fetchMissingUsers()
+        }
+        
         startListeningToAllHabitEntries()
     }
     
@@ -313,4 +437,5 @@ struct HabitListItem: Identifiable {
     let habit: Habit
     let state: CompletionState
     let isOwner: Bool
+    let buddyInfos: [HabitCellBuddyInfo]
 }

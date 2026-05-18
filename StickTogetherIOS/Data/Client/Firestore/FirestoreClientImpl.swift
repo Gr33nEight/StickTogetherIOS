@@ -45,15 +45,6 @@ final class FirestoreClientImpl: FirestoreClient {
         }
     }
     
-    func setDataAsync<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
-        let doc = db.collection(endpoint.path).document(id.value)
-        do {
-            try doc.setData(from: dto, merge: merge)
-        } catch {
-            throw FirestoreErrorMapper.map(error)
-        }
-    }
-    
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
         do {
@@ -149,6 +140,14 @@ final class FirestoreClientImpl: FirestoreClient {
                 }
                 
                 guard let snapshot else { return }
+                
+                
+                guard snapshot.exists else {
+                    continuation.finish(
+                        throwing: FirestoreClientError.documentNotFound
+                    )
+                    return
+                }
                 
                 do {
                     let data = try snapshot.data(as: E.DTO.self)

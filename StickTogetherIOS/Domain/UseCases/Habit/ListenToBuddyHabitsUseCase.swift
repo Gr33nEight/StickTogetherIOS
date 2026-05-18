@@ -16,6 +16,6 @@ final class ListenToBuddyHabitsUseCase: ListenToHabitsUseCase {
     }
     
     func stream(for id: String) async throws -> AsyncThrowingStream<[Habit], any Error>{
-        return try await repository.listenToBuddyHabits(for: id)
+        return repository.listenToBuddyHabits(for: id)
     }
 }

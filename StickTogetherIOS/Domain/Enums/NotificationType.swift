@@ -20,4 +20,17 @@ enum NotificationType: Hashable, Codable {
         case .friendRequest: return 3
         }
     }
+    
+    var payload: String? {
+        switch self {
+        case .systemMessage:
+            nil
+        case .friendMessage:
+            nil
+        case .habitInvite(let habitId):
+            habitId
+        case .friendRequest:
+            nil
+        }
+    }
 }

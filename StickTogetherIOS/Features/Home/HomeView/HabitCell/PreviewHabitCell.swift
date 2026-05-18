@@ -24,13 +24,13 @@ struct PreviewHabitCell: View {
             strikethrough: buddyDid,
             showCompletionButton: false,
             completionButtonBackground: Color.custom.grey,
-            showBuddyStatus: HabitCellBuddyInfo(
+            showBuddyStatus: [HabitCellBuddyInfo(
+                id: UUID().uuidString,
                 buddyStatusColor: Color.custom.text,
                 buddyBadgeColor: buddyDid ? Color.custom.primary : Color.custom.red,
-                buddiesName: [""],
-                showStatusBadge: false,
-                buddyMarkedAsDone: buddyDid
-            ),
+                buddyName: "",
+                showStatusBadge: nil
+            )],
             showCheckmark: false,
             checkmarkColor: .clear,
             completionButtonBorderColor: .clear,

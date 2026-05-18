@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CoopHabitCell: View {
     let habit: Habit
+    let buddyInfos: [HabitCellBuddyInfo]
     let selectedDate: Date
     let isToday: Bool
     let onToggle: () -> Void
@@ -17,15 +18,9 @@ struct CoopHabitCell: View {
 
     private var done: Bool { state == .all }
     private var iDid: Bool { state == .onlyMe || state == .all }
-    private var buddyDid: Bool { state == .onlyOthers || state == .all }
 
     private var isPastAndNotDone: Bool {
         selectedDate < Calendar.current.startOfDay(for: Date()) && !done
-    }
-
-    private var buddyColor: Color {
-        if done || isPastAndNotDone { return Color.custom.text }
-        return buddyDid ? Color.custom.primary : Color.custom.red
     }
     
     var body: some View {
@@ -33,26 +28,29 @@ struct CoopHabitCell: View {
             HabitCellTemplate(
                 icon: habit.icon,
                 title: habit.title,
-                habitCellBackground: isPastAndNotDone ? Color.custom.red :
-                    done ? Color.custom.primary : Color.custom.grey,
+                habitCellBackground: isPastAndNotDone
+                    ? Color.custom.red
+                    : done
+                        ? Color.custom.primary
+                        : Color.custom.grey,
                 strikethrough: iDid || done,
                 showCompletionButton: isToday,
-                completionButtonBackground: done ? Color.custom.text :
-                    iDid ? Color.custom.primary : Color.custom.grey,
-                showBuddyStatus: HabitCellBuddyInfo(
-                    buddyStatusColor: buddyColor,
-                    buddyBadgeColor: done
-                        ? (buddyDid ? Color.custom.primary : Color.custom.red)
-                    : isToday ? Color.custom.text : Color.custom.red,
-                    buddiesName: [""],
-                    showStatusBadge: true,
-                    buddyMarkedAsDone: buddyDid
-                ),
+                completionButtonBackground: done
+                    ? Color.custom.text
+                    : iDid
+                        ? Color.custom.primary
+                        : Color.custom.grey,
+                showBuddyStatus: buddyInfos,
                 showCheckmark: iDid || done,
-                checkmarkColor: done ? Color.custom.primary : Color.custom.text,
-                completionButtonBorderColor: iDid || done ? .clear : Color(.systemGray),
+                checkmarkColor: done
+                    ? Color.custom.primary
+                    : Color.custom.text,
+                completionButtonBorderColor: iDid || done
+                    ? .clear
+                    : Color(.systemGray),
                 updateCompletion: onToggle
-            ).opacity(isToday ? 1 : 0.6)
+            )
+            .opacity(isToday ? 1 : 0.6)
         }
     }
 }

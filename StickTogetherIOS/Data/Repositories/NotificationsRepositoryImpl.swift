@@ -20,6 +20,11 @@ final class NotificationsRepositoryImpl: NotificationsRepository {
         try await firestoreClient.setData(dto, for: NotificationEndpoint.self, id: docId, merge: false)
     }
     
+    func createNotification(transactionContext: TransactionContext, _ notification: Notification) throws {
+        let dto = NotificationMapper.toDTO(notification)
+        try transactionClient.create(dto, for: NotificationEndpoint.self, transactionContext: transactionContext)
+    }
+    
     func getNotification(by id: String) async throws -> Notification {
         let dto = try await firestoreClient.fetchDocument(NotificationEndpoint.self, id: .init(value: id))
         return NotificationMapper.toDomain(dto)

@@ -156,7 +156,7 @@ extension HomeViewTemp {
             } else {
                 VStack(spacing: 0) {
                     picker.padding(.bottom).padding(.top, 5)
-                    if !viewModel.visibleHabits.isEmpty {
+                    if !viewModel.habitItems.isEmpty {
                         ScrollView(showsIndicators: false) {
                             VStack {
                                 ForEach(viewModel.habitItems) { item in

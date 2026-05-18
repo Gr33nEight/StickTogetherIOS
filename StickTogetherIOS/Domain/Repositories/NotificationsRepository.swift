@@ -9,6 +9,7 @@ import Foundation
 
 protocol NotificationsRepository {
     func createNotification(_ notification: Notification) async throws
+    func createNotification(transactionContext: TransactionContext, _ notification: Notification) throws
     func getNotification(by id: String) async throws -> Notification
     func getNotification(byReceiver id: String, and senderId: String) async throws -> Notification
     func getNotifications(byReceiver id: String) async throws -> [Notification]

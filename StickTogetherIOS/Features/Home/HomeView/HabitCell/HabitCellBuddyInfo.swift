@@ -7,10 +7,25 @@
 
 import SwiftUI
 
-struct HabitCellBuddyInfo {
+struct HabitCellBuddyInfo: Identifiable, Hashable {
+    let id: String
     let buddyStatusColor: Color
     let buddyBadgeColor: Color
-    let buddiesName: [String]
-    let showStatusBadge: Bool
-    let buddyMarkedAsDone: Bool
+    let buddyName: String
+    let showStatusBadge: StatusBadgeType?
+}
+
+enum StatusBadgeType: CaseIterable {
+    case xmark, checkmark, invited
+    
+    var imageName: String {
+        switch self {
+        case .xmark:
+            return "xmark"
+        case .checkmark:
+            return "checkmark"
+        case .invited:
+            return "envelope.fill"
+        }
+    }
 }

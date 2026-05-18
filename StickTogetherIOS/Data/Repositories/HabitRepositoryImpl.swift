@@ -10,9 +10,11 @@ import FirebaseFirestore
 
 final class HabitRepositoryImpl: HabitRepository {
     private let firestoreClient: FirestoreClient
-    
-    init(firestoreClient: FirestoreClient) {
+    private let firestoreTransactionClient: FirestoreTransactionClient
+
+    init(firestoreClient: FirestoreClient, firestoreTransactionClient: FirestoreTransactionClient) {
         self.firestoreClient = firestoreClient
+        self.firestoreTransactionClient = firestoreTransactionClient
     }
     
     func getOwnedHabits(for userId: String) async throws -> [Habit] {
@@ -22,7 +24,7 @@ final class HabitRepositoryImpl: HabitRepository {
     }
     
     func getBuddyHabits(for userId: String) async throws -> [Habit] {
-        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId))
+        let query = FirestoreQuery().arrayContains(.field("acceptedBuddyIds"), .string(userId))
         let dtos = try await firestoreClient.fetch(HabitEndpoint.self, query: query)
         return dtos.map({ HabitMapper.toDomain($0) })
     }
@@ -46,9 +48,16 @@ final class HabitRepositoryImpl: HabitRepository {
         try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: true)
     }
     
+    func updateHabitFields(transactionContext: TransactionContext, fields: [String : FirestoreUpdateOperations], habitId: String) throws {
+        try firestoreTransactionClient.update(HabitEndpoint.self, id: .init(value: habitId), data: fields, transactionContext: transactionContext)
+    }
+    
     func createHabit(_ habit: Habit) async throws {
+        guard let habitId = habit.id else {
+            throw HabitRepositoryError.habitIdNotFound
+        }
         let dto = HabitMapper.toDTO(habit)
-        let docId = try await firestoreClient.create(dto, for: HabitEndpoint.self)
+        let docId = FirestoreDocumentID(value: habitId)
         try await firestoreClient.setData(dto, for: HabitEndpoint.self, id: docId, merge: false)
         
     }
@@ -60,13 +69,13 @@ final class HabitRepositoryImpl: HabitRepository {
     }
     
     func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId))
+        let query = FirestoreQuery().arrayContains(.field("acceptedBuddyIds"), .string(userId))
         let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream)
     }
     
     func listenToSharedHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let query = FirestoreQuery().isEqual(.field("buddyId"), .string(userId)).isEqual(.field("type"), .int(2))
+        let query = FirestoreQuery().arrayContains(.field("acceptedBuddyIds"), .string(userId)).isEqual(.field("type"), .int(2))
         let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream) 
     }

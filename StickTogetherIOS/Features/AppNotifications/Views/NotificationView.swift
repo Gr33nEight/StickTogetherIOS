@@ -160,7 +160,7 @@ struct HabitInviteCell: View {
 
     var body: some View {
         ZStack {
-//            if habit != nil {
+            if habit != nil {
                 VStack{
                     HStack(spacing: 15) {
                         Text("🙍‍♂️")
@@ -191,10 +191,7 @@ struct HabitInviteCell: View {
                     HStack(spacing: 10) {
                         Button {
                             Task {
-//                                await appNotificationsVM.deleteAppNotification(notification.id)
-//                                habit!.buddyId = profileVM.safeUser.safeID
-//                                await habitVM.updateHabit(habit!)
-//                                await informAboutAcceptance()
+                                await notificationsVM.acceptInviation(notificationId: notification.id, habit: habit)
                             }
                         } label: {
                             Text("Accept")
@@ -202,11 +199,7 @@ struct HabitInviteCell: View {
                         }.customButtonStyle(.primary)
                         Button {
                             Task {
-//                                await appNotificationsVM.deleteAppNotification(notification.id)
-//                                habit!.type = .alone
-//                                habit!.buddyId = ""
-//                                await habitVM.updateHabit(habit!)
-//                                await informAboutDecline()
+                                await notificationsVM.declineInvitation(notificationId: notification.id, habit: habit)
                             }
                         } label: {
                             Text("Decline")
@@ -219,43 +212,11 @@ struct HabitInviteCell: View {
                             .fill(notification.isRead ? Color.custom.background : Color.custom.grey)
                     )
 
-//            }
+            }
         }.task {
-//            guard let habitId = notification.habitId else { return }
-//            let result = await habitVM.getHabitById(habitId)
-//            
-//            switch result {
-//            case .value(let h):
-//                habit = h
-//                return
-//            case .error(_):
-//                await appNotificationsVM.deleteAppNotification(notification.id)
-//            }
+            guard let habitId = notification.type.payload else { return }
+            habit = await notificationsVM.getHabitBy(id: habitId)
         }
-    }
-    
-    func informAboutAcceptance() async {
-//        guard let habit = habit else { return }
-//        let appNotification = AppNotification.habitInviteAccepted(
-//            senderId: profileVM.safeUser.safeID,
-//            receiverId: notification.senderId,
-//            senderName: profileVM.safeUser.name,
-//            habitId: habit.id ?? "",
-//            habitTitle: habit.title
-//        )
-//        await appNotificationsVM.sendAppNotification(appNotification)
-    }
-    
-    func informAboutDecline() async {
-//        guard let habit = habit else { return }
-//        let appNotification = AppNotification.habitInviteDeclined(
-//            senderId: profileVM.safeUser.safeID,
-//            receiverId: notification.senderId,
-//            senderName: profileVM.safeUser.name,
-//            habitId: habit.id ?? "",
-//            habitTitle: habit.title
-//        )
-//        await appNotificationsVM.sendAppNotification(appNotification)
     }
 }
 

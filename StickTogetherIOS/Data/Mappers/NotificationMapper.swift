@@ -30,6 +30,7 @@ enum NotificationMapper {
             body: domain.body,
             date: domain.date,
             isRead: domain.isRead,
+            payload: mapPayload(domain),
             type: Int(domain.type.value)
         )
     }
@@ -66,6 +67,20 @@ enum NotificationMapper {
             return .friendRequest
         default:
             return .systemMessage
+        }
+    }
+    
+    private static func mapPayload(_ domain: Notification) -> [String: String]? {
+        switch domain.type {
+        case .systemMessage:
+            return nil
+        case .friendMessage:
+            return nil
+        case .habitInvite(let habitId):
+            guard let habitId else { return nil }
+            return ["habitId": habitId]
+        case .friendRequest:
+            return nil
         }
     }
 }

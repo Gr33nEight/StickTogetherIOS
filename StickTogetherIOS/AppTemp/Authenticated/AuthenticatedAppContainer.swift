@@ -31,7 +31,7 @@ final class AuthenticatedAppContainer {
     // MARK: - Repositories
 
     private lazy var habitRepository: HabitRepository =
-        HabitRepositoryImpl(firestoreClient: firestoreClient)
+        HabitRepositoryImpl(firestoreClient: firestoreClient, firestoreTransactionClient: firestoreTransactionClient)
 
     private lazy var habitEntryRepository: HabitEntryRepository =
         HabitEntryRepositoryImpl(firestoreClient: firestoreClient)
@@ -88,6 +88,9 @@ final class AuthenticatedAppContainer {
     
     private lazy var listenToHabit: ListenToHabitUseCase =
         ListenToHabitUseCaseImpl(habitRepository: habitRepository)
+    
+    private lazy var getHabit: GetHabitByIdUseCase =
+        GetHabitByIdUseCaseImpl(repository: habitRepository)
 
     // MARK: - UseCases (Habit Entries)
     
@@ -174,6 +177,13 @@ final class AuthenticatedAppContainer {
     private lazy var encourageBuddies: EncourageBuddiesUseCase =
         EncourageBuddiesUseCaseImpl(notificationsRepository: notificationsRepository, userRepository: userRepository)
     
+    private lazy var acceptHabitInvitation: AcceptHabitInvitationUseCase =
+        AcceptHabitInvitationUseCaseImpl(notificationsRepository: notificationsRepository, habitRepository: habitRepository, transactionRepository: transactionFactory, userRepository: userRepository)
+    
+    private lazy var declineHabitInvitation: DeclineHabitInvitationUseCase =
+        DeclineHabitInvitationUseCaseImpl(notificationsRepository: notificationsRepository, habitRepository: habitRepository, transactionRepository: transactionFactory, userRepository: userRepository)
+        
+    
     // MARK: - ViewModels
 
     @MainActor
@@ -183,7 +193,7 @@ final class AuthenticatedAppContainer {
             listenToOwnedHabits: listenToOwnedHabits,
             listenToBuddyHabits: listenToBuddyHabits,
             listenToSharedHabits: listenToSharedHabits,
-            getCurrentUser: getUser,
+            getUser: getUser,
             toggleHabitCompletion: toggleHabitCompletionState,
             listenToAllHabitEntriesOnDate: listenToAllHabitEntries,
             getHabitEntries: getHabitEntries
@@ -220,7 +230,10 @@ final class AuthenticatedAppContainer {
         NotificationsViewModel(
             currentUserId: userId,
             listenToUserNotifications: listenToNotification,
-            markAsReadUseCase: markAsRead
+            markAsReadUseCase: markAsRead,
+            acceptHabitInvitation: acceptHabitInvitation,
+            declineHabitInvitation: declineHabitInvitation,
+            getHabit: getHabit
         )
     }
     

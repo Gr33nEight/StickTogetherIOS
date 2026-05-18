@@ -18,6 +18,9 @@ final class NotificationsViewModel: ObservableObject {
     
     private let listenToUserNotifications: ListenToNotificationsUseCase
     private let markAsReadUseCase: MarkAsReadUseCase
+    private let acceptHabitInvitation: AcceptHabitInvitationUseCase
+    private let declineHabitInvitation: DeclineHabitInvitationUseCase
+    private let getHabit: GetHabitByIdUseCase
     
     var userNotifications: [Notification] {
         allNotifications.filter({$0.type != .friendRequest})
@@ -34,11 +37,17 @@ final class NotificationsViewModel: ObservableObject {
     init(
         currentUserId: String,
         listenToUserNotifications: ListenToNotificationsUseCase,
-        markAsReadUseCase: MarkAsReadUseCase
+        markAsReadUseCase: MarkAsReadUseCase,
+        acceptHabitInvitation: AcceptHabitInvitationUseCase,
+        declineHabitInvitation: DeclineHabitInvitationUseCase,
+        getHabit: GetHabitByIdUseCase
     ) {
         self.currentUserId = currentUserId
         self.listenToUserNotifications = listenToUserNotifications
         self.markAsReadUseCase = markAsReadUseCase
+        self.acceptHabitInvitation = acceptHabitInvitation
+        self.declineHabitInvitation = declineHabitInvitation
+        self.getHabit = getHabit
     }
     
     func startListeningToUserNotifications() {
@@ -77,4 +86,38 @@ final class NotificationsViewModel: ObservableObject {
         }
     }
     
+    func acceptInviation(notificationId: String?, habit: Habit?) async {
+        guard let notificationId else {
+            print("nie ma notification")
+            return
+        }
+        guard let habit else {
+            print("nie ma habit")
+            return
+        }
+        do {
+            try await acceptHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+    
+    func declineInvitation(notificationId: String?, habit: Habit?) async {
+        guard let notificationId else { return }
+        guard let habit else { return }
+        do {
+            try await declineHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+    
+    func getHabitBy(id: String) async -> Habit? {
+        do {
+            return try await getHabit.execute(id: id)
+        } catch {
+            self.error = error.localizedDescription
+            return nil
+        }
+    }
 }

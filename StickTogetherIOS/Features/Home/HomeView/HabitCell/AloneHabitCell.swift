@@ -31,7 +31,7 @@ struct AloneHabitCell: View {
             strikethrough: done,
             showCompletionButton: isToday,
             completionButtonBackground: done ? Color.custom.text : Color.custom.grey,
-            showBuddyStatus: nil,
+            showBuddyStatus: [],
             showCheckmark: done,
             checkmarkColor: done ? Color.custom.primary : Color.custom.text,
             completionButtonBorderColor: done ? .clear : Color(.systemGray),

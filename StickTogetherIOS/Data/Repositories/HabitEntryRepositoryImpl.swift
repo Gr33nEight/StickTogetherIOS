@@ -121,7 +121,7 @@ final class HabitEntryRepositoryImpl: HabitEntryRepository {
                     }
                     continuation.finish()
                 } catch {
-                    continuation.finish(throwing: error)
+                    continuation.finish(throwing: ListenToEntriesError.failedToListen)
                 }
             }
         }

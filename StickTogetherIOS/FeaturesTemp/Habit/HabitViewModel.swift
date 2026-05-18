@@ -183,8 +183,12 @@ final class HabitViewModel: ObservableObject {
                 for try await habit in stream {
                     self.habit = habit
                 }
+            } catch let error as ListenToHabitError {
+                event = error.event
             } catch {
-                event = .showToastMessage(.failed(error.localizedDescription))
+                event = .showToastMessage(
+                    .failed(error.localizedDescription)
+                )
             }
         }
     }

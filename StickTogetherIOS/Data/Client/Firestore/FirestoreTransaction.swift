@@ -15,6 +15,12 @@ protocol FirestoreTransactionClient {
         transactionContext: TransactionContext
     ) throws
     
+    func create<E: FirestoreEndpoint>(
+        _ dto: E.DTO,
+        for endpoint: E.Type,
+        transactionContext: TransactionContext
+    ) throws
+    
     func delete<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         id: FirestoreDocumentID,

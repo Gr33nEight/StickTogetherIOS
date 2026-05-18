@@ -31,6 +31,7 @@ struct HabitCell: View {
             case .coop:
                 CoopHabitCell(
                     habit: habitItem.habit,
+                    buddyInfos: habitItem.buddyInfos,
                     selectedDate: selectedDate,
                     isToday: isToday,
                     onToggle: onToggle,

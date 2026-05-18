@@ -10,4 +10,5 @@ enum HabitRepositoryError: Error {
     case habitEntryNotFound
     case failedToDelete
     case failedToFetch
+    case habitIdNotFound
 }

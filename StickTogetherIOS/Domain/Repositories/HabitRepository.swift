@@ -13,6 +13,7 @@ protocol HabitRepository {
     func getHabit(with id: String) async throws -> Habit
     func deleteHabit(with id: String) async throws
     func updateHabit(_ newValue: Habit) async throws
+    func updateHabitFields(transactionContext: TransactionContext, fields: [String : FirestoreUpdateOperations], habitId: String) throws
     func createHabit(_ habit: Habit) async throws
     func listenToOwnedHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
     func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], Error>
