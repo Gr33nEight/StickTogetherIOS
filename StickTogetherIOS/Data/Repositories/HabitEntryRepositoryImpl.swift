@@ -113,7 +113,7 @@ final class HabitEntryRepositoryImpl: HabitEntryRepository {
         }
         
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await dtos in stream {
                         let entries = dtos.map(HabitEntryMapper.toDomain)
@@ -124,6 +124,7 @@ final class HabitEntryRepositoryImpl: HabitEntryRepository {
                     continuation.finish(throwing: ListenToEntriesError.failedToListen)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }

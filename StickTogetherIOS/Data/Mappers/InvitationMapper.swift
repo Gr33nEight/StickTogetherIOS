@@ -18,7 +18,7 @@ enum InvitationMapper {
     
     static func invitationStream(_ stream: AsyncThrowingStream<[InvitationDTO], any Error>) -> AsyncThrowingStream<[Invitation], Error> {
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await dtos in stream {
                         continuation.yield(dtos.map(InvitationMapper.toDomain(_:)))
@@ -28,6 +28,7 @@ enum InvitationMapper {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }

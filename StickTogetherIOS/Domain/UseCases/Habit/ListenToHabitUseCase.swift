@@ -26,7 +26,7 @@ final class ListenToHabitUseCaseImpl: ListenToHabitUseCase {
             habitRepository.listenToHabit(with: habitId)
 
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await habit in repositoryStream {
                         continuation.yield(habit)
@@ -40,6 +40,7 @@ final class ListenToHabitUseCaseImpl: ListenToHabitUseCase {
                     )
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 

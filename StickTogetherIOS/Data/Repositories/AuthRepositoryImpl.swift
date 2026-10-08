@@ -60,7 +60,7 @@ final class AuthRepositoryImpl: AuthRepository {
         AsyncStream { continuation in
             let stream = authClient.listenToAuthState()
             
-            Task {
+            let task = Task {
                 for await session in stream {
                     guard let session else {
                         continuation.yield(.loggedOut)
@@ -70,6 +70,7 @@ final class AuthRepositoryImpl: AuthRepository {
                     continuation.yield(.loggedIn(userId: session.uid))
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
     

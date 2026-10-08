@@ -51,7 +51,7 @@ enum HabitMapper {
     
     static func habitStream(_ stream: AsyncThrowingStream<[HabitDTO], any Error>) -> AsyncThrowingStream<[Habit], any Error> {
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await dtos in stream {
                         continuation.yield(dtos.map(HabitMapper.toDomain(_:)))
@@ -61,12 +61,13 @@ enum HabitMapper {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
     
     static func habitStream(_ stream: AsyncThrowingStream<HabitDTO, any Error>) -> AsyncThrowingStream<Habit, any Error> {
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await dto in stream {
                         continuation.yield(HabitMapper.toDomain(dto))
@@ -76,6 +77,7 @@ enum HabitMapper {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }

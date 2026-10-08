@@ -38,7 +38,7 @@ enum HabitEntryMapper {
     
     static func entryStream(_ stream: AsyncThrowingStream<[HabitEntryDTO], any Error>) -> AsyncThrowingStream<[HabitEntry], any Error> {
         return AsyncThrowingStream { continuation in
-            Task {
+            let task = Task {
                 do {
                     for try await dtos in stream {
                         continuation.yield(dtos.map(HabitEntryMapper.toDomain(_:)))
@@ -48,6 +48,7 @@ enum HabitEntryMapper {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }
