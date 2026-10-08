@@ -7,6 +7,24 @@
 import FirebaseFirestore
 import Foundation
 
+/// Serializes updates from the concurrent per-chunk listener tasks.
+private final class ChunkedListenerState<Value>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var latestByChunk: [Int: [Value]] = [:]
+
+    func update(
+        _ values: [Value],
+        for chunk: Int,
+        publish: ([Value]) -> Void
+    ) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        latestByChunk[chunk] = values
+        publish(latestByChunk.values.flatMap { $0 })
+    }
+}
+
 final class FirestoreClientImpl: FirestoreClient {
     private let db: Firestore
     private let responseCache = FirestoreResponseCache.shared
@@ -261,7 +279,7 @@ final class FirestoreClientImpl: FirestoreClient {
         
         return AsyncThrowingStream { continuation in
             var tasks: [Task<Void, Never>] = []
-            var latestPerChunk: [Int: [E.DTO]] = [:]
+            let state = ChunkedListenerState<E.DTO>()
             
             for (index, chunk) in chunks.enumerated() {
                 let query = queryBuilder(chunk)
@@ -271,13 +289,9 @@ final class FirestoreClientImpl: FirestoreClient {
                 let task = Task {
                     do {
                         for try await dtos in stream {
-                            latestPerChunk[index] = dtos
-                            
-                            let merged = latestPerChunk
-                                .values
-                                .flatMap { $0 }
-                            
-                            continuation.yield(merged)
+                            state.update(dtos, for: index) { merged in
+                                continuation.yield(merged)
+                            }
                         }
                     } catch {
                         continuation.finish(throwing: FirestoreErrorMapper.map(error))
