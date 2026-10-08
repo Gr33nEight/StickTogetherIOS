@@ -47,11 +47,15 @@ final class HomeViewModel: ObservableObject {
     private let toggleHabitCompletion: ToggleHabitCompletionStateUseCase
     private let listenToAllHabitEntriesOnDate: ListenToAllHabitEntriesOnDate
     private var getHabitEntries: GetHabitEntriesFromDateRangeUseCase
-    
+
     var currentUserName: String {
         currentUser?.name ?? "Unknown user"
     }
     
+    var headerTitle: String {
+        "\(Date().timeOfDayGreeting),\n\(currentUserName.capitalized) 👋"
+    }
+
     var habitItems: [HabitListItem] {
         habits(for: selectedDate).map { habit in
             HabitListItem(

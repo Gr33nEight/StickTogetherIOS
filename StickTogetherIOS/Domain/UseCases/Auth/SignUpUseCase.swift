@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SignUpUseCase {
-    func execute(email: String, password: String) async throws
+    func execute(email: String, password: String, name: String) async throws
 }
 
 final class SignUpUseCaseImpl: SignUpUseCase {
@@ -18,7 +18,7 @@ final class SignUpUseCaseImpl: SignUpUseCase {
         self.repository = repository
     }
     
-    func execute(email: String, password: String) async throws {
+    func execute(email: String, password: String, name: String) async throws {
         guard !email.isEmpty else {
             throw AuthError.invalidEmail
         }
@@ -27,6 +27,6 @@ final class SignUpUseCaseImpl: SignUpUseCase {
             throw AuthError.invalidPassword
         }
         
-        try await repository.signUp(email: email, password: password)
+        try await repository.signUp(email: email, password: password, name: name)
     }
 }

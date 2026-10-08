@@ -15,7 +15,19 @@ final class AuthClientImpl: AuthClient {
     
     func signIn(email: String, password: String) async throws -> AuthSession {
         let result = try await auth.signIn(withEmail: email, password: password)
-        return AuthSession(uid: result.user.uid)
+        return AuthSession(uid: result.user.uid, name: result.user.displayName, email: result.user.email)
+    }
+
+    func signInWithApple(identityToken: String, nonce: String) async throws -> AuthSession {
+        let credential = OAuthProvider.appleCredential(withIDToken: identityToken, rawNonce: nonce, fullName: nil)
+        let result = try await auth.signIn(with: credential)
+        return AuthSession(uid: result.user.uid, name: result.user.displayName, email: result.user.email)
+    }
+
+    func signInWithGoogle(idToken: String, accessToken: String) async throws -> AuthSession {
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+        let result = try await auth.signIn(with: credential)
+        return AuthSession(uid: result.user.uid, name: result.user.displayName, email: result.user.email)
     }
     
     func signUp(email: String, password: String) async throws -> AuthSession {
@@ -44,4 +56,3 @@ final class AuthClientImpl: AuthClient {
         }
     }
 }
-

@@ -9,36 +9,22 @@
 import SwiftUI
 
 struct LoadingOverlay: View {
-    @EnvironmentObject var loading: LoadingManager
-
     var body: some View {
         ZStack {
-            if loading.isLoading {
-                LoadingView()
-                .transition(.opacity)
-                .zIndex(1)
-            }
+            Color.black.opacity(0.45)
+                .ignoresSafeArea()
+
+            ProgressView()
+                .controlSize(.regular)
+                .tint(Color.custom.primary)
+                .padding(28)
+                .background(
+                    .ultraThinMaterial,
+                    in: RoundedRectangle(cornerRadius: 16)
+                )
         }
-        .animation(.easeInOut(duration: 0.12), value: loading.isLoading)
-        .allowsHitTesting(loading.isLoading)
-        .accessibility(hidden: !loading.isLoading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .accessibilityLabel("Loading")
     }
 }
-
-struct LoadingView: View {
-    var body: some View {
-        ZStack {
-            Blur(style: .prominent)
-            ProgressView().tint(.accent)
-        }.ignoresSafeArea()
-    }
-}
-
-//#Preview {
-//    FriendsListView()
-//        .environmentObject(FriendsViewModel(profileService: MockProfileService(), friendsService: MockFriendsService(), currentUser: User(name: "", email: "")))
-//        .overlay {
-//            LoadingOverlay().environmentObject(LoadingManager())
-//        }
-//        .preferredColorScheme(.dark)
-//}

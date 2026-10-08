@@ -37,6 +37,12 @@ struct LogInView: View {
                     passwordError = validatePassword(password)
                 }
                 .edgesIgnoringSafeArea(.bottom)
+                .overlay {
+                    if vm.isLoading {
+                        LoadingOverlay()
+                    }
+                }
+                .animation(.easeInOut(duration: 0.2), value: vm.isLoading)
         }
     }
     private func validateEmail(_ email: String) -> String? {

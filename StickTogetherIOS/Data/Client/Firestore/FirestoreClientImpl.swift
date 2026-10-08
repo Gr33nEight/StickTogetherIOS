@@ -29,8 +29,19 @@ final class FirestoreClientImpl: FirestoreClient {
     }
     
     func fetchDocument<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws -> E.DTO where E : FirestoreEndpoint{
+        let snapshot: DocumentSnapshot
         do {
-            return try await db.collection(endpoint.path).document(id.value).getDocument().data(as: E.DTO.self)
+            snapshot = try await db.collection(endpoint.path).document(id.value).getDocument()
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
+
+        guard snapshot.exists else {
+            throw FirestoreClientError.documentNotFound
+        }
+
+        do {
+            return try snapshot.data(as: E.DTO.self)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -39,7 +50,7 @@ final class FirestoreClientImpl: FirestoreClient {
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID, merge: Bool) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
         do {
-            try doc.setData(from: dto, merge: merge)
+            try await doc.setData(from: dto, merge: merge)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -48,7 +59,7 @@ final class FirestoreClientImpl: FirestoreClient {
     func setData<E>(_ dto: E.DTO, for endpoint: E.Type, id: FirestoreDocumentID) async throws where E : FirestoreEndpoint {
         let doc = db.collection(endpoint.path).document(id.value)
         do {
-            try doc.setData(from: dto)
+            try await doc.setData(from: dto)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -171,7 +182,7 @@ final class FirestoreClientImpl: FirestoreClient {
         let ref = db.collection(endpoint.path).document()
         
         do {
-            try ref.setData(from: dto)
+            try await ref.setData(from: dto)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }

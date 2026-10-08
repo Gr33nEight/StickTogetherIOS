@@ -24,7 +24,6 @@ final class CreateHabitViewModel: ObservableObject {
     @Published var autoEmoji: String? = nil
     @Published var event: CreateHabitEvent?
     
-    @Published private(set) var error: String?
     @Published private(set) var isLoading: Bool = false
     
     private let currentUserId: String
@@ -36,27 +35,6 @@ final class CreateHabitViewModel: ObservableObject {
     ) {
         self.currentUserId = currentUserId
         self.createHabit = createHabit
-    }
-    
-    func createHabit() async {
-        do {
-            let input = CreateHabitInput(
-                title: title,
-                icon: mapIcon(),
-                frequency: mapFrequency(),
-                startDate: startDate,
-                endDate: endDate,
-                reminderTime: reminderTime,
-                type: type,
-                buddyIds: buddy?.id.map { [$0] } ?? []
-            )
-            //TODO: Fix later
-            
-            try await createHabit.execute(input, for: currentUserId)
-            event = .success
-        } catch {
-            event = .error(error.localizedDescription)
-        }
     }
     
     private func mapFrequency() -> Frequency {
@@ -77,6 +55,53 @@ final class CreateHabitViewModel: ObservableObject {
             return autoEmoji
         } else {
             return ""
+        }
+    }
+    
+    private func habitValidation() -> Bool {
+        guard !title.isEmpty else {
+            event = .error("Please add a title")
+            return false
+        }
+        
+        guard startDate <= endDate else {
+            event = .error("Start date must be before end date")
+            return false
+        }
+        
+        if pickedDays.isEmpty && pickedFrequency == .weekly {
+            event = .error("Please select at least one day")
+            return false
+        }
+        
+        if type == .coop || type == .preview, buddy == nil {
+            event = .error("Please select a buddy")
+            return false
+        }
+        
+        return true
+    }
+    
+    func createHabit() async {
+        guard habitValidation() else { return }
+        
+        do {
+            let input = CreateHabitInput(
+                title: title,
+                icon: mapIcon(),
+                frequency: mapFrequency(),
+                startDate: startDate,
+                endDate: endDate,
+                reminderTime: reminderTime,
+                type: type,
+                buddyIds: buddy?.id.map { [$0] } ?? []
+            )
+            //TODO: Fix later
+            
+            try await createHabit.execute(input, for: currentUserId)
+            event = .success
+        } catch {
+            event = .error(error.localizedDescription)
         }
     }
 }

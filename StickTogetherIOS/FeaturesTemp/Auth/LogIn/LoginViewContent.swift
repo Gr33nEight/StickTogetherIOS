@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AuthenticationServices
+import UIKit
 
 extension LogInView {
     @ViewBuilder
@@ -53,23 +54,24 @@ extension LogInView {
                 .font(.myCaption)
             VStack { Divider() }
         }
-//        VStack {
-//            SignInWithAppleButton(.signIn) { request in
-//                let nonce = Constants.randomNonceString()
-//                vm.currentNonce = nonce
-//                request.requestedScopes = [.fullName, .email]
-//                request.nonce = Constants.sha256(nonce)
-//            } onCompletion: { result in
-//                Task {
-//                    await vm.handleAppleSignInResult(result)
-//                }
-//            }.signInWithAppleButtonStyle(.black)
-//                .frame(height: 44)
-//            GoogleSignInButton(style: .filled) {
-//                Task {
-//                    await vm.handleGoogleSignInResult()
-//                }
-//            }
-//        }
+        VStack {
+            SignInWithAppleButton(.signIn) { request in
+                vm.prepareAppleSignInRequest(request)
+            } onCompletion: { result in
+                Task {
+                    await vm.handleAppleSignInResult(result)
+                }
+            }.signInWithAppleButtonStyle(.black)
+                .frame(height: 44)
+            GoogleSignInButton(style: .filled) {
+                Task {
+                    guard let viewController = UIApplication.shared.connectedScenes
+                        .compactMap({ $0 as? UIWindowScene })
+                        .flatMap(\.windows)
+                        .first(where: \.isKeyWindow)?.rootViewController else { return }
+                    await vm.handleGoogleSignInResult(presenting: viewController)
+                }
+            }
+        }
     }
 }

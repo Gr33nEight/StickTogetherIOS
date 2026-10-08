@@ -37,5 +37,8 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+    
+    <key>GIDClientID</key>
+    <string>268348490006-ph556ontm6tmrbarvs5apt3aap4vkhc9.apps.googleusercontent.com</string>
 </dict>
 </plist>

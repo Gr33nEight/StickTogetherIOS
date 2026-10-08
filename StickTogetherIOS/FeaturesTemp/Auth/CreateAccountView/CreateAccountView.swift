@@ -43,6 +43,12 @@ struct CreateAccountView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .navigationBarBackButtonHidden(true)
+            .overlay {
+                if vm.isLoading {
+                    LoadingOverlay()
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: vm.isLoading)
     }
     private func validateEmail(_ email: String) -> String? {
             guard !email.isEmpty else { return nil }

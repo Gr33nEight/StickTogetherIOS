@@ -9,6 +9,8 @@ import Foundation
 
 protocol SignInUseCase {
     func execute(email: String, password: String) async throws
+    func executeApple(identityToken: String, nonce: String, name: String?, email: String?) async throws
+    func executeGoogle(idToken: String, accessToken: String) async throws
 }
 
 final class SignInUseCaseImpl: SignInUseCase {
@@ -29,10 +31,19 @@ final class SignInUseCaseImpl: SignInUseCase {
         
         try await repository.signIn(email: email, password: password)
     }
+
+    func executeApple(identityToken: String, nonce: String, name: String?, email: String?) async throws {
+        try await repository.signInWithApple(identityToken: identityToken, nonce: nonce, name: name, email: email)
+    }
+
+    func executeGoogle(idToken: String, accessToken: String) async throws {
+        try await repository.signInWithGoogle(idToken: idToken, accessToken: accessToken)
+    }
 }
 
 enum AuthError: Error {
     case invalidEmail
     case invalidPassword
     case weakPassword
+    case invalidCredential
 }

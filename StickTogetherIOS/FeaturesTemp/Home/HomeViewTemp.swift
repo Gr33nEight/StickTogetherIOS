@@ -36,7 +36,7 @@ struct HomeViewTemp: View {
 extension HomeViewTemp {
     var header: some View {
         HStack {
-            Text("\(Date().timeOfDayGreeting),\n\(viewModel.currentUserName.capitalized) 👋")
+            Text(viewModel.headerTitle)
                 .font(.customAppFont(size: 28, weight: .bold))
             Spacer()
             Button {
@@ -193,7 +193,7 @@ extension HomeViewTemp {
                     }
                 }
             }
-        }
+        }.frame(maxHeight: .infinity)
         .padding(.horizontal, 20)
     }
     

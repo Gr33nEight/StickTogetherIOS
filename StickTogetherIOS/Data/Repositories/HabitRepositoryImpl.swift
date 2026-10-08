@@ -69,7 +69,7 @@ final class HabitRepositoryImpl: HabitRepository {
     }
     
     func listenToBuddyHabits(for userId: String) -> AsyncThrowingStream<[Habit], any Error> {
-        let query = FirestoreQuery().arrayContains(.field("acceptedBuddyIds"), .string(userId))
+        let query = FirestoreQuery().arrayContains(.field("acceptedBuddyIds"), .string(userId)).isEqual(.field("type"), .int(1))
         let stream = firestoreClient.listen(HabitEndpoint.self, query: query)
         return HabitMapper.habitStream(stream)
     }
