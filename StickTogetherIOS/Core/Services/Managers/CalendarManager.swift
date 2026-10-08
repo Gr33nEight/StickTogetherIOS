@@ -32,52 +32,52 @@ class CalendarManager {
     }
 
     func addHabitToCalendar(habit: Habit) throws {
-        guard hasAccess() else {
-            print("No calendar access")
-            return
-        }
-        guard let calendar = appCalendar else {
-            print("Default calendar unavailable")
-            return
-        }
-
-
-        var cursor = habit.startDate.startOfDay
-        let end = habit.endDate.startOfDay
-
-        let cal = Calendar.current
-
-        while cursor <= end {
-            if habit.frequency.occurs(on: cursor, startDate: habit.startDate) {
-                let event = EKEvent(eventStore: eventStore)
-                event.calendar = calendar
-                event.title = habit.title
-
-                let dayKey = Habit.dayKey(for: cursor)
-                let hid = habit.id ?? UUID().uuidString
-                let marker = "sticktogether;habitId=\(hid);day=\(dayKey)"
-                if let existingNotes = event.notes, !existingNotes.isEmpty {
-                    event.notes = existingNotes + "\n" + marker
-                } else {
-                    event.notes = marker
-                }
-
-                if let reminderTime = habit.reminderTime {
-                    event.startDate = combine(date: cursor, with: reminderTime)
-                    event.endDate = event.startDate.addingTimeInterval(30 * 60)
-                    event.isAllDay = false
-                } else {
-                    event.startDate = cursor
-                    event.endDate = cal.date(byAdding: .day, value: 1, to: cursor)!
-                    event.isAllDay = true
-                }
-
-                try eventStore.save(event, span: .thisEvent)
-            }
-
-            guard let next = cal.date(byAdding: .day, value: 1, to: cursor) else { break }
-            cursor = next
-        }
+//        guard hasAccess() else {
+//            print("No calendar access")
+//            return
+//        }
+//        guard let calendar = appCalendar else {
+//            print("Default calendar unavailable")
+//            return
+//        }
+//
+//
+//        var cursor = habit.startDate.startOfDay
+//        let end = habit.endDate.startOfDay
+//
+//        let cal = Calendar.current
+//
+//        while cursor <= end {
+//            if habit.frequency.occurs(on: cursor, startDate: habit.startDate) {
+//                let event = EKEvent(eventStore: eventStore)
+//                event.calendar = calendar
+//                event.title = habit.title
+//
+//                let dayKey = Habit.dayKey(for: cursor)
+//                let hid = habit.id ?? UUID().uuidString
+//                let marker = "sticktogether;habitId=\(hid);day=\(dayKey)"
+//                if let existingNotes = event.notes, !existingNotes.isEmpty {
+//                    event.notes = existingNotes + "\n" + marker
+//                } else {
+//                    event.notes = marker
+//                }
+//
+//                if let reminderTime = habit.reminderTime {
+//                    event.startDate = combine(date: cursor, with: reminderTime)
+//                    event.endDate = event.startDate.addingTimeInterval(30 * 60)
+//                    event.isAllDay = false
+//                } else {
+//                    event.startDate = cursor
+//                    event.endDate = cal.date(byAdding: .day, value: 1, to: cursor)!
+//                    event.isAllDay = true
+//                }
+//
+//                try eventStore.save(event, span: .thisEvent)
+//            }
+//
+//            guard let next = cal.date(byAdding: .day, value: 1, to: cursor) else { break }
+//            cursor = next
+//        }
     }
     
     func removeHabit(_ habit: Habit) {

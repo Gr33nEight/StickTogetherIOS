@@ -69,40 +69,94 @@ struct Frequency: Codable, Equatable {
 }
 
 extension Frequency {
-    func occurs(on date: Date, startDate: Date, calendar: Calendar = .current) -> Bool {
+    func occurs(
+        on date: Date,
+        startDate: Date,
+        endDate: Date? = nil,
+        calendar: Calendar = .current
+    ) -> Bool {
+        
         let day = calendar.startOfDay(for: date)
         let start = calendar.startOfDay(for: startDate)
 
-        if day < start { return false }
+        if day < start {
+            return false
+        }
+
+        if let endDate {
+            let end = calendar.startOfDay(for: endDate)
+
+            if day > end {
+                return false
+            }
+        }
 
         switch type {
+
         case .daily:
-            let interval = max(1, (intervalDays ?? 1))
-            let diff = calendar.dateComponents([.day], from: start, to: day).day ?? 0
+            let interval = max(1, intervalDays ?? 1)
+
+            let diff = calendar.dateComponents(
+                [.day],
+                from: start,
+                to: day
+            ).day ?? 0
+
             return diff % interval == 0
 
         case .weekly:
-            let intervalW = max(1, (intervalWeeks ?? 1))
-            let daysDiff = calendar.dateComponents([.day], from: start, to: day).day ?? 0
+            let intervalW = max(1, intervalWeeks ?? 1)
+
+            let daysDiff = calendar.dateComponents(
+                [.day],
+                from: start,
+                to: day
+            ).day ?? 0
+
             let weeksDiff = daysDiff / 7
-            if weeksDiff % intervalW != 0 { return false }
-            return dayMatchesWeekly(day: day, calendar: calendar)
+
+            if weeksDiff % intervalW != 0 {
+                return false
+            }
+
+            return dayMatchesWeekly(
+                day: day,
+                calendar: calendar
+            )
 
         case .monthly:
-            let intervalM = max(1, (intervalMonths ?? 1))
-            let comps = calendar.dateComponents([.month], from: start, to: day)
+            let intervalM = max(1, intervalMonths ?? 1)
+
+            let comps = calendar.dateComponents(
+                [.month],
+                from: start,
+                to: day
+            )
+
             let monthsDiff = comps.month ?? 0
-            if monthsDiff % intervalM != 0 { return false }
+
+            if monthsDiff % intervalM != 0 {
+                return false
+            }
 
             let startDOM = calendar.component(.day, from: start)
             let dayDOM = calendar.component(.day, from: day)
-            if dayDOM == startDOM { return true }
 
-            if let range = calendar.range(of: .day, in: .month, for: day) {
-                if startDOM > range.count && dayDOM == range.count {
+            if dayDOM == startDOM {
+                return true
+            }
+
+            if let range = calendar.range(
+                of: .day,
+                in: .month,
+                for: day
+            ) {
+                if startDOM > range.count &&
+                    dayDOM == range.count {
                     return true
                 }
             }
+
             return false
         }
     }

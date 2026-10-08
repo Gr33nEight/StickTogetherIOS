@@ -1,0 +1,13 @@
+//
+//  HabitViewContainer.swift
+//  StickTogetherIOS
+//
+//  Created by Natanael Jop on 05/12/2025.
+//
+
+import Foundation
+
+struct HabitViewContainer {
+    let habit: Habit
+    let selectedDate: Date
+}

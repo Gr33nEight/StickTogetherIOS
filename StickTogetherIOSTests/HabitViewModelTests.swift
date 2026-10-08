@@ -17,11 +17,7 @@ final class HabitViewModelTests: XCTestCase {
 
     override func setUp() async throws {
         service = MockHabitService()
-        currentUser = User(
-            id: "user-1",
-            name: "Test User",
-            email: "test@test.com"
-        )
+        currentUser = User(name: "", email: "", friendsIds: [], icon: "", language: .en, theme: .dark, mainHabitType: .alone)
 
         vm = HabitViewModel(
             service: service,

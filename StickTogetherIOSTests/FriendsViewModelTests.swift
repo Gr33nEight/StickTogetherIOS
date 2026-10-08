@@ -22,11 +22,7 @@ final class FriendsViewModelTests: XCTestCase {
 
         await profileService.setStoredUser(currentUser)
 
-        let currentUser = User(
-            id: "me",
-            name: "Me",
-            email: "me@gmail.com"
-        )
+        let currentUser = User(name: "", email: "", friendsIds: [], icon: "", language: .en, theme: .dark, mainHabitType: .alone)
 
         vm = FriendsViewModel(
             profileService: profileService,
@@ -79,7 +75,7 @@ final class FriendsViewModelTests: XCTestCase {
         XCTAssertTrue(added.isEmpty)
     }
 
-    func testRemoveFriend_callsServiceForBothUsers() async {
+    func testRemoveFriend_callsServiceForallUsers() async {
         // when
         let result = await vm.removeFromFriendsList(userId: "friend123")
 

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CalendarView: View {
-    let habit: Habit
     let state: (Date) -> HabitState
     let startDate: Date
     
