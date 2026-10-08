@@ -18,6 +18,15 @@ struct StickTogetherApp: App {
     
     init() {
         FirebaseApp.configure()
+
+        // Snapshot callbacks decode Firestore documents before publishing them.
+        // Keep that work off the main queue so listener updates cannot block
+        // tab transitions while the UI is rendering.
+        let firestore = Firestore.firestore()
+        let firestoreSettings = firestore.settings
+        firestoreSettings.dispatchQueue = DispatchQueue(label: "com.sticktogether.firestore-callbacks")
+        firestore.settings = firestoreSettings
+
         NotificationManager.shared.configure()
         PushManager.shared.configure()
     }

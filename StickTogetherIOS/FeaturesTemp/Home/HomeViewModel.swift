@@ -38,6 +38,9 @@ final class HomeViewModel: ObservableObject {
     private var buddyTask: Task<Void, Never>?
     private var sharedTask: Task<Void, Never>?
     private var habitEntriesTask: Task<Void, Never>?
+    private var missingUsersTask: Task<Void, Never>?
+    private var activeHabitEntriesDate: Date?
+    private var activeHabitEntryIds: [String]?
     
     private let currentUserId: String
     private let listenToOwnedHabits: ListenToHabitsUseCase
@@ -361,24 +364,45 @@ final class HomeViewModel: ObservableObject {
     }
     
     private func startListeningToAllHabitEntries() {
-        stopListeningToAllHabitEntries()
-        
-        let habitIds = visibleHabits.compactMap { $0.id }
+        let date = Calendar.current.startOfDay(for: selectedDate)
+        let habitIds = visibleHabits.compactMap(\.id).sorted()
+        guard activeHabitEntriesDate != date || activeHabitEntryIds != habitIds else { return }
+
+        let previousTask = habitEntriesTask
+        previousTask?.cancel()
+        activeHabitEntriesDate = date
+        activeHabitEntryIds = habitIds
 
         habitEntriesTask = Task { [weak self] in
             guard let self else { return }
+            // Tear down the old Firestore stream before opening another one.
+            // Fast date/tab changes can otherwise briefly stack chunk listeners.
+            if let previousTask {
+                await previousTask.value
+            }
+            guard !Task.isCancelled,
+                  self.activeHabitEntriesDate == date,
+                  self.activeHabitEntryIds == habitIds else { return }
+
             do {
-                let stream = try await listenToAllHabitEntriesOnDate.stream(date: selectedDate, habitIds: habitIds)
+                let stream = try await listenToAllHabitEntriesOnDate.stream(date: date, habitIds: habitIds)
                 for try await entries in stream {
+                    guard !Task.isCancelled else { return }
                     self.entries = entries
                 }
+            } catch is CancellationError {
+                return
             } catch {
-                self.error = error.localizedDescription
+                if !Task.isCancelled {
+                    self.error = error.localizedDescription
+                }
             }
         }
     }
     
     private func stopListeningToAllHabitEntries() {
+        activeHabitEntriesDate = nil
+        activeHabitEntryIds = nil
         habitEntriesTask?.cancel()
         habitEntriesTask = nil
     }
@@ -414,8 +438,12 @@ final class HomeViewModel: ObservableObject {
             self.visibleHabits = sharedHabits
         }
         
-        Task {
-            await fetchMissingUsers()
+        if missingUsersTask == nil {
+            missingUsersTask = Task { [weak self] in
+                guard let self else { return }
+                await self.fetchMissingUsers()
+                self.missingUsersTask = nil
+            }
         }
         
         startListeningToAllHabitEntries()
