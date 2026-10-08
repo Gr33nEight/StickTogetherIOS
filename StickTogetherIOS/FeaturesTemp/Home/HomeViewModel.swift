@@ -28,7 +28,7 @@ final class HomeViewModel: ObservableObject {
     @Published private(set) var visibleHabits: [Habit] = []
     @Published private(set) var entries: [HabitEntry] = []
     @Published private(set) var error: String?
-    @Published private(set) var isLoading: Bool = false
+    @Published private(set) var hasCompletedInitialLoad = false
     
     private var ownedHabits: [Habit] = []
     private var buddyHabits: [Habit] = []
@@ -41,6 +41,11 @@ final class HomeViewModel: ObservableObject {
     private var missingUsersTask: Task<Void, Never>?
     private var activeHabitEntriesDate: Date?
     private var activeHabitEntryIds: [String]?
+    private let loadingManager = LoadingManager.shared
+    private var listenerGeneration = 0
+    private var initialLoadTokens: [String: UUID] = [:]
+    private var loadedHabitEntriesRange: String?
+    private var loadingHabitEntriesRange: String?
     
     private let currentUserId: String
     private let listenToOwnedHabits: ListenToHabitsUseCase
@@ -52,11 +57,12 @@ final class HomeViewModel: ObservableObject {
     private var getHabitEntries: GetHabitEntriesFromDateRangeUseCase
 
     var currentUserName: String {
-        currentUser?.name ?? "Unknown user"
+        currentUser?.name ?? ""
     }
     
     var headerTitle: String {
-        "\(Date().timeOfDayGreeting),\n\(currentUserName.capitalized) 👋"
+        guard !currentUserName.isEmpty else { return "\(Date().timeOfDayGreeting)," }
+        return "\(Date().timeOfDayGreeting),\n\(currentUserName.capitalized) 👋"
     }
 
     var habitItems: [HabitListItem] {
@@ -128,10 +134,26 @@ final class HomeViewModel: ObservableObject {
     }
     
     func fetchHabitEntries(from startDate: Date, to endDate: Date) async  {
+        let key = "\(Calendar.current.startOfDay(for: startDate).timeIntervalSince1970)-\(Calendar.current.startOfDay(for: endDate).timeIntervalSince1970)"
+        guard loadedHabitEntriesRange != key,
+              loadingHabitEntriesRange != key else { return }
+        loadingHabitEntriesRange = key
+
         do {
-            weeklyEntries = try await getHabitEntries.execute(userId: currentUserId, from: startDate, to: endDate)
+            let result = try await loadingManager.run {
+                try await getHabitEntries.execute(userId: currentUserId, from: startDate, to: endDate)
+            }
+            if loadingHabitEntriesRange == key {
+                weeklyEntries = result
+                loadedHabitEntriesRange = key
+            }
         } catch {
-            self.error = error.localizedDescription
+            if loadingHabitEntriesRange == key, !(error is CancellationError) {
+                self.error = error.localizedDescription
+            }
+        }
+        if loadingHabitEntriesRange == key {
+            loadingHabitEntriesRange = nil
         }
     }
     
@@ -158,58 +180,108 @@ final class HomeViewModel: ObservableObject {
     func onAppear() async {
         startListening()
         if currentUser == nil {
-            await getCurrentUser()
+            await getCurrentUser(generation: listenerGeneration)
         }
     }
     
     private func startListening() {
-        stopListening()
+        if ownedTask != nil || buddyTask != nil || sharedTask != nil {
+            stopListening()
+        }
+        beginInitialLoadIfNeeded()
+        let generation = listenerGeneration
         ownedTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = try await listenToOwnedHabits.stream(for: currentUserId)
                 for try await habits in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.ownedHabits = habits
                     self.updateVisibleHabits()
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("ownedHabits", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("ownedHabits", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 self.error = error.localizedDescription
             }
+            finishInitialLoad("ownedHabits", generation: generation)
         }
         
         buddyTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = try await listenToBuddyHabits.stream(for: currentUserId)
                 for try await habits in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.buddyHabits = habits
                     self.updateVisibleHabits()
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("buddyHabits", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("buddyHabits", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 self.error = error.localizedDescription
             }
+            finishInitialLoad("buddyHabits", generation: generation)
         }
         
         sharedTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = try await listenToSharedHabits.stream(for: currentUserId)
                 for try await habits in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.sharedHabits = habits
                     self.updateVisibleHabits()
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("sharedHabits", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("sharedHabits", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 self.error = error.localizedDescription
             }
+            finishInitialLoad("sharedHabits", generation: generation)
+        }
+    }
+
+    private func beginInitialLoadIfNeeded() {
+        guard !hasCompletedInitialLoad, initialLoadTokens.isEmpty else { return }
+        var initialSources = ["ownedHabits", "buddyHabits", "sharedHabits"]
+        if currentUser == nil { initialSources.append("currentUser") }
+        initialLoadTokens = Dictionary(
+            uniqueKeysWithValues: initialSources.map { ($0, loadingManager.begin()) }
+        )
+    }
+
+    private func finishInitialLoad(_ key: String, generation: Int) {
+        guard generation == listenerGeneration,
+              let token = initialLoadTokens.removeValue(forKey: key) else { return }
+        loadingManager.finish(token)
+        if initialLoadTokens.isEmpty {
+            hasCompletedInitialLoad = true
         }
     }
     
-    func getCurrentUser() async {
+    private func getCurrentUser(generation: Int) async {
         do {
             currentUser = try await getUser.byId(with: currentUserId)
         } catch {
             self.error = error.localizedDescription
         }
+        finishInitialLoad("currentUser", generation: generation)
     }
     
     func toggleHabitCompletion(of habitId: String) async {
@@ -236,11 +308,13 @@ final class HomeViewModel: ObservableObject {
         }
         
         do {
-            try await toggleHabitCompletion.execute(
-                forHabit: habitId,
-                on: selectedDate,
-                forUser: currentUserId
-            )
+            try await loadingManager.run {
+                try await toggleHabitCompletion.execute(
+                    forHabit: habitId,
+                    on: selectedDate,
+                    forUser: currentUserId
+                )
+            }
         } catch {
             entries = previousEntries
             self.error = error.localizedDescription
@@ -450,6 +524,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     func stopListening() {
+        listenerGeneration += 1
         ownedTask?.cancel()
         buddyTask?.cancel()
         sharedTask?.cancel()
@@ -458,6 +533,10 @@ final class HomeViewModel: ObservableObject {
         ownedTask = nil
         buddyTask = nil
         sharedTask = nil
+        for token in initialLoadTokens.values {
+            loadingManager.finish(token)
+        }
+        initialLoadTokens.removeAll()
     }
     
     deinit {

@@ -13,7 +13,6 @@ final class FriendsViewModel: ObservableObject {
     @Published var event: FriendsViewEvent?
     
     @Published private(set) var visibleFriends: [User] = []
-    @Published private(set) var isLoading = false
     @Published private(set) var friendRequestNotifications = [Notification]()
     
     @Published private var receivedInvitations: [InvitationWithUser] = []
@@ -22,6 +21,10 @@ final class FriendsViewModel: ObservableObject {
     private var friendsTask: Task<Void, Never>?
     private var receivedInvitationsTask: Task<Void, Never>?
     private var sentInvitationsTask: Task<Void, Never>?
+    private let loadingManager = LoadingManager.shared
+    private var listenerGeneration = 0
+    private var initialLoadTokens: [String: UUID] = [:]
+    private var hasCompletedInitialLoad = false
     
     private let currentUserId: String
     private let listenToFriends: ListenToFriendsUseCase
@@ -74,15 +77,38 @@ final class FriendsViewModel: ObservableObject {
     }
     
     func startListening() {
-        startListeningToFriends()
-        startListeningToSentInvitations()
-        startListeningToReceivedInvitations()
+        stopListening()
+        if !hasCompletedInitialLoad {
+            initialLoadTokens = [
+                "friends": loadingManager.begin(),
+                "sentInvitations": loadingManager.begin(),
+                "receivedInvitations": loadingManager.begin()
+            ]
+        }
+        let generation = listenerGeneration
+        startListeningToFriends(generation: generation)
+        startListeningToSentInvitations(generation: generation)
+        startListeningToReceivedInvitations(generation: generation)
     }
     
     func stopListening() {
+        listenerGeneration += 1
         stopListeningToFriends()
         stopListeningToSentInvitations()
         stopListeningToReceivedInvitations()
+        for token in initialLoadTokens.values {
+            loadingManager.finish(token)
+        }
+        initialLoadTokens.removeAll()
+    }
+
+    private func finishInitialLoad(_ key: String, generation: Int) {
+        guard generation == listenerGeneration,
+              let token = initialLoadTokens.removeValue(forKey: key) else { return }
+        loadingManager.finish(token)
+        if initialLoadTokens.isEmpty {
+            hasCompletedInitialLoad = true
+        }
     }
     
     func handleInviteTap() { event = .showInviteModal }
@@ -93,7 +119,9 @@ final class FriendsViewModel: ObservableObject {
             return
         }
         do {
-            try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            try await loadingManager.run {
+                try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            }
             event = .closeModal
         } catch let error as InvitationError {
             handleInvitationError(error)
@@ -104,7 +132,9 @@ final class FriendsViewModel: ObservableObject {
     
     func acceptInvitation(with invitationId: String) async {
         do {
-            try await acceptInvitation.execute(invitationId: invitationId)
+            try await loadingManager.run {
+                try await acceptInvitation.execute(invitationId: invitationId)
+            }
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -112,7 +142,9 @@ final class FriendsViewModel: ObservableObject {
 
     func removeInvitation(with invitationId: String) async {
         do {
-            try await removeInvitation.execute(invitationId: invitationId)
+            try await loadingManager.run {
+                try await removeInvitation.execute(invitationId: invitationId)
+            }
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -120,7 +152,9 @@ final class FriendsViewModel: ObservableObject {
     
     func declineInvitation(with invitationId: String) async {
         do {
-            try await declineInvitation.execute(invitationId: invitationId)
+            try await loadingManager.run {
+                try await declineInvitation.execute(invitationId: invitationId)
+            }
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -128,7 +162,9 @@ final class FriendsViewModel: ObservableObject {
     
     func removeFriend(by userId: String) async {
         do {
-            try await removeFriend.execute(userId: currentUserId, friendId: userId)
+            try await loadingManager.run {
+                try await removeFriend.execute(userId: currentUserId, friendId: userId)
+            }
         } catch {
             event = .showToastMessage(.failed("Something went wrong"))
         }
@@ -152,21 +188,26 @@ final class FriendsViewModel: ObservableObject {
         friendsTask = nil
     }
     
-    private func startListeningToFriends() {
-        isLoading = true
-        defer { isLoading = false }
-        stopListeningToFriends()
-        
+    private func startListeningToFriends(generation: Int) {
         friendsTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = listenToFriends.stream(for: currentUserId)
                 for try await friends in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.visibleFriends = friends
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("friends", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("friends", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 event = .showToastMessage(.failed("Failed to fetch friends."))
             }
+            finishInitialLoad("friends", generation: generation)
         }
     }
     
@@ -175,21 +216,26 @@ final class FriendsViewModel: ObservableObject {
         sentInvitationsTask = nil
     }
     
-    private func startListeningToSentInvitations(){
-        stopListeningToSentInvitations()
-        isLoading = true
-        defer { isLoading = false }
-        
+    private func startListeningToSentInvitations(generation: Int) {
         sentInvitationsTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = listenToSentInvitations.stream(for: currentUserId)
                 for try await invitations in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.sentInvitations = invitations
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("sentInvitations", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("sentInvitations", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 event = .showToastMessage(.failed("Failed to fetch sent invitations."))
             }
+            finishInitialLoad("sentInvitations", generation: generation)
         }
     }
     
@@ -198,22 +244,26 @@ final class FriendsViewModel: ObservableObject {
         receivedInvitationsTask = nil
     }
     
-    private func startListeningToReceivedInvitations(){
-        stopListeningToReceivedInvitations()
-        
-        isLoading = true
-        defer { isLoading = false }
-        
+    private func startListeningToReceivedInvitations(generation: Int) {
         receivedInvitationsTask = Task { [weak self] in
             guard let self else { return }
+            var receivedInitialValue = false
             do {
                 let stream = listenToReceivedInvitations.stream(for: currentUserId)
                 for try await invitations in stream {
+                    guard !Task.isCancelled, generation == listenerGeneration else { return }
                     self.receivedInvitations = invitations
+                    if !receivedInitialValue {
+                        receivedInitialValue = true
+                        finishInitialLoad("receivedInvitations", generation: generation)
+                    }
                 }
             } catch {
+                finishInitialLoad("receivedInvitations", generation: generation)
+                guard !Task.isCancelled, generation == listenerGeneration else { return }
                 event = .showToastMessage(.failed("Failed to fetch received invitations."))
             }
+            finishInitialLoad("receivedInvitations", generation: generation)
         }
     }
     

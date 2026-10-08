@@ -21,6 +21,7 @@ final class NotificationsViewModel: ObservableObject {
     private let acceptHabitInvitation: AcceptHabitInvitationUseCase
     private let declineHabitInvitation: DeclineHabitInvitationUseCase
     private let getHabit: GetHabitByIdUseCase
+    private let loadingManager = LoadingManager.shared
     
     var userNotifications: [Notification] {
         allNotifications.filter({$0.type != .friendRequest})
@@ -73,7 +74,9 @@ final class NotificationsViewModel: ObservableObject {
     func markAsRead(_ id: String?) async {
         guard let id else { return }
         do {
-            try await markAsReadUseCase.execute(for: id)
+            try await loadingManager.run {
+                try await markAsReadUseCase.execute(for: id)
+            }
         } catch {
             self.error = error.localizedDescription
         }
@@ -96,7 +99,9 @@ final class NotificationsViewModel: ObservableObject {
             return
         }
         do {
-            try await acceptHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+            try await loadingManager.run {
+                try await acceptHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+            }
         } catch {
             self.error = error.localizedDescription
         }
@@ -106,7 +111,9 @@ final class NotificationsViewModel: ObservableObject {
         guard let notificationId else { return }
         guard let habit else { return }
         do {
-            try await declineHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+            try await loadingManager.run {
+                try await declineHabitInvitation.execute(notificationId: notificationId, habit: habit, currentUserId: currentUserId)
+            }
         } catch {
             self.error = error.localizedDescription
         }
@@ -114,7 +121,9 @@ final class NotificationsViewModel: ObservableObject {
     
     func getHabitBy(id: String) async -> Habit? {
         do {
-            return try await getHabit.execute(id: id)
+            return try await loadingManager.run {
+                try await getHabit.execute(id: id)
+            }
         } catch {
             self.error = error.localizedDescription
             return nil

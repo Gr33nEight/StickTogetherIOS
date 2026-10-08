@@ -18,6 +18,7 @@ final class FriendsListViewModel: ObservableObject {
     private let currentUserId: String
     private let listenToFriends: ListenToFriendsUseCase
     private let sendInvitation: SendInvitationUseCase
+    private let loadingManager = LoadingManager.shared
     
     private var friendsTask: Task<Void, Never>?
     
@@ -64,7 +65,9 @@ final class FriendsListViewModel: ObservableObject {
             return
         }
         do {
-            try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            try await loadingManager.run {
+                try await sendInvitation.execute(from: currentUserId, to: userEmail)
+            }
             event = .closeModal
         } catch let error as InvitationError {
             handleInvitationError(error)

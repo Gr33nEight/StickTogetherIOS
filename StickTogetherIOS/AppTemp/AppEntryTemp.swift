@@ -9,14 +9,28 @@ import SwiftUI
 
 struct AppEntryTemp: View {
     @StateObject var viewModel: SessionViewModel
+
+    @StateObject private var loadingManager = LoadingManager.shared
+
     var body: some View {
-        switch viewModel.state {
-        case .loading:
-            ProgressView()
-        case .authenticated(let authenticatedAppContainer):
-            AuthenticatedRootView(container: authenticatedAppContainer)
-        case .unauthenticated(let unauthenticatedAppContainer):
-            UnauthenticatedRootView(container: unauthenticatedAppContainer)
+        ZStack {
+            Group {
+                switch viewModel.state {
+                case .loading:
+                    LaunchScreenView()
+                case .authenticated(let authenticatedAppContainer):
+                    AuthenticatedRootView(container: authenticatedAppContainer)
+                case .unauthenticated(let unauthenticatedAppContainer):
+                    UnauthenticatedRootView(container: unauthenticatedAppContainer)
+                }
+            }
+
+            if loadingManager.isLoading {
+                LoadingOverlay()
+                    .zIndex(1)
+                    .transition(.opacity)
+            }
         }
+        .animation(.easeInOut(duration: 0.2), value: loadingManager.isLoading)
     }
 }

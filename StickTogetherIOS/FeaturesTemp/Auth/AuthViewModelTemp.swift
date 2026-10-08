@@ -16,9 +16,9 @@ final class AuthViewModelTemp: ObservableObject {
     private var signUpUseCase: SignUpUseCase
     private var signOutUseCase: SignOutUseCase
     
-    @Published private(set) var isLoading: Bool = false
     @Published private(set) var error: String?
     private var currentNonce: String?
+    private let loadingManager = LoadingManager.shared
     
     init(signInUseCase: SignInUseCase, signUpUseCase: SignUpUseCase, signOutUseCase: SignOutUseCase) {
         self.signInUseCase = signInUseCase
@@ -31,7 +31,6 @@ final class AuthViewModelTemp: ObservableObject {
     }
 
     func prepareAppleSignInRequest(_ request: ASAuthorizationAppleIDRequest) {
-        isLoading = true
         error = nil
         let nonce = Constants.randomNonceString()
         currentNonce = nonce
@@ -69,10 +68,8 @@ final class AuthViewModelTemp: ObservableObject {
     }
 
     private func perform(_ action: () async throws -> Void) async {
-        isLoading = true
         error = nil
-        defer { isLoading = false }
-        do { try await action() }
+        do { try await loadingManager.run { try await action() } }
         catch { self.error = error.localizedDescription }
     }
 

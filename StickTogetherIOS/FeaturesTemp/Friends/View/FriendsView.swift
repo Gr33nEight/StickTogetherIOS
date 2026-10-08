@@ -24,10 +24,7 @@ struct FriendsView: View {
     
     var body: some View {
         ZStack {
-            if viewModel.isLoading {
-                ProgressView()
-            }else{
-                CustomView(title: "Friends", dismissIcon: "") {
+            CustomView(title: "Friends", dismissIcon: "") {
                     VStack {
                         HStack(spacing: 0) {
                             ForEach(FriendsListType.allCases, id:\.self) { type in
@@ -81,7 +78,6 @@ struct FriendsView: View {
                     }
                     
                 }.padding(.bottom, 60)
-            }
         }
             .background(Color.custom.background)
         .animation(.easeInOut, value: removingStarted)

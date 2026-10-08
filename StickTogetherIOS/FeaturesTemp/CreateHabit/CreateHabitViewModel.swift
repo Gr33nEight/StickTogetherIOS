@@ -24,10 +24,9 @@ final class CreateHabitViewModel: ObservableObject {
     @Published var autoEmoji: String? = nil
     @Published var event: CreateHabitEvent?
     
-    @Published private(set) var isLoading: Bool = false
-    
     private let currentUserId: String
     private let createHabit: CreateHabitUseCase
+    private let loadingManager = LoadingManager.shared
     
     init(
         currentUserId: String,
@@ -98,7 +97,9 @@ final class CreateHabitViewModel: ObservableObject {
             )
             //TODO: Fix later
             
-            try await createHabit.execute(input, for: currentUserId)
+            try await loadingManager.run {
+                try await createHabit.execute(input, for: currentUserId)
+            }
             event = .success
         } catch {
             event = .error(error.localizedDescription)

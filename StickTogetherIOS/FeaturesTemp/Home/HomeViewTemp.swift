@@ -12,7 +12,7 @@ struct HomeViewTemp: View {
     @EnvironmentObject var notificationsVM: NotificationsViewModel
     @Environment(\.navigate) var navigate
     
-    @State var pageIndex: Int = 0
+    @State var pageIndex: Int = 500
     @State var baseWeekAnchor: Date = Date()
     
     @Namespace var dayAnimation
@@ -29,9 +29,18 @@ struct HomeViewTemp: View {
         .edgesIgnoringSafeArea(.bottom)
         .task {
             await viewModel.onAppear()
+            let week = weekDates(around: viewModel.selectedDate)
+            if let first = week.first, let last = week.last {
+                await viewModel.fetchHabitEntries(from: first, to: last)
+            }
         }
         .onDisappear {
             viewModel.stopListening()
+        }
+        .overlay {
+            if !viewModel.hasCompletedInitialLoad {
+                LoadingOverlay()
+            }
         }
     }
 }
@@ -152,9 +161,7 @@ extension HomeViewTemp {
 extension HomeViewTemp {
     private var content: some View {
         Group {
-            if viewModel.isLoading {
-                ProgressView()
-            } else if let error = viewModel.error {
+            if let error = viewModel.error {
                 Text(error)
             } else {
                 VStack(spacing: 0) {

@@ -29,6 +29,7 @@ final class HabitViewModel: ObservableObject {
     private var toggleHabitCompletionState: ToggleHabitCompletionStateUseCase
     private var listenToHabit: ListenToHabitUseCase
     private var listenToEntries: ListenToHabitEntriesUseCase
+    private let loadingManager = LoadingManager.shared
     
     var myEntry: HabitEntry? {
         entries.first { $0.userId == currentUserId }
@@ -102,7 +103,9 @@ final class HabitViewModel: ObservableObject {
     func deleteHabit() async {
         guard let habitId = habit.id else { return }
         do {
-            try await deleteHabit.execute(habitId)
+            try await loadingManager.run {
+                try await deleteHabit.execute(habitId)
+            }
             event = .dimsiss
         } catch {
             event = .showToastMessage(.failed(error.localizedDescription))
@@ -114,7 +117,9 @@ final class HabitViewModel: ObservableObject {
             return
         }
         do {
-            try await encourageBuddies.execute(forUsers: habit.acceptedBuddyIds, from: habit.ownerId, habitId: habitId)
+            try await loadingManager.run {
+                try await encourageBuddies.execute(forUsers: habit.acceptedBuddyIds, from: habit.ownerId, habitId: habitId)
+            }
         } catch {
             event = .showToastMessage(.failed(error.localizedDescription))
         }
@@ -140,11 +145,13 @@ final class HabitViewModel: ObservableObject {
         }
         
         do {
-            try await toggleHabitCompletionState.execute(
-                forHabit: habitId,
-                on: selectedDate,
-                forUser: currentUserId
-            )
+            try await loadingManager.run {
+                try await toggleHabitCompletionState.execute(
+                    forHabit: habitId,
+                    on: selectedDate,
+                    forUser: currentUserId
+                )
+            }
         } catch {
             entries = previousEntries
             event = .showToastMessage(.failed(error.localizedDescription))
