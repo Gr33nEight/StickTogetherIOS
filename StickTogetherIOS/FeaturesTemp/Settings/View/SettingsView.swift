@@ -94,5 +94,8 @@ struct SettingsView: View {
             .task {
                 viewModel.startListeningToCurrentUser()
             }
+            .onDisappear {
+                viewModel.stopListeningToCurrentUser()
+            }
     }
 }

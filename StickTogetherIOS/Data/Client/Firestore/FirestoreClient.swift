@@ -18,6 +18,12 @@ protocol FirestoreClient {
         _ endpoint: E.Type,
         id: FirestoreDocumentID
     ) async throws -> E.DTO
+
+    /// Reads from the server only, bypassing both Firestore's offline store and the app response cache.
+    func fetchDocumentFromServer<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        id: FirestoreDocumentID
+    ) async throws -> E.DTO
     
     func setData<E: FirestoreEndpoint>(
         _ dto: E.DTO,

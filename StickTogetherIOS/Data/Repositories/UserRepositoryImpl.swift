@@ -18,6 +18,11 @@ final class UserRepositoryImpl: UserRepository {
         let dto = try await firestoreClient.fetchDocument(UserEndpoint.self, id: .init(value: userId))
         return UserMapper.toDomain(dto)
     }
+
+    func getUserFromServer(withId userId: String) async throws -> User {
+        let dto = try await firestoreClient.fetchDocumentFromServer(UserEndpoint.self, id: .init(value: userId))
+        return UserMapper.toDomain(dto)
+    }
     
     func getUser(byEmail email: String) async throws -> User? {
         let query = FirestoreQuery().isEqual(.field("email"), .string(email)).limit(1)

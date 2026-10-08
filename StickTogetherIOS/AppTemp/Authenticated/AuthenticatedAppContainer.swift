@@ -12,6 +12,11 @@ final class AuthenticatedAppContainer {
     // MARK: - Input
 
     let userId: String
+
+    // Keep tab state alive while SwiftUI swaps the visible tab view.
+    @MainActor private var homeViewModel: HomeViewModel?
+    @MainActor private var friendsViewModel: FriendsViewModel?
+    @MainActor private var settingsViewModel: SettingsViewModel?
     
     init(userId: String) {
         self.userId = userId
@@ -272,17 +277,20 @@ final class AuthenticatedAppContainer {
 
     @MainActor
     func makeHomeView() -> some View {
-        HomeViewTemp(viewModel: self.makeHomeViewModel())
+        if homeViewModel == nil { homeViewModel = makeHomeViewModel() }
+        return HomeViewTemp(viewModel: self.homeViewModel!)
     }
         
     @MainActor
     func makeFriendsView() -> some View {
-        FriendsView(viewModel: self.makeFriendsViewModel())
+        if friendsViewModel == nil { friendsViewModel = makeFriendsViewModel() }
+        return FriendsView(viewModel: self.friendsViewModel!)
     }
     
     @MainActor
     func makeSettingsView() -> some View {
-        SettingsView(viewModel: self.makeSettingsViewModel())
+        if settingsViewModel == nil { settingsViewModel = makeSettingsViewModel() }
+        return SettingsView(viewModel: self.settingsViewModel!)
     }
     
     @MainActor

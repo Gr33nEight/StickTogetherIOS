@@ -154,7 +154,9 @@ final class HomeViewModel: ObservableObject {
 
     func onAppear() async {
         startListening()
-        await getCurrentUser()
+        if currentUser == nil {
+            await getCurrentUser()
+        }
     }
     
     private func startListening() {
@@ -419,10 +421,11 @@ final class HomeViewModel: ObservableObject {
         startListeningToAllHabitEntries()
     }
     
-    private func stopListening() {
+    func stopListening() {
         ownedTask?.cancel()
         buddyTask?.cancel()
         sharedTask?.cancel()
+        stopListeningToAllHabitEntries()
         
         ownedTask = nil
         buddyTask = nil

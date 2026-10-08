@@ -13,6 +13,45 @@ struct FirestoreQuery {
 }
 
 extension FirestoreQuery {
+    /// Stable representation used to distinguish cached query results.
+    var cacheKey: String {
+        let filterKeys = filters.map { filter -> String in
+            switch filter {
+            case .isEqual(let field, let value): return "eq:\(field.cacheKey):\(value.cacheKey)"
+            case .arrayContains(let field, let value): return "contains:\(field.cacheKey):\(value.cacheKey)"
+            case .greaterThan(let field, let value): return "gt:\(field.cacheKey):\(value.cacheKey)"
+            case .greaterThanOrEqualTo(let field, let value): return "gte:\(field.cacheKey):\(value.cacheKey)"
+            case .lessThan(let field, let value): return "lt:\(field.cacheKey):\(value.cacheKey)"
+            case .lessThanOrEqualTo(let field, let value): return "lte:\(field.cacheKey):\(value.cacheKey)"
+            case .isIn(let field, let values): return "in:\(field.cacheKey):[\(values.map(\.cacheKey).joined(separator: ","))]"
+            }
+        }
+        let ordering = order.map { "\($0.field):\($0.descending)" } ?? "none"
+        return "\(filterKeys.joined(separator: "&"))|limit:\(limit.map(String.init) ?? "none")|order:\(ordering)"
+    }
+}
+
+private extension FirestoreField {
+    var cacheKey: String {
+        switch self {
+        case .field(let name): return "field:\(name)"
+        case .documentId: return "documentId"
+        }
+    }
+}
+
+private extension FirestoreValue {
+    var cacheKey: String {
+        switch self {
+        case .string(let value): return "s:\(value)"
+        case .int(let value): return "i:\(value)"
+        case .bool(let value): return "b:\(value)"
+        case .date(let value): return "d:\(value.timeIntervalSince1970)"
+        }
+    }
+}
+
+extension FirestoreQuery {
 
     func isEqual(
         _ field: FirestoreField,

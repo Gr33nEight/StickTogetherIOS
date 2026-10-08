@@ -9,6 +9,7 @@ import Foundation
 
 final class FirestoreClientImpl: FirestoreClient {
     private let db: Firestore
+    private let responseCache = FirestoreResponseCache.shared
     
     init(db: Firestore = Firestore.firestore()) {
         self.db = db
@@ -18,20 +19,53 @@ final class FirestoreClientImpl: FirestoreClient {
         _ endpoint: E.Type,
         query: FirestoreQuery
     ) async throws -> [E.DTO] where E : FirestoreEndpoint {
+        let cacheKey = "\(E.path)|query|\(query.cacheKey)"
+        if let cached: [E.DTO] = responseCache.value(for: cacheKey, as: [E.DTO].self) {
+            return cached
+        }
         do {
             let snapshot = try await self.fetchSnapshot(endpoint, query: query)
-            return try snapshot.documents.compactMap {
+            let values = try snapshot.documents.compactMap {
                 try $0.data(as: E.DTO.self)
             }
+            responseCache.store(values, for: cacheKey)
+            return values
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
     }
     
     func fetchDocument<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws -> E.DTO where E : FirestoreEndpoint{
+        let cacheKey = "\(E.path)|document|\(id.value)"
+        if let cached: E.DTO = responseCache.value(for: cacheKey, as: E.DTO.self) {
+            return cached
+        }
         let snapshot: DocumentSnapshot
         do {
             snapshot = try await db.collection(endpoint.path).document(id.value).getDocument()
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
+
+        guard snapshot.exists else {
+            throw FirestoreClientError.documentNotFound
+        }
+
+        do {
+            let value = try snapshot.data(as: E.DTO.self)
+            responseCache.store(value, for: cacheKey)
+            return value
+        } catch {
+            throw FirestoreErrorMapper.map(error)
+        }
+    }
+
+    func fetchDocumentFromServer<E>(_ endpoint: E.Type, id: FirestoreDocumentID) async throws -> E.DTO where E : FirestoreEndpoint {
+        let snapshot: DocumentSnapshot
+        do {
+            snapshot = try await db.collection(endpoint.path)
+                .document(id.value)
+                .getDocument(source: .server)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -51,6 +85,7 @@ final class FirestoreClientImpl: FirestoreClient {
         let doc = db.collection(endpoint.path).document(id.value)
         do {
             try await doc.setData(from: dto, merge: merge)
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -60,6 +95,7 @@ final class FirestoreClientImpl: FirestoreClient {
         let doc = db.collection(endpoint.path).document(id.value)
         do {
             try await doc.setData(from: dto)
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -71,6 +107,7 @@ final class FirestoreClientImpl: FirestoreClient {
         
         do {
             try await ref.updateData(data)
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -81,6 +118,7 @@ final class FirestoreClientImpl: FirestoreClient {
         let ref = db.collection(endpoint.path).document(id.value)
         do {
             try await ref.delete()
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -96,6 +134,7 @@ final class FirestoreClientImpl: FirestoreClient {
             }
             
             try await batch.commit()
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }
@@ -124,6 +163,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 }
                 
                 guard let snapshot else { return }
+                self.responseCache.invalidate(endpoint: E.path)
                 
                 do {
                     let data = try snapshot.documents.map {
@@ -151,6 +191,7 @@ final class FirestoreClientImpl: FirestoreClient {
                 }
                 
                 guard let snapshot else { return }
+                self.responseCache.invalidate(endpoint: E.path)
                 
                 
                 guard snapshot.exists else {
@@ -183,6 +224,7 @@ final class FirestoreClientImpl: FirestoreClient {
         
         do {
             try await ref.setData(from: dto)
+            responseCache.invalidate(endpoint: E.path)
         } catch {
             throw FirestoreErrorMapper.map(error)
         }

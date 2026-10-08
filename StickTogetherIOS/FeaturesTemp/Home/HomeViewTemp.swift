@@ -30,6 +30,9 @@ struct HomeViewTemp: View {
         .task {
             await viewModel.onAppear()
         }
+        .onDisappear {
+            viewModel.stopListening()
+        }
     }
 }
 

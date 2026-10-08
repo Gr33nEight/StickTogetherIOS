@@ -88,6 +88,9 @@ struct FriendsView: View {
             .task {
                 viewModel.startListening()
             }
+            .onDisappear {
+                viewModel.stopListening()
+            }
             .onChange(of: viewModel.event) { _, event in
                 guard let event else { return }
                 
